@@ -1,7 +1,4 @@
 Hola mundo.
-
+Adiós mudo.
 
 Hola Humano
-
-
-que necio con las pruebas
