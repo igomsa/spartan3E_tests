@@ -117,7 +117,7 @@ assign wImmediateValue = {wSourceAddr1,wSourceAddr0};
                   begin
                      if (CurrentRow == 0)
                        begin
-                          MODULE_ADDER #(4) MyAdder
+                          EMUL #(4) MyAdder
                             (
                              .A( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
                              .B( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
@@ -128,7 +128,7 @@ assign wImmediateValue = {wSourceAddr1,wSourceAddr0};
                        end
                      else if (CurrentCol == 13)
                        begin
-                          MODULE_ADDER # (4) MyAdder
+                          EMUL # (4) MyAdder
                             (
                              .A( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
                              .B( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
@@ -136,29 +136,29 @@ assign wImmediateValue = {wSourceAddr1,wSourceAddr0};
                              .Co( wCarry[ CurrentRow +1 ][ CurrentCol]),
                              .Ro(wResult[CurrentCol][CurrentRow])
                              );
+                          end
                      else
                        begin
                           if (CurrentCol != 13)
                             begin
-                               MODULE_ADDER # (4) MyAdder
-                                 (
+                               EMUL # (4) MyAdder (
                                   .A( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
                                   .B( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
                    	          .Ci( wCarry[ CurrentRow ][ CurrentCol ] ),
                    	          .Co( wCarry[ CurrentRow ][ CurrentCol + 1]),
-                   	          .Ro(wResult[CurrentCol][CurrentRow])
-                                  end
-
-                                  end
-                                  end
-                                  end
-	                          endgenerate
+                                  .Ro(wResult[CurrentCol][CurrentRow])
+                                  );
+                            end
+                       end
+                  end
+             end
+        endgenerate
 
 
 always @ ( * )
 begin
-	case (wOperation)
-	//-------------------------------------
+        case (wOperation)
+        //-------------------------------------
 	`NOP:
 	begin
 		rFFLedEN     <= 1'b0;
@@ -184,7 +184,7 @@ begin
 	end
         //-------------------------------------
 
-	`SMUL:
+	`MUL:
 	begin
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
