@@ -126,7 +126,7 @@ assign wImmediateValue = {wSourceAddr1,wSourceAddr0};
                              .Ro(wResult[CurrentCol][CurrentRow])
                              );
                        end
-                     else if (CurrentCol == 13)
+			  else if (CurrentCol == 14)
                        begin
                           EMUL # (4) MyAdder
                             (
@@ -139,7 +139,7 @@ assign wImmediateValue = {wSourceAddr1,wSourceAddr0};
                           end
                      else
                        begin
-                          if (CurrentCol != 13)
+			       if (CurrentCol != 14)
                             begin
                                EMUL # (4) MyAdder (
                                   .A( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
