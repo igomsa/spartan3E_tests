@@ -16,10 +16,11 @@ begin
 	0: oInstruction = { `NOP ,24'd4000    };
 	1: oInstruction = { `STO, `R0,16'd0003 };
 	2: oInstruction = { `STO, `R1,16'd0022 };
-	6: oInstruction = { `SUB ,`R0,`R0,`R1    };
-	4: oInstruction = { `NOP ,24'd4000    };
-	5: oInstruction = { `LED ,8'b0,`R0,8'b0 };
-	6: oInstruction = { `JMP ,  8'd0,16'b0   };
+	3: oInstruction = { `NOP ,24'd4000    };
+	4: oInstruction = { `SMUL ,`R0,`R0,`R1    };
+	5: oInstruction = { `NOP ,24'd4000    };
+	6: oInstruction = { `LED ,8'b0,`R0,8'b0 };
+	7: oInstruction = { `JMP ,  8'd0,16'b0   };
 	default:
 		oInstruction = { `LED ,  24'b10101010 };		//NOP
 	endcase
