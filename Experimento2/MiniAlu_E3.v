@@ -103,6 +103,56 @@ FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FF_LEDS
 
 assign wImmediateValue = {wSourceAddr1,wSourceAddr0};
 
+   genvar CurrentRow, CurrentCol;
+   generate
+      for (CurrentRow = 0; CurrentRow < 14; CurrentRow = CurrentRow +1)
+        begin
+           for ( CurrentCol = 0; CurrentCol < 15; CurrentCol = CurrentCol + 1)
+             begin
+                if (CurrentCol == 0)
+                  begin
+                     assign wCarry[ CurrentRow ][ 0 ] = 0;
+                  end
+                else
+                  begin
+                     if (CurrentRow == 0)
+                       begin
+                          MODULE_ADDER #(4) MyAdder
+                            (
+                             .A( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
+                             .B( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
+                             .Ci( wCarry[ CurrentRow ][ CurrentCol ] ),
+                             .Co( wCarry[ CurrentRow ][ CurrentCol + 1]),
+                             .Ro(wResult[CurrentCol][CurrentRow])
+                             );
+                       end
+                     else if (CurrentCol == 13)
+                       begin
+                          MODULE_ADDER # (4) MyAdder
+                            (
+                             .A( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
+                             .B( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
+                             .Ci( wCarry[ CurrentRow ][ CurrentCol ] ),
+                             .Co( wCarry[ CurrentRow +1 ][ CurrentCol]),
+                             .Ro(wResult[CurrentCol][CurrentRow])
+                             );
+                     else
+                       begin
+                          if (CurrentCol != 13)
+                            begin
+                               MODULE_ADDER # (4) MyAdder
+                                 (
+                                  .A( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
+                                  .B( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
+                   	          .Ci( wCarry[ CurrentRow ][ CurrentCol ] ),
+                   	          .Co( wCarry[ CurrentRow ][ CurrentCol + 1]),
+                   	          .Ro(wResult[CurrentCol][CurrentRow])
+                                  end
+
+                                  end
+                                  end
+                                  end
+	                          endgenerate
 
 
 always @ ( * )
@@ -139,54 +189,9 @@ begin
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b1;
-		genvar CurrentRow, CurrentCol;
-		generate
-	for (CurrentRow = 0; CurrentRow < 14; CurrentRow = CurrentRow +1)
-       	begin
-		for ( CurrentCol = 0; CurrentCol < 15; CurrentCol = CurrentCol + 1)
-         	begin 
-          	  if (CurrentCol == 0)
-              {	
-              	assign wCarry[ CurrentRow ][ 0 ] = 0;
-              }
-              else {
-                  if (CurrentRow == 0){
-                    MODULE_ADDER #(4) MyAdder
-                    (
-      		   .A( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
-		   .B( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
-                   .Ci( wCarry[ CurrentRow ][ CurrentCol ] ),
-                   .Co( wCarry[ CurrentRow ][ CurrentCol + 1]),
-                   .Ro(wResult[CurrentCol][CurrentRow])
-                    );                    
-                  }
-			  else if (CurrentCol == 13){
-                  	MODULE_ADDER # (4) MyAdder
-                    (
-		    .A( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
-		    .B( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
-                    .Ci( wCarry[ CurrentRow ][ CurrentCol ] ),
-		    .Co( wCarry[ CurrentRow +1 ][ CurrentCol]),
-                    .Ro(wResult[CurrentCol][CurrentRow])
-                    );
-                  else{
-			  if (CurrentCol != 13){
-                 	 MODULE_ADDER # (4) MyAdder
-                    	(
-                   	.A( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
-		 	.B( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
-                   	.Ci( wCarry[ CurrentRow ][ CurrentCol ] ),
-                   	.Co( wCarry[ CurrentRow ][ CurrentCol + 1]),
-                   	.Ro(wResult[CurrentCol][CurrentRow])
-                    }
-                   
-              }
-          end
-       end
-	endgenerate
-        
+
 end
-		
+
 	end
 	//-------------------------------------
 	`STO:
