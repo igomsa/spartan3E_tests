@@ -18,9 +18,6 @@ wire [3:0]  wOperation;
 reg [15:0]   rResult;
 wire [7:0]  wSourceAddr0,wSourceAddr1,wDestination;
 wire [15:0] wSourceData0,wSourceData1,wIPInitialValue,wImmediateValue;
-wire [11:0] wCarry;
-wire [3:0] wResult [2:0];
-
 
 
 
@@ -102,6 +99,8 @@ FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FF_LEDS
 
 assign wImmediateValue = {wSourceAddr1,wSourceAddr0};
 
+wire [11:0] wCarry;
+wire [3:0] wResult [2:0];
                 EMUL mul0(.wA(wSourceData1[0] & wSourceData0[1]), .wB(wSourceData1[1] & wSourceData0[0]), .iCarry(1'b0),  .oCarry(wCarry[0]), .oR(wResult[0][0]));
                 EMUL mul1(.wA(wSourceData1[2] & wSourceData0[0]), .wB(wSourceData1[1] & wSourceData0[1]), .iCarry(wCarry[0]),  .oCarry(wCarry[1]), .oR(wResult[0][1]));
                 EMUL mul2(.wA(wSourceData1[3] & wSourceData0[0]), .wB(wSourceData1[2] & wSourceData0[1]), .iCarry(wCarry[1]),  .oCarry(wCarry[2]), .oR(wResult[0][2]));
@@ -114,6 +113,13 @@ assign wImmediateValue = {wSourceAddr1,wSourceAddr0};
                 EMUL mul9(.wA(wResult[1][2]), .wB(wSourceData1[1] & wSourceData0[3]), .iCarry(wCarry[8]),  .oCarry(wCarry[9]), .oR(wResult[2][1]));
                 EMUL mul10(.wA(wResult[1][3]), .wB(wSourceData1[2] & wSourceData0[3]), .iCarry(wCarry[9]),  .oCarry(wCarry[10]), .oR(wResult[2][2]));
                 EMUL mul11(.wA(wCarry[7]), .wB(wSourceData1[3] & wSourceData0[3]), .iCarry(wCarry[10]),  .oCarry(wCarry[11]), .oR(wResult[2][3]));
+
+wire [15:0] wAux;
+Buffer8b buff
+(
+           .iI({8'b0, wCarry[11], wResult[2][3], wResult[2][2], wResult[2][1], wResult[2][0], wResult[1][0], wResult[0][0], wSourceData1[0] & wSourceData1[0]}),
+           .oO(wAux)
+);
 
 
 always @ ( * )
@@ -150,7 +156,7 @@ begin
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b1;
-           rResult <= {8'b0, wCarry[11], wResult[2][3], wResult[2][2], wResult[2][1], wResult[2][0], wResult[1][0], wResult[0][0], wSourceData1[0] & wSourceData1[0]};
+           rResult <= wAux;
         end
 	//-------------------------------------
 	`STO:
