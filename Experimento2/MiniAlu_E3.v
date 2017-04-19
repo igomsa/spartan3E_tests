@@ -18,9 +18,6 @@ wire [3:0]  wOperation;
 reg [15:0]   rResult;
 wire [7:0]  wSourceAddr0,wSourceAddr1,wDestination;
 wire [15:0] wSourceData0,wSourceData1,wIPInitialValue,wImmediateValue;
-wire[15:0] wCarry[14:0];
-wire [5:0] wResult;
-output reg [15:0] rVars;
 
 
 
@@ -103,12 +100,18 @@ FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FF_LEDS
 
 assign wImmediateValue = {wSourceAddr1,wSourceAddr0};
 
+//----------------------------------------------------------------------
+//Se introduce código para realizar instancias de manera automática
+//a manera de arreglo de 15x14
+
+wire[15:0] wCarry[14:0];
+wire [15:0] wResult [15:0];
    genvar CurrentRow, CurrentCol;
    generate
       for (CurrentRow = 0; CurrentRow < 14; CurrentRow = CurrentRow +1)
-        begin
+        begin: MUL_ROW
            for ( CurrentCol = 0; CurrentCol < 15; CurrentCol = CurrentCol + 1)
-             begin
+             begin: MUL_COL
                 if (CurrentCol == 0)
                   begin
                      assign wCarry[ CurrentRow ][ 0 ] = 0;
@@ -119,41 +122,43 @@ assign wImmediateValue = {wSourceAddr1,wSourceAddr0};
                        begin
                           EMUL #(4) MyAdder
                             (
-                             .A( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
-                             .B( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
-                             .Ci( wCarry[ CurrentRow ][ CurrentCol ] ),
-                             .Co( wCarry[ CurrentRow ][ CurrentCol + 1]),
-                             .Ro(wResult[CurrentCol][CurrentRow])
+                             .wA( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
+                             .wB( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
+                             .iCarry( wCarry[ CurrentRow ][ CurrentCol ] ),
+                             .oCarry( wCarry[ CurrentRow ][ CurrentCol + 1]),
+                             .oR(wResult[CurrentCol][CurrentRow])
                              );
                        end
-			  else if (CurrentCol == 14)
+                     else if (CurrentCol == 13)
                        begin
                           EMUL # (4) MyAdder
                             (
-                             .A( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
-                             .B( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
-                             .Ci( wCarry[ CurrentRow ][ CurrentCol ] ),
-                             .Co( wCarry[ CurrentRow +1 ][ CurrentCol]),
-                             .Ro(wResult[CurrentCol][CurrentRow])
+                             .wA( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
+                             .wB( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
+                             .iCarry( wCarry[ CurrentRow ][ CurrentCol ] ),
+                             .oCarry( wCarry[ CurrentRow +1 ][ CurrentCol]),
+                             .oR(wResult[CurrentCol][CurrentRow])
                              );
                           end
                      else
                        begin
-			       if (CurrentCol != 14)
+                          if (CurrentCol != 13)
                             begin
                                EMUL # (4) MyAdder (
-                                  .A( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
-                                  .B( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
-                   	          .Ci( wCarry[ CurrentRow ][ CurrentCol ] ),
-                   	          .Co( wCarry[ CurrentRow ][ CurrentCol + 1]),
-                                  .Ro(wResult[CurrentCol][CurrentRow])
+                                  .wA( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
+                                  .wB( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
+                   	          .iCarry( wCarry[ CurrentRow ][ CurrentCol ] ),
+                   	          .oCarry( wCarry[ CurrentRow ][ CurrentCol + 1]),
+                                  .oR(wResult[CurrentCol][CurrentRow])
                                   );
                             end
                        end
                   end
              end
-        endgenerate
+        end
+   endgenerate
 
+//----------------------------------------------------------------------
 
 always @ ( * )
 begin
@@ -190,9 +195,16 @@ begin
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b1;
 
-end
+           rResult <= {8'b0, wResult[0][6], wResult[5][0], wResult[4][0], wResult[3][0], wResult[2][0], wResult[1][0], wResult[0][0], wSourceData1[0] & wSourceData0[0]};
 
-	end
+/*
+           #1 rResult <= {8'b0, wCarry[11], wResult[2][3], wResult[2][2], wResult[2][1], wResult[2][0], wResult[1][0], wResult[0][0], wSourceData1[0] & wSourceData1[0]};
+
+           #1 rResult <= {8'b0, wCarry[11], wResult[2][3], wResult[2][2], wResult[2][1], wResult[2][0], wResult[1][0], wResult[0][0], wSourceData1[0] & wSourceData1[0]};
+
+           #1 rResult <= {8'b0, wCarry[11], wResult[2][3], wResult[2][2], wResult[2][1], wResult[2][0], wResult[1][0], wResult[0][0], wSourceData1[0] & wSourceData1[0]};
+*/
+        end
 	//-------------------------------------
 	`STO:
 	begin
