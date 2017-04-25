@@ -103,6 +103,8 @@ FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FF_LEDS
 
 assign wImmediateValue = {wSourceAddr1,wSourceAddr0};
 
+		MUX 		mux0(.wCase0(6'b000000), .wCase1(wSourceData1), .wCase2(rVars[5:0]), .wCase3(rVars[11:6]), .wSelection(wSourceData0[1:0]));
+		MUX 		mux1(.wCase0(6'b000000), .wCase1(wSourceData1), .wCase2(rVars[5:0]), .wCase3(rVars[11:6]), .wSelection(wSourceData0[3:2]));
 
 
 always @ ( * )
@@ -138,9 +140,7 @@ begin
 	begin
       rVars[5:0] 	<= {1'b0, wSourceData1, 1'b0};
    	rVars[11:6] <= {1'b0, wSourceData1, 1'b0} + wSourceData1;
-		MUX 		mux0(.wCase0(6'b000000), .wCase1(wSourceData1), .wCase2(rVars[5:0]), .wCase3(rVars[11:6]), .wSelection(wSourceData0[1:0]));
-		MUX 		mux1(.wCase0(6'b000000), .wCase1(wSourceData1), .wCase2(rVars[5:0]), .wCase3(rVars[11:6]), .wSelection(wSourceData0[3:2]));
-	 	rResult 		<= {mux1, 2'b00} + mux0;
+	rResult 		<= {mux1, 2'b00} + mux0;
 	end
 	//-------------------------------------
 	`STO:
