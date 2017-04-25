@@ -104,58 +104,71 @@ assign wImmediateValue = {wSourceAddr1,wSourceAddr0};
 //Se introduce código para realizar instancias de manera automática
 //a manera de arreglo de 15x14
 
-wire[15:0] wCarry[14:0];
-wire [15:0] wResult [15:0];
+   wire [15:0] wCarry[14:0];    //Cable que permite la conexión entre carries.
+   wire [15:0] wResult [15:0];  //Cable que permitirá conexión a rResult.
+
+   //Param CurrentRow: Fila actal
+   //Param CurrentCol: Columna actual
    genvar CurrentRow, CurrentCol;
-   generate
+
+   generate //Permite instanciar varias veces
+
+      //For de las filas.
       for (CurrentRow = 0; CurrentRow < 14; CurrentRow = CurrentRow +1)
-        begin: MUL_ROW
+        begin: MUL_ROW //Etiqueta de inicio del for de filas
+
+           //For de las columnas
            for ( CurrentCol = 0; CurrentCol < 15; CurrentCol = CurrentCol + 1)
-             begin: MUL_COL
+             begin: MUL_COL //Etiqueta de inicio del for de columnas
+
+                //La primera columna es un caso especial.
+                //Se debe asignar 0 a su valor de iCarry.
                 if (CurrentCol == 0)
                   begin
-                     assign wCarry[ CurrentRow ][ 0 ] = 0;
-                  end
+                     assign wCarry[ CurrentRow ][ CurrentCol ] = 0;
+                  end //if
+
+                //La primera fila es un caso especial de conexión,
+                //específicamente en entradas.
+                if (CurrentRow == 0)
+                  begin
+                     EMUL #(4) MyAdder
+                       (
+                        .wA( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
+                        .wB( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
+                        .iCarry( wCarry[ CurrentRow ][ CurrentCol ] ),
+                        .oCarry( wCarry[ CurrentRow ][ CurrentCol + 1]),
+                        .oR(wResult[CurrentCol][CurrentRow])
+                        );
+                  end //if
+
+                // La última columna es un caso especial de conexión.
+                else if (CurrentCol == 13)
+                  begin
+                     EMUL # (4) MyAdder
+                       (
+                        .wA( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
+                        .wB( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
+                        .iCarry( wCarry[ CurrentRow ][ CurrentCol ] ),
+                        .oCarry( wCarry[ CurrentRow +1 ][ CurrentCol]),
+                        .oR(wResult[CurrentCol][CurrentRow])
+                        );
+                  end //else if
+
+                //Filas y columnas típicas
                 else
                   begin
-                     if (CurrentRow == 0)
-                       begin
-                          EMUL #(4) MyAdder
-                            (
-                             .wA( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
-                             .wB( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
-                             .iCarry( wCarry[ CurrentRow ][ CurrentCol ] ),
-                             .oCarry( wCarry[ CurrentRow ][ CurrentCol + 1]),
-                             .oR(wResult[CurrentCol][CurrentRow])
-                             );
-                       end
-                     else if (CurrentCol == 13)
-                       begin
-                          EMUL # (4) MyAdder
-                            (
-                             .wA( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
-                             .wB( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
-                             .iCarry( wCarry[ CurrentRow ][ CurrentCol ] ),
-                             .oCarry( wCarry[ CurrentRow +1 ][ CurrentCol]),
-                             .oR(wResult[CurrentCol][CurrentRow])
-                             );
-                          end
-                     else
-                       begin
-                          if (CurrentCol != 13)
-                            begin
-                               EMUL # (4) MyAdder (
-                                  .wA( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
-                                  .wB( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
-                   	          .iCarry( wCarry[ CurrentRow ][ CurrentCol ] ),
-                   	          .oCarry( wCarry[ CurrentRow ][ CurrentCol + 1]),
-                                  .oR(wResult[CurrentCol][CurrentRow])
-                                  );
-                            end
-                       end
-                  end
-             end
-        end
+                     EMUL # (4) MyAdder
+                       (
+                        .wA( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
+                        .wB( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
+                        .iCarry( wCarry[ CurrentRow ][ CurrentCol ] ),
+                        .oCarry( wCarry[ CurrentRow ][ CurrentCol + 1]),
+                        .oR(wResult[CurrentCol][CurrentRow])
+                        );
+                  end //else
+             end //For Col
+        end //For Row
    endgenerate
 
 //----------------------------------------------------------------------
