@@ -134,7 +134,7 @@ begin
 	end
         //-------------------------------------
 
-	`MUL:
+	`IMUL2:
 	begin
       rVars[5:0] 	<= {1'b0, wSourceData1, 1'b0};
    	rVars[11:6] <= {1'b0, wSourceData1, 1'b0} + wSourceData1;
