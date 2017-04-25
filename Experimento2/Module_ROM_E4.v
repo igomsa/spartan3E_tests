@@ -14,8 +14,8 @@ begin
 
 //LOOP1:
 	0: oInstruction = { `NOP ,24'd4000    };
-	1: oInstruction = { `STO, `R0,16'd0003 };
-	2: oInstruction = { `STO, `R1,16'd0022 };
+	1: oInstruction = { `STO, `R0,16'd0008 };
+	2: oInstruction = { `STO, `R1,16'd0012 };
 	6: oInstruction = { `SUB ,`R0,`R0,`R1    };
 	4: oInstruction = { `NOP ,24'd4000    };
 	5: oInstruction = { `LED ,8'b0,`R0,8'b0 };
