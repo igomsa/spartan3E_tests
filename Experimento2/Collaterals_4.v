@@ -65,25 +65,34 @@ endmodule // EMUL
 
 // Modulo para multiplicacion con Mux
 module MUX(
- input wire [5,0] wCase0,
- input wire [5,0] wCase1,
- input wire [5,0] wCase2,
- input wire [5,0] wCase3,
- input wire [1,0] wSelection,
- output wire[5,0] oR
+	input wire [5:0] wCase0,
+	input wire [5:0] wCase1,
+	input wire [5:0] wCase2,
+	input wire [5:0] wCase3,
+	input wire [1:0] wSelection,
+	output wire[5:0] oR
 );
+	always @(*)
+	begin
 	if(wSelection == 2'b00)
-     assign {oR} = wCase0;
-
+		begin
+      oR <= wCase0;
+		end
 	else if (wSelection == 2'b01)
-     assign {oR} = wCase1;
+		begin
+     oR <= wCase1;
+		end
 
 	else if (wSelection == 2'b10)
-     assign {oR} = wCase2;
+		begin
+      oR <= wCase2;
+	  end
 
 	else if (wSelection == 2'b11)
-     assign {oR} = wCase3;
-
+		begin
+     oR <= wCase3;
+	  end
+	end
 endmodule // MUX
 
 
