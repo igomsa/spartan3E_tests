@@ -51,11 +51,11 @@ endmodule
 //----------------------------------------------------------------------
 //Se define el módulo de multiplicación para implementar el "array multiplier"
 module EMUL(
- input wire [5:0] wA,
- input wire [7:0] wB,
+ input wire [31:0] wA,
+ input wire [31:0] wB,
  input wire iCarry,
  output wire       oCarry,
- output wire [7:0] oR
+ output wire [31:0] oR
 );
 
      assign oR = wA + wB;
@@ -65,12 +65,12 @@ endmodule // EMUL
 
 // Modulo para multiplicacion con Mux
 module MUX(
-	input wire [5:0] wCase0,
-	input wire [5:0] wCase1,
-	input wire [5:0] wCase2,
-	input wire [5:0] wCase3,
+	input wire [18:0] wCase0,
+	input wire [18:0] wCase1,
+	input wire [18:0] wCase2,
+	input wire [18:0] wCase3,
 	input wire [1:0] wSelection,
-	output reg[5:0] oR
+	output reg[18:0] oR
 );
 	always @(*)
 	begin
