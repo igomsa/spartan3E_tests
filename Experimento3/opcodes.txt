@@ -1,0 +1,8 @@
+0 NOP
+1 SUB
+2 LED
+3 BLE
+4 STO
+5 ADD
+6 JMP
+7 MUL
