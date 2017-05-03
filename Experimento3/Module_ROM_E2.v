@@ -61,7 +61,7 @@ begin
  	10: oInstruction = {`LCD, 4'b0, `R0, 8'b0}
 	42: oInstruction = { `JMP,  8'd0, 16'b0}
 	default:
-		oInstruction = { `LED ,  24'b10101010 };		//NOP
+		oInstruction = { `LCD ,  24'b0 };		//NOP
 	endcase
 end
 
