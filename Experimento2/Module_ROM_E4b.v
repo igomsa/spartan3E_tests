@@ -14,11 +14,11 @@ begin
 
 //LOOP1:
 	0: oInstruction = { `NOP ,24'd4000     };
-	1: oInstruction = { `STO, `R0,16'd465  };
-	2: oInstruction = { `STO, `R1,16'd80   };
+	1: oInstruction = { `STO, `R0,16'd32768  };
+	2: oInstruction = { `STO, `R1,16'd32768   };
 	3: oInstruction = { `NOP ,24'd4000     };
 	4: oInstruction = { `MUL ,`R0,`R0,`R1  };
-	5: oInstruction = { `NOP ,24'd4000     };
+	5: oInstruction = { `NOP ,24'd5000     };
 	6: oInstruction = { `LED ,8'b0,`R0,8'b0};
 	7: oInstruction = { `JMP ,  8'd0,16'b0 };
 	default:
