@@ -18,7 +18,7 @@ wire [3:0]  wOperation;
 reg [15:0]   rResult;
 wire [7:0]  wSourceAddr0,wSourceAddr1,wDestination;
 wire [15:0] wSourceData0,wSourceData1,wIPInitialValue,wImmediateValue;
-wire [7:0]   wCarry;
+wire [7:0]   wFinalResult;
 wire [12:0] wResult;
 output reg [15:0] rVars;
 
@@ -105,7 +105,7 @@ assign wImmediateValue = {wSourceAddr1,wSourceAddr0};
 
 		MUX 		mux0(.wCase0(6'b0), .wCase1(wSourceData1[3:0]), .wCase2({1'b0, wSourceData1[3:0], 1'b0}), .wCase3({wSourceData1[3:0], 1'b0} + wSourceData1[3:0]), .wSelection(wSourceData0[1:0]), .oR(wResult[5:0]) );
 		MUX 		mux1(.wCase0(6'b0), .wCase1(wSourceData1[3:0]), .wCase2({1'b0, wSourceData1[3:0], 1'b0}), .wCase3({1'b0, wSourceData1[3:0], 1'b0} + wSourceData1[3:0]), .wSelection(wSourceData0[3:2]), .oR(wResult[11:6]) );
-		EMUL 		mul0(.wA(wResult[5:0]), .wB({wResult[11:6], 2'b0}), .iCarry(1'b0), .oCarry(), .oR(wCarry[7:0])); 
+		EMUL 		mul0(.wA(wResult[5:0]), .wB({wResult[11:6], 2'b0}), .iCarry(1'b0), .oCarry(), .oR(wFinalResult[7:0])); 
 
 always @ ( * )
 begin
@@ -141,7 +141,7 @@ begin
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b1;
-	rResult 		<= {8'b0, wCarry};
+	rResult 		<= {8'b0, wFinalResult};
 	end
 	//-------------------------------------
 	`STO:
