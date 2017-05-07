@@ -162,7 +162,11 @@ begin
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b1;
-	rResult 		<= {8'b0, wResult};
+	//rResult 		<= {8'b0, wResult};
+  //rResult 		<= {8'b0, wResult >> 8};
+  //rResult 		<= {8'b0, wResult >> 16};
+  rResult 		<= {8'b0, wResult >> 24};
+
 	end
 	//-------------------------------------
 	`STO:
