@@ -1,15 +1,15 @@
 [*]
-[*] GTKWave Analyzer v3.3.66 (w)1999-2015 BSI
-[*] Wed Apr 26 00:50:53 2017
+[*] GTKWave Analyzer v3.3.79 (w)1999-2017 BSI
+[*] Mon May  8 16:54:50 2017
 [*]
-[dumpfile] "/home/moises/Lab_Digitales/Experimento2/Ejercicio4.vcd"
-[dumpfile_mtime] "Wed Apr 26 00:50:35 2017"
-[dumpfile_size] 33566
-[savefile] "/home/moises/Lab_Digitales/Experimento2/Ejercicio4b.gtkw"
-[timestart] 150000
-[size] 1297 709
+[dumpfile] "/home/hgeihsen/Documents/Ing.Electrica/Lab_Digitales/Experimento2/Ejercicio4.vcd"
+[dumpfile_mtime] "Mon May  8 16:53:27 2017"
+[dumpfile_size] 46198
+[savefile] "/home/hgeihsen/Documents/Ing.Electrica/Lab_Digitales/Experimento2/Ejercicio4b.gtkw"
+[timestart] 296200
+[size] 1297 706
 [pos] -1 -1
-*-15.922589 185700 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-13.922589 185700 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TestBench.
 [treeopen] TestBench.uut.
 [sst_width] 225
@@ -45,5 +45,19 @@ TestBench.uut.mul3.oR[31:0]
 TestBench.uut.mul4.oR[31:0]
 TestBench.uut.mul5.oR[31:0]
 TestBench.uut.mul6.oR[31:0]
+@24
+TestBench.uut.mux0.wCase0[18:0]
+TestBench.uut.mux0.wCase1[18:0]
+TestBench.uut.mux0.wCase2[18:0]
+TestBench.uut.mux0.wCase3[18:0]
+TestBench.uut.mux0.wSelection[1:0]
+TestBench.uut.wSourceData0[15:0]
+TestBench.uut.wSourceData1[15:0]
+@28
+TestBench.uut.rResult[15:0]
+@29
+TestBench.uut.oLed[7:0]
+@28
+TestBench.uut.wResult[31:0]
 [pattern_trace] 1
 [pattern_trace] 0
