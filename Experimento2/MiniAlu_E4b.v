@@ -122,7 +122,7 @@ wire [31:0] wResult;
 		MUX 		mux6(.wCase0(18'b0), .wCase1(wSourceData1), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[13:12]), .oR(wParcialRes6[17:0]));
 		MUX 		mux7(.wCase0(18'b0), .wCase1(wSourceData1), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[15:14]), .oR(wParcialRes7[17:0]) );
 
-// Se llevan a cabo las sumas parciales de los resultados obtenidos en los muxes. 
+// Se llevan a cabo las sumas parciales de los resultados obtenidos en los muxes.
 	// Sumas con corrimiento de 2 bits
 		EMUL 		mul0(.wA(wParcialRes0[17:0]), .wB({wParcialRes1[17:0], 2'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes8[20:0]));
 		EMUL 		mul1(.wA(wParcialRes2[17:0]), .wB({wParcialRes3[17:0], 2'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes9[20:0]));
@@ -133,6 +133,8 @@ wire [31:0] wResult;
 		EMUL 		mul5(.wA(wParcialRes10[18:0]), .wB({wParcialRes11[18:0], 4'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes13[22:0]));
 	// Sumas con corrimientos de 8 bits, suma final.
 		EMUL 		mul6(.wA(wParcialRes12[22:0]), .wB({wParcialRes13[22:0], 8'b0}), .iCarry(1'b0), .oCarry(), .oR(wResult[31:0]));
+
+   genvar   i;
 
 always @ ( * )
 begin
@@ -168,11 +170,34 @@ begin
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b1;
-	rResult 		<= {8'b0, wResult[7:0]};
- // #20 rResult 		<= {8'b0, wResult[15:8]};
-  //#20 rResult 		<= {8'b0, wResult[22:16]};
-  //#20 rResult 		<= {8'b0, wResult[31:23]};
-
+           i <= 0;
+           case (i)
+             0:
+               begin
+	          rResult 		<= {8'b0, wResult[7:0]};
+                  i <= i+1;
+               end
+             1:
+                begin
+                   rResult <= {8'b0, wResult[15:8]};
+                  i <= i+1;
+               end
+             2:
+                begin
+                   rResult <= {8'b0, wResult[22:16]};
+                  i <= i+1;
+               end
+             3:
+                begin
+                   rResult <= {8'b0, wResult[31:23]};
+                  i <= 0;
+               end
+             default:
+                begin
+	          rResult 		<= {8'b0, wResult[7:0]};
+                  i <= 0;
+                end
+             endcase
 	end
 	//-------------------------------------
 	`STO:
