@@ -18,8 +18,13 @@ wire [3:0]  wOperation;
 reg [15:0]   rResult;
 wire [7:0]  wSourceAddr0,wSourceAddr1,wDestination;
 wire [15:0] wSourceData0,wSourceData1,wIPInitialValue,wImmediateValue;
-wire [7:0]   wFinalResult;
-wire [12:0] wResult;
+wire [17:0]   wParcialRes0, wParcialRes1, wParcialRes2, wParcialRes3;
+wire [17:0]   wParcialRes4,   wParcialRes5, wParcialRes6, wParcialRes7;
+wire [20:0]   wParcialRes8, wParcialRes9, wParcialRes10, wParcialRes11;
+wire [22:0]   wParcialRes12, wParcialRes13;
+wire [31:0] wResult;
+
+
 output reg [15:0] rVars;
 
 
@@ -103,9 +108,25 @@ FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FF_LEDS
 
 assign wImmediateValue = {wSourceAddr1,wSourceAddr0};
 
-		MUX 		mux0(.wCase0(6'b0), .wCase1(wSourceData1[3:0]), .wCase2({1'b0, wSourceData1[3:0], 1'b0}), .wCase3({wSourceData1[3:0], 1'b0} + wSourceData1[3:0]), .wSelection(wSourceData0[1:0]), .oR(wResult[5:0]) );
-		MUX 		mux1(.wCase0(6'b0), .wCase1(wSourceData1[3:0]), .wCase2({1'b0, wSourceData1[3:0], 1'b0}), .wCase3({1'b0, wSourceData1[3:0], 1'b0} + wSourceData1[3:0]), .wSelection(wSourceData0[3:2]), .oR(wResult[11:6]) );
-		EMUL 		mul0(.wA(wResult[5:0]), .wB({wResult[11:6], 2'b0}), .iCarry(1'b0), .oCarry(), .oR(wFinalResult[7:0]));
+		MUX 		mux0(.wCase0(18'b0), .wCase1(wSourceData1), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[1:0]), .oR(wParcialRes0[17:0]) );
+		MUX 		mux1(.wCase0(18'b0), .wCase1(wSourceData1), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[3:2]), .oR(wParcialRes1[17:0]) );
+		MUX 		mux2(.wCase0(18'b0), .wCase1(wSourceData1), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[5:4]), .oR(wParcialRes2[17:0]) );
+		MUX 		mux3(.wCase0(18'b0), .wCase1(wSourceData1), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[7:6]), .oR(wParcialRes3[17:0]) );
+		MUX 		mux4(.wCase0(18'b0), .wCase1(wSourceData1), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[9:8]), .oR(wParcialRes4[17:0]) );
+		MUX 		mux5(.wCase0(18'b0), .wCase1(wSourceData1), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[11:10]), .oR(wParcialRes5[17:0]) );
+		MUX 		mux6(.wCase0(18'b0), .wCase1(wSourceData1), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[13:12]), .oR(wParcialRes6[17:0]));
+		MUX 		mux7(.wCase0(18'b0), .wCase1(wSourceData1), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[15:14]), .oR(wParcialRes7[17:0]) );
+
+
+		EMUL 		mul0(.wA(wParcialRes0[17:0]), .wB({wParcialRes1[17:0], 2'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes8[20:0]));
+		EMUL 		mul1(.wA(wParcialRes2[17:0]), .wB({wParcialRes3[17:0], 2'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes9[20:0]));
+		EMUL 		mul2(.wA(wParcialRes4[17:0]), .wB({wParcialRes5[17:0], 2'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes10[20:0]));
+		EMUL 		mul3(.wA(wParcialRes6[17:0]), .wB({wParcialRes7[17:0], 2'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes11[20:0]));
+
+		EMUL 		mul4(.wA(wParcialRes8[18:0]), .wB({wParcialRes9[18:0], 4'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes12[22:0]));
+		EMUL 		mul5(.wA(wParcialRes10[18:0]), .wB({wParcialRes11[18:0], 4'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes13[22:0]));
+
+		EMUL 		mul6(.wA(wParcialRes12[22:0]), .wB({wParcialRes13[22:0], 8'b0}), .iCarry(1'b0), .oCarry(), .oR(wResult[31:0]));
 
 always @ ( * )
 begin
@@ -141,7 +162,11 @@ begin
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b1;
-	rResult 		<= {8'b0, wFinalResult};
+	//rResult 		<= {8'b0, wResult};
+  //rResult 		<= {8'b0, wResult >> 8};
+  //rResult 		<= {8'b0, wResult >> 16};
+  rResult 		<= {8'b0, wResult >> 24};
+
 	end
 	//-------------------------------------
 	`STO:

@@ -1,0 +1,110 @@
+[*]
+[*] GTKWave Analyzer v3.3.79 (w)1999-2017 BSI
+[*] Sun Apr  9 13:10:26 2017
+[*]
+[dumpfile] "/home/hgeihsen/Documents/Ing.Electrica/tmp/Experimento1/Ejercicio1/Experimento1.vcd"
+[dumpfile_mtime] "Sun Apr  9 13:07:17 2017"
+[dumpfile_size] 22485
+[savefile] "/home/hgeihsen/Documents/Ing.Electrica/tmp/Experimento1/Ejercicio1/Experimento1.gtkw"
+[timestart] 181040
+[size] 1366 709
+[pos] -1 -1
+*-12.922589 186490 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] TestBench.
+[treeopen] TestBench.uut.
+[sst_width] 207
+[signals_width] 320
+[sst_expanded] 1
+[sst_vpaned_height] 195
+@28
+TestBench.Clock
+TestBench.uut.DataRam.oDataOut0[15:0]
+TestBench.uut.DataRam.oDataOut1[15:0]
+TestBench.uut.DataRam.iDataIn[15:0]
+TestBench.oLed[7:0]
+TestBench.uut.mul0.wA
+TestBench.uut.mul0.wB
+TestBench.uut.mul0.oCarry
+TestBench.uut.mul1.wA
+TestBench.uut.mul1.wB
+TestBench.uut.mul1.oCarry
+TestBench.uut.mul2.wA
+TestBench.uut.mul2.wB
+TestBench.uut.mul2.oCarry
+TestBench.uut.mul11.oCarry
+@2024
+^1 /home/hgeihsen/Documents/Ing.Electrica/tmp/Experimento1/Ejercicio1/opcodes.txt
+TestBench.uut.InstructionRom.oInstruction[27:0]
+^1 /home/hgeihsen/Documents/Ing.Electrica/tmp/Experimento1/Ejercicio1/opcodes.txt
+TestBench.uut.InstructionRom.iAddress[15:0]
+@800200
+-m0
+@28
+TestBench.uut.mul0.iCarry
+TestBench.uut.mul0.oCarry
+TestBench.uut.mul0.oR
+TestBench.uut.mul0.wA
+TestBench.uut.mul0.wB
+@1000200
+-m0
+@800200
+-m1
+@28
+TestBench.uut.mul1.iCarry
+TestBench.uut.mul1.oCarry
+TestBench.uut.mul1.oR
+TestBench.uut.mul1.wA
+TestBench.uut.mul1.wB
+@1000200
+-m1
+@800200
+-m2
+@28
+TestBench.uut.mul2.iCarry
+TestBench.uut.mul2.oCarry
+TestBench.uut.mul2.oR
+TestBench.uut.mul2.wA
+TestBench.uut.mul2.wB
+@1000200
+-m2
+@800200
+-m4
+@28
+TestBench.uut.mul4.iCarry
+TestBench.uut.mul4.oCarry
+TestBench.uut.mul4.oR
+TestBench.uut.mul4.wA
+TestBench.uut.mul4.wB
+@1000200
+-m4
+@800200
+-m5
+@28
+TestBench.uut.mul5.iCarry
+TestBench.uut.mul5.oCarry
+TestBench.uut.mul5.oR
+TestBench.uut.mul5.wA
+TestBench.uut.mul5.wB
+@1000200
+-m5
+@800200
+-m8
+@28
+TestBench.uut.mul8.iCarry
+TestBench.uut.mul8.oCarry
+TestBench.uut.mul8.oR
+TestBench.uut.mul8.wA
+TestBench.uut.mul8.wB
+@1000200
+-m8
+@800201
+-mul11
+@29
+TestBench.uut.mul11.iCarry
+TestBench.uut.mul11.oCarry
+TestBench.uut.mul11.wA
+TestBench.uut.mul11.wB
+@1000201
+-mul11
+[pattern_trace] 1
+[pattern_trace] 0

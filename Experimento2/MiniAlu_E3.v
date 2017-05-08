@@ -104,6 +104,7 @@ assign wImmediateValue = {wSourceAddr1,wSourceAddr0};
 //Se introduce cÃ³digo para realizar instancias de manera automÃ¡tica
 //a manera de arreglo de 15x14
 
+<<<<<<< HEAD
 wire[15:0] wCarry[14:0];
 wire [15:0] wResult [15:0];
    genvar CurrentRow, CurrentCol;
@@ -112,14 +113,29 @@ wire [15:0] wResult [15:0];
         begin: MUL_ROW
            for ( CurrentCol = 0; CurrentCol < 15; CurrentCol = CurrentCol + 1)
              begin: MUL_COL
+=======
+wire[16:0] wCarry[16:0];
+wire [16:0]wResult[16:0];
+   genvar CurrentRow, CurrentCol;
+   generate //Permite instanciar varias veces
+	//For de las filas.
+      for (CurrentRow = 0; CurrentRow < 15; CurrentRow = CurrentRow +1)
+        begin: MUL_ROW //Etiqueta de inicio del for de filas
+		  //For de las columnas
+           for ( CurrentCol = 0; CurrentCol < 16; CurrentCol = CurrentCol + 1)
+             begin: MUL_COL //Etiqueta de inicio del for de columnas
+				 //La primera columna es un caso especial.
+				//Se debe asignar 0 a su valor de iCarry.
+>>>>>>> master
                 if (CurrentCol == 0)
                   begin
                      assign wCarry[ CurrentRow ][ 0 ] = 0;
-                  end
-                else
-                  begin
+                  end//if
+						 //La primera fila es un caso especial de conexión,
+						 //específicamente en entradas.
                      if (CurrentRow == 0)
                        begin
+<<<<<<< HEAD
                           EMUL #(4) MyAdder
                             (
                              .wA( wSourceData0[CurrentRow] & wSourceData1[CurrentCol] ),
@@ -157,6 +173,58 @@ wire [15:0] wResult [15:0];
              end
         end
    endgenerate
+=======
+									if (CurrentCol == 15)
+										begin
+											EMUL # (4) MyAdder1
+											(
+											.wA( wSourceData0[CurrentRow+1] & wSourceData1[CurrentCol] ),
+											.wB( 1'b0),
+											.iCarry( wCarry[ CurrentRow ][ CurrentCol ] ),
+											.oCarry( wCarry[ CurrentRow +1 ][ CurrentCol+1]),
+											.oR(wResult[CurrentRow][CurrentCol])
+											);
+										end //else if
+										else 
+										begin
+                          EMUL #(4) MyAdder(
+                             .wA( wSourceData0[CurrentRow+1] & wSourceData1[CurrentCol] ),
+                             .wB( wSourceData0[CurrentRow] & wSourceData1[CurrentCol+1] ),
+                             .iCarry( wCarry[ CurrentRow ][ CurrentCol ] ),
+                             .oCarry( wCarry[ CurrentRow ][ CurrentCol + 1]),
+                             .oR(wResult[ CurrentRow ][ CurrentCol])
+                             );
+									  end
+								end //if
+								//ultima columna de las demas filas 
+							else if (CurrentCol == 15 )
+								begin
+								EMUL #(4) MyAdder2(
+								.wA(wSourceData0[CurrentRow+1]&wSourceData1[CurrentCol] ),
+								.wB( wCarry[ CurrentRow  ][ CurrentCol ] ),
+								.iCarry( wCarry[ CurrentRow ][ CurrentCol ] ),
+								.oCarry( wCarry[ CurrentRow +1][ CurrentCol +1]),
+								.oR(wResult[ CurrentRow ][ CurrentCol ])
+								);
+							end//else if
+							// La última columna es un caso especial de conexión.
+              
+             //Filas y columnas típicas
+                else
+                  begin
+                     EMUL # (4) MyAdder
+                       (
+                        .wA( wSourceData0[CurrentRow +1] & wSourceData1[CurrentCol] ),
+                        .wB( wResult[CurrentRow -1][CurrentCol +1] ),
+                        .iCarry( wCarry[ CurrentRow ][ CurrentCol ] ),
+                        .oCarry( wCarry[ CurrentRow ][ CurrentCol + 1]),
+                        .oR(wResult[CurrentRow][CurrentCol])
+                        );
+                  end //else
+             end //For Col
+        end //For Row
+endgenerate
+>>>>>>> master
 
 //----------------------------------------------------------------------
 
@@ -195,6 +263,7 @@ begin
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b1;
 
+<<<<<<< HEAD
            rResult <= {8'b0, wResult[0][6], wResult[5][0], wResult[4][0], wResult[3][0], wResult[2][0], wResult[1][0], wResult[0][0], wSourceData1[0] & wSourceData0[0]};
 
 /*
@@ -204,6 +273,17 @@ begin
 
            #1 rResult <= {8'b0, wCarry[11], wResult[2][3], wResult[2][2], wResult[2][1], wResult[2][0], wResult[1][0], wResult[0][0], wSourceData1[0] & wSourceData1[0]};
 */
+=======
+           //rResult <= {8'b0, wResult[6][0], wResult[5][0], wResult[4][0], wResult[3][0], wResult[2][0], wResult[1][0], wResult[0][0], wSourceData1[0] & wSourceData0[0]};
+
+
+          // rResult <= {8'b0, wResult[14][0], wResult[13][0], wResult[12][0], wResult[11][0], wResult[10][0], wResult[9][0], wResult[8][0], wResult[7][0]};
+
+           //rResult <= {8'b0, wResult[14][8], wResult[14][7], wResult[14][6], wResult[14][5], wResult[14][4], wResult[14][3], wResult[14][2], wResult[14][1]};
+
+          rResult <= {8'b0, wCarry[15][16], wResult[14][15], wResult[14][14], wResult[14][13], wResult[14][12], wResult[14][11], wResult[14][10], wResult[14][9]};
+
+>>>>>>> master
         end
 	//-------------------------------------
 	`STO:

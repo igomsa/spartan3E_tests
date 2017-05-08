@@ -1,0 +1,49 @@
+[*]
+[*] GTKWave Analyzer v3.3.66 (w)1999-2015 BSI
+[*] Wed Apr 26 00:50:53 2017
+[*]
+[dumpfile] "/home/moises/Lab_Digitales/Experimento2/Ejercicio4.vcd"
+[dumpfile_mtime] "Wed Apr 26 00:50:35 2017"
+[dumpfile_size] 33566
+[savefile] "/home/moises/Lab_Digitales/Experimento2/Ejercicio4b.gtkw"
+[timestart] 150000
+[size] 1297 709
+[pos] -1 -1
+*-15.922589 185700 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] TestBench.
+[treeopen] TestBench.uut.
+[sst_width] 225
+[signals_width] 309
+[sst_expanded] 1
+[sst_vpaned_height] 195
+@28
+TestBench.Clock
+@800200
+-MUX0
+@24
+TestBench.uut.mux0.oR[18:0]
+TestBench.uut.mux1.oR[18:0]
+TestBench.uut.mux2.oR[18:0]
+TestBench.uut.mux3.oR[18:0]
+TestBench.uut.mux4.oR[18:0]
+TestBench.uut.mux5.oR[18:0]
+TestBench.uut.mux6.oR[18:0]
+@1000200
+-MUX0
+@800200
+-SUMA1
+@22
+TestBench.uut.mul0.oR[31:0]
+@24
+TestBench.uut.mul1.oR[31:0]
+@22
+TestBench.uut.mul2.oR[31:0]
+TestBench.uut.mul3.oR[31:0]
+@1000200
+-SUMA1
+@22
+TestBench.uut.mul4.oR[31:0]
+TestBench.uut.mul5.oR[31:0]
+TestBench.uut.mul6.oR[31:0]
+[pattern_trace] 1
+[pattern_trace] 0
