@@ -111,7 +111,8 @@ wire [22:0]   wParcialRes12, wParcialRes13;
    //Resultado final de la multiplicación de AxB.
 wire [31:0] wResult;
 
-   //**************Comentarios ****************
+   //Se introducen en las funciones MUX los resultados correspondientes a cada caso posible del selector.
+   // Dado que son numeros de 16 bits, son necesarios 8 muxes.
 		MUX 		mux0(.wCase0(18'b0), .wCase1(wSourceData1), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[1:0]), .oR(wParcialRes0[17:0]) );
 		MUX 		mux1(.wCase0(18'b0), .wCase1(wSourceData1), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[3:2]), .oR(wParcialRes1[17:0]) );
 		MUX 		mux2(.wCase0(18'b0), .wCase1(wSourceData1), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[5:4]), .oR(wParcialRes2[17:0]) );
@@ -121,15 +122,16 @@ wire [31:0] wResult;
 		MUX 		mux6(.wCase0(18'b0), .wCase1(wSourceData1), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[13:12]), .oR(wParcialRes6[17:0]));
 		MUX 		mux7(.wCase0(18'b0), .wCase1(wSourceData1), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[15:14]), .oR(wParcialRes7[17:0]) );
 
-//***********Más comentarios******
+// Se llevan a cabo las sumas parciales de los resultados obtenidos en los muxes. 
+	// Sumas con corrimiento de 2 bits
 		EMUL 		mul0(.wA(wParcialRes0[17:0]), .wB({wParcialRes1[17:0], 2'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes8[20:0]));
 		EMUL 		mul1(.wA(wParcialRes2[17:0]), .wB({wParcialRes3[17:0], 2'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes9[20:0]));
 		EMUL 		mul2(.wA(wParcialRes4[17:0]), .wB({wParcialRes5[17:0], 2'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes10[20:0]));
 		EMUL 		mul3(.wA(wParcialRes6[17:0]), .wB({wParcialRes7[17:0], 2'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes11[20:0]));
-
+	//Sumas con corrimiento de 4 bits. (sumas de los resultados de las sumas)
 		EMUL 		mul4(.wA(wParcialRes8[18:0]), .wB({wParcialRes9[18:0], 4'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes12[22:0]));
 		EMUL 		mul5(.wA(wParcialRes10[18:0]), .wB({wParcialRes11[18:0], 4'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes13[22:0]));
-
+	// Sumas con corrimientos de 8 bits, suma final.
 		EMUL 		mul6(.wA(wParcialRes12[22:0]), .wB({wParcialRes13[22:0], 8'b0}), .iCarry(1'b0), .oCarry(), .oR(wResult[31:0]));
 
 always @ ( * )
