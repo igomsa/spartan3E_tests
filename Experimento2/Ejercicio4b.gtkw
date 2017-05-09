@@ -1,63 +1,82 @@
 [*]
 [*] GTKWave Analyzer v3.3.79 (w)1999-2017 BSI
-[*] Mon May  8 16:54:50 2017
+[*] Tue May  9 02:36:20 2017
 [*]
-[dumpfile] "/home/hgeihsen/Documents/Ing.Electrica/Lab_Digitales/Experimento2/Ejercicio4.vcd"
-[dumpfile_mtime] "Mon May  8 16:53:27 2017"
-[dumpfile_size] 46198
+[dumpfile] "/home/hgeihsen/Documents/Ing.Electrica/Lab_Digitales/Experimento2/Ejercicio4b.vcd"
+[dumpfile_mtime] "Tue May  9 02:35:01 2017"
+[dumpfile_size] 50188
 [savefile] "/home/hgeihsen/Documents/Ing.Electrica/Lab_Digitales/Experimento2/Ejercicio4b.gtkw"
-[timestart] 296200
-[size] 1297 706
+[timestart] 536690
+[size] 1366 709
 [pos] -1 -1
-*-13.922589 185700 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-13.922589 238600 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TestBench.
 [treeopen] TestBench.uut.
 [sst_width] 225
-[signals_width] 309
+[signals_width] 306
 [sst_expanded] 1
-[sst_vpaned_height] 195
+[sst_vpaned_height] 196
 @28
 TestBench.Clock
 @800200
 -MUX0
 @24
-TestBench.uut.mux0.oR[18:0]
-TestBench.uut.mux1.oR[18:0]
-TestBench.uut.mux2.oR[18:0]
-TestBench.uut.mux3.oR[18:0]
-TestBench.uut.mux4.oR[18:0]
-TestBench.uut.mux5.oR[18:0]
-TestBench.uut.mux6.oR[18:0]
+TestBench.uut.mux0.wSelection[1:0]
 @1000200
 -MUX0
 @800200
--SUMA1
-@22
-TestBench.uut.mul0.oR[31:0]
+-MUX1
 @24
-TestBench.uut.mul1.oR[31:0]
-@22
-TestBench.uut.mul2.oR[31:0]
-TestBench.uut.mul3.oR[31:0]
+TestBench.uut.mux1.wSelection[1:0]
 @1000200
--SUMA1
-@22
-TestBench.uut.mul4.oR[31:0]
-TestBench.uut.mul5.oR[31:0]
-TestBench.uut.mul6.oR[31:0]
+-MUX1
+@28
+TestBench.uut.DataRam.oDataOut0[15:0]
+TestBench.uut.DataRam.oDataOut1[15:0]
+TestBench.uut.DataRam.iDataIn[15:0]
 @24
-TestBench.uut.mux0.wCase0[18:0]
-TestBench.uut.mux0.wCase1[18:0]
-TestBench.uut.mux0.wCase2[18:0]
-TestBench.uut.mux0.wCase3[18:0]
-TestBench.uut.mux0.wSelection[1:0]
+TestBench.oLed[7:0]
+@800200
+-MUL0
+@24
+TestBench.uut.mul0.iCarry
+TestBench.uut.mul0.oCarry
+@1000200
+-MUL0
+@c00200
+-TestBench.uut.wCarry
+@1401200
+-group_end
+@c00028
+TestBench.uut.rResult[15:0]
+@28
+(0)TestBench.uut.rResult[15:0]
+(1)TestBench.uut.rResult[15:0]
+(2)TestBench.uut.rResult[15:0]
+(3)TestBench.uut.rResult[15:0]
+(4)TestBench.uut.rResult[15:0]
+(5)TestBench.uut.rResult[15:0]
+(6)TestBench.uut.rResult[15:0]
+(7)TestBench.uut.rResult[15:0]
+(8)TestBench.uut.rResult[15:0]
+(9)TestBench.uut.rResult[15:0]
+(10)TestBench.uut.rResult[15:0]
+(11)TestBench.uut.rResult[15:0]
+(12)TestBench.uut.rResult[15:0]
+(13)TestBench.uut.rResult[15:0]
+(14)TestBench.uut.rResult[15:0]
+(15)TestBench.uut.rResult[15:0]
+@1401200
+-group_end
+@28
+TestBench.uut.oLed[7:0]
+TestBench.uut.wResult[31:0]
+@25
+TestBench.uut.i[1:0]
+@28
+TestBench.uut.ENMUL
+TestBench.uut.rResetMUL
 TestBench.uut.wSourceData0[15:0]
 TestBench.uut.wSourceData1[15:0]
-@28
-TestBench.uut.rResult[15:0]
-@29
-TestBench.uut.oLed[7:0]
-@28
-TestBench.uut.wResult[31:0]
 [pattern_trace] 1
 [pattern_trace] 0

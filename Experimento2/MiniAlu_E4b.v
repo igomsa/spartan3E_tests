@@ -19,7 +19,12 @@ reg [15:0]   rResult;
 wire [7:0]  wSourceAddr0,wSourceAddr1,wDestination;
 wire [15:0] wSourceData0,wSourceData1,wIPInitialValue,wImmediateValue;
 
-
+   //Register ENMUL: Habilitador de contador para mostrar resultado de MUL.
+   //Register rResetMUL: Reinicia la cuenta del contador.
+   //Wire [1:0] i: Lleva la cuenta.
+   wire   [1:0]  i;
+   reg      rResetMUL;
+   reg      ENMUL;
 
 
 ROM InstructionRom
@@ -49,6 +54,17 @@ UPCOUNTER_POSEDGE IP
 .Enable(  1'b1                 ),
 .Q(       wIP_temp             )
 );
+
+   //Contador para mostrar resultado en de 32 bits
+UPCOUNTER_POSEDGE counter0
+(
+.Clock(   Clock                ),
+.Reset(   rResetMUL ),
+.Initial( 1'b0  ),
+.Enable(  ENMUL                 ),
+.Q(       i             )
+);
+
 assign wIP = (rBranchTaken) ? wIPInitialValue : wIP_temp;
 
 FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FFD1
@@ -113,28 +129,34 @@ wire [31:0] wResult;
 
    //Se introducen en las funciones MUX los resultados correspondientes a cada caso posible del selector.
    // Dado que son numeros de 16 bits, son necesarios 8 muxes.
-		MUX 		mux0(.wCase0(18'b0), .wCase1(wSourceData1), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[1:0]), .oR(wParcialRes0[17:0]) );
-		MUX 		mux1(.wCase0(18'b0), .wCase1(wSourceData1), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[3:2]), .oR(wParcialRes1[17:0]) );
-		MUX 		mux2(.wCase0(18'b0), .wCase1(wSourceData1), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[5:4]), .oR(wParcialRes2[17:0]) );
-		MUX 		mux3(.wCase0(18'b0), .wCase1(wSourceData1), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[7:6]), .oR(wParcialRes3[17:0]) );
-		MUX 		mux4(.wCase0(18'b0), .wCase1(wSourceData1), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[9:8]), .oR(wParcialRes4[17:0]) );
-		MUX 		mux5(.wCase0(18'b0), .wCase1(wSourceData1), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[11:10]), .oR(wParcialRes5[17:0]) );
-		MUX 		mux6(.wCase0(18'b0), .wCase1(wSourceData1), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[13:12]), .oR(wParcialRes6[17:0]));
-		MUX 		mux7(.wCase0(18'b0), .wCase1(wSourceData1), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[15:14]), .oR(wParcialRes7[17:0]) );
+		MUX mux0(.wCase0(18'b0), .wCase1({2'b0, wSourceData1}), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[1:0]), .oR(wParcialRes0[17:0]) );
+		MUX mux1(.wCase0(18'b0), .wCase1({2'b0, wSourceData1}), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[3:2]), .oR(wParcialRes1[17:0]) );
+		MUX mux2(.wCase0(18'b0), .wCase1({2'b0, wSourceData1}), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[5:4]), .oR(wParcialRes2[17:0]) );
+		MUX mux3(.wCase0(18'b0), .wCase1({2'b0, wSourceData1}), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[7:6]), .oR(wParcialRes3[17:0]) );
+		MUX mux4(.wCase0(18'b0), .wCase1({2'b0, wSourceData1}), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[9:8]), .oR(wParcialRes4[17:0]) );
+		MUX mux5(.wCase0(18'b0), .wCase1({2'b0, wSourceData1}), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[11:10]), .oR(wParcialRes5[17:0]) );
+		MUX mux6(.wCase0(18'b0), .wCase1({2'b0, wSourceData1}), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[13:12]), .oR(wParcialRes6[17:0]));
+		MUX mux7(.wCase0(18'b0), .wCase1({2'b0, wSourceData1}), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[15:14]), .oR(wParcialRes7[17:0]) );
 
 // Se llevan a cabo las sumas parciales de los resultados obtenidos en los muxes.
 	// Sumas con corrimiento de 2 bits
-		EMUL 		mul0(.wA(wParcialRes0[17:0]), .wB({wParcialRes1[17:0], 2'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes8[20:0]));
-		EMUL 		mul1(.wA(wParcialRes2[17:0]), .wB({wParcialRes3[17:0], 2'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes9[20:0]));
-		EMUL 		mul2(.wA(wParcialRes4[17:0]), .wB({wParcialRes5[17:0], 2'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes10[20:0]));
-		EMUL 		mul3(.wA(wParcialRes6[17:0]), .wB({wParcialRes7[17:0], 2'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes11[20:0]));
-	//Sumas con corrimiento de 4 bits. (sumas de los resultados de las sumas)
-		EMUL 		mul4(.wA(wParcialRes8[18:0]), .wB({wParcialRes9[18:0], 4'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes12[22:0]));
-		EMUL 		mul5(.wA(wParcialRes10[18:0]), .wB({wParcialRes11[18:0], 4'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes13[22:0]));
-	// Sumas con corrimientos de 8 bits, suma final.
-		EMUL 		mul6(.wA(wParcialRes12[22:0]), .wB({wParcialRes13[22:0], 8'b0}), .iCarry(1'b0), .oCarry(), .oR(wResult[31:0]));
+		EMUL mul0(.wA({14'b0, wParcialRes0[17:0]}), .wB({12'b0, wParcialRes1[17:0], 2'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes8[20:0]));
+		EMUL mul1(.wA({14'b0, wParcialRes2[17:0]}), .wB({12'b0, wParcialRes3[17:0], 2'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes9[20:0]));
+		EMUL mul2(.wA({14'b0, wParcialRes4[17:0]}), .wB({12'b0, wParcialRes5[17:0], 2'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes10[20:0]));
+		EMUL mul3(.wA({14'b0, wParcialRes6[17:0]}), .wB({12'b0, wParcialRes7[17:0], 2'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes11[20:0]));
+	//Sumas con crimiento de 4 bits. (sumas de los resultados de las sumas)
+		EMUL mul4(.wA({13'b0, wParcialRes8[18:0]}), .wB({10'b0, wParcialRes9[18:0], 4'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes12[22:0]));
+		EMUL mul5(.wA({13'b0, wParcialRes10[18:0]}), .wB({10'b0, wParcialRes11[18:0], 4'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes13[22:0]));
+	// Sumas con rrimientos de 8 bits, suma final.
+		EMUL mul6(.wA({9'b0, wParcialRes12[22:0]}), .wB({6'b0, wParcialRes13[22:0], 8'b0}), .iCarry(1'b0), .oCarry(), .oR(wResult[31:0]));
 
-   genvar   i;
+
+//Condiciones iniciales para evitar condiciones X.
+   initial
+     begin
+        rResetMUL <= 0;
+        ENMUL <= 0;
+     end
 
 always @ ( * )
 begin
@@ -145,6 +167,7 @@ begin
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b0;
+           ENMUL <= 0;
 		rResult      <= 0;
 	end
 	//-------------------------------------
@@ -153,6 +176,7 @@ begin
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b1;
+           ENMUL <= 0;
 		rResult   <= wSourceData1 + wSourceData0;
 	end
         //-------------------------------------
@@ -161,7 +185,9 @@ begin
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b1;
+           ENMUL <= 0;
 		rResult   <= wSourceData1 - wSourceData0;
+
 	end
         //-------------------------------------
 
@@ -170,34 +196,30 @@ begin
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b1;
-           i <= 0;
-           case (i)
-             0:
+                rResetMUL <= 0;
+                ENMUL <= 1;
+
+           //Con respecto al contador se asigna el resultado.
+          if (i==0)
                begin
-	          rResult 		<= {8'b0, wResult[7:0]};
-                  i <= i+1;
+	          rResult <= {8'b0, wResult[7:0]};
                end
-             1:
+           else if (i==1)
                 begin
                    rResult <= {8'b0, wResult[15:8]};
-                  i <= i+1;
                end
-             2:
+           else if (i==2)
                 begin
-                   rResult <= {8'b0, wResult[22:16]};
-                  i <= i+1;
+                   rResult <= {8'b0, wResult[23:16]};
                end
-             3:
+           else if (i==3)
                 begin
-                   rResult <= {8'b0, wResult[31:23]};
-                  i <= 0;
+                   rResult <= {8'b0, wResult[31:24]};
                end
-             default:
+           else
                 begin
-	          rResult 		<= {8'b0, wResult[7:0]};
-                  i <= 0;
-                end
-             endcase
+                  rResetMUL <= 1;
+               end
 	end
 	//-------------------------------------
 	`STO:
@@ -205,6 +227,7 @@ begin
 		rFFLedEN     <= 1'b0;
 		rWriteEnable <= 1'b1;
 		rBranchTaken <= 1'b0;
+           ENMUL <= 0;
 		rResult      <= wImmediateValue;
 	end
 	//-------------------------------------
@@ -213,6 +236,7 @@ begin
 		rFFLedEN     <= 1'b0;
 		rWriteEnable <= 1'b0;
 		rResult      <= 0;
+           ENMUL <= 0;
 		if (wSourceData1 <= wSourceData0 )
 			rBranchTaken <= 1'b1;
 		else
@@ -225,6 +249,7 @@ begin
 		rFFLedEN     <= 1'b0;
 		rWriteEnable <= 1'b0;
 		rResult      <= 0;
+           ENMUL <= 0;
 		rBranchTaken <= 1'b1;
 	end
 	//-------------------------------------
@@ -233,6 +258,7 @@ begin
 		rFFLedEN     <= 1'b1;
 		rWriteEnable <= 1'b0;
 		rResult      <= 0;
+           ENMUL <= 0;
 		rBranchTaken <= 1'b0;
 	end
 	//-------------------------------------
@@ -242,6 +268,7 @@ begin
 		rWriteEnable <= 1'b0;
 		rResult      <= 0;
 		rBranchTaken <= 1'b0;
+           ENMUL <= 0;
 	end
 	//-------------------------------------
 	endcase

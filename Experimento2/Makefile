@@ -11,7 +11,7 @@ Ejercicio_4:
 	iverilog -Wall -o Ejercicio4.out MiniAlu_E4.v Module_ROM_E4.v Collaterals_4.v RAM.v Defintions.v TestBench_E4.v && vvp Ejercicio4.out && gtkwave Ejercicio4.vcd Ejercicio4.gtkw &
 
 Ejercicio_4b:
-	iverilog -Wall -o Ejercicio4b.out MiniAlu_E4b.v Module_ROM_E4b.v Collaterals_4b.v RAM.v Defintions.v TestBench_E4.v && vvp Ejercicio4b.out && gtkwave Ejercicio4.vcd Ejercicio4b.gtkw &
+	iverilog -Wall -o Ejercicio4b.out MiniAlu_E4b.v Module_ROM_E4b.v Collaterals_4b.v RAM.v Defintions.v TestBench_E4b.v && vvp Ejercicio4b.out && gtkwave Ejercicio4b.vcd Ejercicio4b.gtkw &
 
 clean:
 	rm Ejercicio1.out Ejercicio1.vcd Ejercicio2.out Ejercicio2.vcd Ejercicio3.out Ejercicio3.vcd Ejercicio4.out Ejercicio4.vcd
@@ -28,5 +28,5 @@ clean_E3:
 clean_E4:
 	rm Ejercicio4.out Ejercicio4.vcd
 
-
-
+clean_E4b:
+	rm Ejercicio4b.out Ejercicio4b.vcd
