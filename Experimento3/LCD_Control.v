@@ -1,20 +1,20 @@
 `timescale 1ns / 1ps
-`define STATE_RESET            0
-`define STATE_POWERON_INIT_0_A 1
-`define STATE_POWERON_INIT_0_B 2
-`define STATE_POWERON_INIT_1   3
-`define STATE_POWERON_INIT_2_A 4
-`define STATE_POWERON_INIT_2_B 5
-`define STATE_POWERON_INIT_3   6
-`define STATE_POWERON_INIT_4_A 7
-`define STATE_POWERON_INIT_4_B 8
-`define STATE_POWERON_INIT_5   9
-`define STATE_POWERON_INIT_6_A 10
-`define STATE_POWERON_INIT_6_B 11
-`define STATE_POWERON_INIT_7   12
-`define STATE_POWERON_INIT_8_A 13
-`define STATE_POWERON_INIT_8_B 14
-`define STATE_CONFIGURATION_9   15
+`define STATE_RESET              0
+`define STATE_POWERON_INIT_0_A   1
+`define STATE_POWERON_INIT_0_B   2
+`define STATE_POWERON_INIT_1     3
+`define STATE_POWERON_INIT_2_A   4
+`define STATE_POWERON_INIT_2_B   5
+`define STATE_POWERON_INIT_3     6
+`define STATE_POWERON_INIT_4_A   7
+`define STATE_POWERON_INIT_4_B   8
+`define STATE_POWERON_INIT_5     9
+`define STATE_POWERON_INIT_6_A   10
+`define STATE_POWERON_INIT_6_B   11
+`define STATE_POWERON_INIT_7     12
+`define STATE_POWERON_INIT_8_A   13
+`define STATE_POWERON_INIT_8_B   14
+`define STATE_CONFIGURATION_9    15
 `define STATE_CONFIGURATION_10_A 16
 `define STATE_CONFIGURATION_10_B 17
 `define STATE_CONFIGURATION_11   18
@@ -26,7 +26,8 @@
 `define STATE_CONFIGURATION_15   24
 `define STATE_CONFIGURATION_16_A 25
 `define STATE_CONFIGURATION_16_B 26
-`define STATE_WRITE_PHRASE 27
+`define STATE_WRITE_PHRASE       27
+
 module Module_LCD_Control
   (
    input wire       Clock,
@@ -281,7 +282,7 @@ module Module_LCD_Control
           `STATE_CONFIGURATION_9:
             begin
                rWrite_Enabled = 1'b1;
-               rEnable_Write_Phrase = 1'b0;               
+               rEnable_Write_Phrase = 1'b1;               
                oLCD_Data = 8'h28;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1;
@@ -417,7 +418,7 @@ module Module_LCD_Control
             end
           //------------------------------------------
           /*
-           Wait 40 us or longer, which is 2,000 clock cycles at 50 MHz.
+           Wait 1,64 ms or longer, which is 82,000 clock cycles at 50 MHz.
            */
           `STATE_CONFIGURATION_16_A:
             begin
@@ -440,8 +441,10 @@ module Module_LCD_Control
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1;
                rNextState = `STATE_RESET;
-            end
-          //------------------------------------------
+            end          
+           /*
+           Write phrase "Hola Mundo"
+           */
           `STATE_WRITE_PHRASE:
             begin
                rWrite_Enabled = 1'b1;
