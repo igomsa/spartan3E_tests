@@ -129,14 +129,14 @@ wire [31:0] wResult;
 
    //Se introducen en las funciones MUX los resultados correspondientes a cada caso posible del selector.
    // Dado que son numeros de 16 bits, son necesarios 8 muxes.
-		MUX mux0(.wCase0(18'b0), .wCase1({2'b0, wSourceData1}), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[1:0]), .oR(wParcialRes0[17:0]) );
-		MUX mux1(.wCase0(18'b0), .wCase1({2'b0, wSourceData1}), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[3:2]), .oR(wParcialRes1[17:0]) );
-		MUX mux2(.wCase0(18'b0), .wCase1({2'b0, wSourceData1}), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[5:4]), .oR(wParcialRes2[17:0]) );
-		MUX mux3(.wCase0(18'b0), .wCase1({2'b0, wSourceData1}), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[7:6]), .oR(wParcialRes3[17:0]) );
-		MUX mux4(.wCase0(18'b0), .wCase1({2'b0, wSourceData1}), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[9:8]), .oR(wParcialRes4[17:0]) );
-		MUX mux5(.wCase0(18'b0), .wCase1({2'b0, wSourceData1}), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[11:10]), .oR(wParcialRes5[17:0]) );
-		MUX mux6(.wCase0(18'b0), .wCase1({2'b0, wSourceData1}), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[13:12]), .oR(wParcialRes6[17:0]));
-		MUX mux7(.wCase0(18'b0), .wCase1({2'b0, wSourceData1}), .wCase2({1'b0, wSourceData1, 1'b0}), .wCase3({1'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[15:14]), .oR(wParcialRes7[17:0]) );
+		mux mux0(.wcase0(19'b0), .wcase1({3'b0, wsourcedata1}), .wcase2({2'b0, wSourceData1, 1'b0}), .wCase3({2'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[1:0]), .oR(wParcialRes0[17:0]) );
+		mux mux1(.wcase0(19'b0), .wcase1({3'b0, wsourcedata1}), .wcase2({2'b0, wSourceData1, 1'b0}), .wCase3({2'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[3:2]), .oR(wParcialRes1[17:0]) );
+		mux mux2(.wcase0(19'b0), .wcase1({3'b0, wsourcedata1}), .wcase2({2'b0, wSourceData1, 1'b0}), .wCase3({2'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[5:4]), .oR(wParcialRes2[17:0]) );
+		mux mux3(.wcase0(19'b0), .wcase1({3'b0, wsourcedata1}), .wcase2({2'b0, wSourceData1, 1'b0}), .wCase3({2'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[7:6]), .oR(wParcialRes3[17:0]) );
+		mux mux4(.wcase0(19'b0), .wcase1({3'b0, wsourcedata1}), .wcase2({2'b0, wSourceData1, 1'b0}), .wCase3({2'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[9:8]), .oR(wParcialRes4[17:0]) );
+		mux mux5(.wcase0(19'b0), .wcase1({3'b0, wsourcedata1}), .wcase2({2'b0, wSourceData1, 1'b0}), .wCase3({2'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[11:10]), .oR(wParcialRes5[17:0]) );
+		mux mux6(.wcase0(19'b0), .wcase1({3'b0, wsourcedata1}), .wcase2({2'b0, wSourceData1, 1'b0}), .wCase3({2'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[13:12]), .oR(wParcialRes6[17:0]));
+		mux mux7(.wcase0(19'b0), .wcase1({3'b0, wsourcedata1}), .wcase2({2'b0, wSourceData1, 1'b0}), .wCase3({2'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[15:14]), .oR(wParcialRes7[17:0]) );
 
 // Se llevan a cabo las sumas parciales de los resultados obtenidos en los muxes.
 	// Sumas con corrimiento de 2 bits
