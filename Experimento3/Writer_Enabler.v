@@ -15,10 +15,15 @@ module Module_Write_Enable
 reg [31:0] rCount;
 reg [3:0] rActualState;
 assign rCount = 32'b0;
+always @(posedge Clock )
+ begin
+	rCount= rCount + 32'b1;
+ end
 
 always @( oLCD_RegisterSelect )
  begin
  	case(rActualState)
+ 	//---------------------------------------
  	`STATE_ENAB:
  	begin
  		oLCD_Enabled = 1'b0;
@@ -31,9 +36,10 @@ always @( oLCD_RegisterSelect )
  		else
  		 begin
  		  rActualState= `STATE_ENAB;
- 		  rCount = rCount + 32'd1; 
+ 		   
  		 end
  	end
+ 	//-----------------------------------------
  	`SET_UP_ENAB:
  	begin
  	 	oLCD_Enabled = 1'b1;
@@ -46,9 +52,10 @@ always @( oLCD_RegisterSelect )
  		else
  		 begin
  			rActualState = `SET_UP_ENAB;
- 			rCount = rCount + 32'b1;
+ 			
   		 end
  	end
+ 	//--------------------------------------------
  	`SET_DOWN_ENAB:
  	begin
  		oLCD_Enabled = 1'b0;
@@ -61,9 +68,10 @@ always @( oLCD_RegisterSelect )
  		else
  		 begin
  			rActualState = `SET_DOWN_ENAB;
- 			rCount = rCount + 1'b1;
+ 			
  		 end
  	end
+ 	//----------------------------------------------
  	`WRITE_DONE:
  	begin
  		oLCD_Enabled = 1'b0;
