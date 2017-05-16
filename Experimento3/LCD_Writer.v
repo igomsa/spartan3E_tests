@@ -4,7 +4,7 @@
 `define STATE_RESET 	 0
 `define CUT_WORD 	 1
 `define WRITE_1ST_NIBBLE 2
-`define WAIT_1uS 	 3
+`define WAIT_1_uS 	 3
 `define RESET_COUNT  	 4
 `define WRITE_2ND_NIBBLE 5
 `define WAIT_40_uS 	 6
@@ -59,6 +59,8 @@ reg rTimeCountReset;
 // reloj que han pasado.
 reg [31:0] rTimeCount;
 
+// Wire wWrite_Reset: Inicia secuencia de Write_Enable
+   wire    wWrite_Reset;
 
    Module_Write_Enable Write_Enable
 (
@@ -81,7 +83,7 @@ begin
 		rTimeCount <= 32'b0;
 	end
 	else
-	begin
+	begn
 		if (rTimeCountReset)
 				rTimeCount <= 32'b0; //restart count
                 else
@@ -115,10 +117,10 @@ always @ ( * )
                  rData_NIBBLE <= iData_Phrase[3:0];
                else
                  rData_NIBBLE <= iData_BYTE[3:0];
-               rNextState <= `WAIT_1uS;
+               rNextState <= `WAIT_1_uS;
             end
           //------------------------------------------
-          `WAIT_1uS 	:
+          `WAIT_1_uS 	:
             begin
                wWrite_Reset <= 0;
                oWrite_Phrase_Done <= 0;
@@ -127,7 +129,7 @@ always @ ( * )
                if (rTimeCount <= 32'b51)
                  rNextState <= `RESET_COUNT_0;
                else
-                 rNextState <= `WAIT_1uS;
+                 rNextState <= `WAIT_1_uS;
             end
           //------------------------------------------
           `RESET_COUNT_0 	:
@@ -148,7 +150,7 @@ always @ ( * )
                  rData_NIBBLE <= iData_Phrase[3:0];
                else
                  rData_NIBBLE <= iData_BYTE[3:0];
-               rNextState <= `WAIT_40uS;
+               rNextState <= `WAIT_40_uS;
             end
           //------------------------------------------
           `WAIT_40_uS 	:
@@ -160,7 +162,7 @@ always @ ( * )
                if (rTimeCount <= 32'b200)
                  rNextState <= `RESET_COUNT_1;
                else
-                 rNextState <= `WAIT_40uS;
+                 rNextState <= `WAIT_40_uS;
 
             end
           //------------------------------------------
