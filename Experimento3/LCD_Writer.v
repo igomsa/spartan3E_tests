@@ -83,7 +83,7 @@ begin
 		rTimeCount <= 32'b0;
 	end
 	else
-	begn
+	begin
 		if (rTimeCountReset)
 				rTimeCount <= 32'b0; //restart count
                 else
@@ -102,10 +102,7 @@ always @ ( * )
                oWrite_Phrase_Done <= 1'b0;
                oSender <= 4'h0;
                rTimeCountReset <= 1'b1;
-               if (iWriteBegin)
                  rNextState <= `WRITE_1ST_NIBBLE;
-               else
-                 rNextState <= `STATE_RESET;
             end
           //------------------------------------------
           `WRITE_1ST_NIBBLE:
@@ -126,7 +123,7 @@ always @ ( * )
                oWrite_Phrase_Done <= 0;
                oSender <= rData_NIBBLE;
                rTimeCountReset <= 1'b0;
-               if (rTimeCount <= 32'b51)
+               if (rTimeCount <= 32'd51)
                  rNextState <= `RESET_COUNT_0;
                else
                  rNextState <= `WAIT_1_uS;
@@ -159,7 +156,7 @@ always @ ( * )
                oWrite_Phrase_Done <= 0;
                oSender <= rData_NIBBLE;
                rTimeCountReset <= 1'b0;
-               if (rTimeCount <= 32'b200)
+               if (rTimeCount <= 32'd200)
                  rNextState <= `RESET_COUNT_1;
                else
                  rNextState <= `WAIT_40_uS;
