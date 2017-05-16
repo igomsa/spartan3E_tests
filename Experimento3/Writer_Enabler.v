@@ -3,7 +3,7 @@
 `define SET_UP_ENAB	1
 `define SET_DOWN_ENAB	2
 `define	WRITE_DONE	3
-
+`define STATE_RESET 4
 module Module_Write_Enable
   (
    input wire  Reset,
@@ -42,7 +42,7 @@ reg [7:0] rCurrentState,rNextState;
           end
      end
 
-   always @( *)
+   always @( * )
      begin
         case(rCurrentState)
           //---------------------------------------
@@ -108,12 +108,13 @@ reg [7:0] rCurrentState,rNextState;
                oLCD_Enabled = 1'b0;
  	       rEnableDone = 1'b1;			//se setea EnableDone para terminar
  	    end
-        end
+      
    //----------------------------------------------
    default:
      rNextState <= `SET_UP_ENAB;
 
 
 endcase // case (rCurrentState)
+end
+endmodule
 
-        endmodule
