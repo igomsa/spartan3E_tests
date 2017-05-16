@@ -33,7 +33,7 @@ module Module_LCD_Control
   (
    input wire       Clock,
    input wire       Reset,
-   output wire      oLCD_Enabled,
+   output wire      oLCD_Enable,
    output reg       oLCD_RegisterSelect, //0=Command, 1=Data
    output wire      oLCD_StrataFlashControl,
    output wire      oLCD_ReadWrite,
@@ -50,20 +50,17 @@ module Module_LCD_Control
 
   initial begin rWrite_Phrase = 0;
 
-Module_Write_Enable Write_Enable
-(
- .iReset(),
- .Clock(),
- .oLCD_ReadWrite(),
- .oLCD_RegisterSelect(),
- .oLCD_Enabled(),
- .rEnableDone()
-);
-
-
      Module_LCD_Writer LCD_Writer
 (
-
+ .Reset(rWrite_Enabled),
+ .iData_NIBBLE(),
+ .iData_BYTE(),
+ .iData_Phrase(),
+ .wWrite_Phrase(rWrite_Phrase),
+ .Clock(Clock),
+ .oWrite_Phrase_Done(wWriteDone),
+ .oSender(oLCD_Data),
+ .oEnable(oLCD_Enable)
 );
 
 
