@@ -5,10 +5,10 @@
 `define CUT_WORD 	 1
 `define WRITE_1ST_NIBBLE 2
 `define WAIT_1_uS 	 3
-`define RESET_COUNT  	 4
+`define RESET_COUNT_0  	 4
 `define WRITE_2ND_NIBBLE 5
 `define WAIT_40_uS 	 6
-`define RESET_COUNT  	 7
+`define RESET_COUNT_1  	 7
 
 //////////////////////////////////////////////////////////////////////////////////
 // Company:
@@ -175,7 +175,7 @@ always @ ( * )
                if (wWrite_Phrase)
                rNextState <= `CUT_WORD;
                else
-               rNextState <= `RESET_STATE;
+               rNextState <= `STATE_RESET;
             end
           //------------------------------------------
           `CUT_WORD 	:
@@ -184,7 +184,7 @@ always @ ( * )
                oWrite_Phrase_Done <= 0;
                oSender <= 4'h0;
                iData_Phrase <= iData_Phrase >> 8;
-               rNextState <= `RESET_STATE;
+               rNextState <= `STATE_RESET;
             end
           //------------------------------------------
           default:
