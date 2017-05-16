@@ -59,10 +59,10 @@ reg [7:0] rCurrentState,rNextState;
                oLCD_Enabled = 1'b0;
                rEnableDone  = 1'b0;
                rTimeCountReset <= 1'b1;
-               if (rCount > 32'd2 )		//se mantiene enalble en 0 por 40ns
+               if (rTimeCount > 32'd2 )		//se mantiene enalble en 0 por 40ns
                  begin
                     rNextState = `SET_UP_ENAB;
-                    rCount = 32'b0;
+                    rTimeCount = 32'b0;
                  end
                else
                  begin
@@ -75,10 +75,10 @@ reg [7:0] rCurrentState,rNextState;
             begin
                oLCD_Enabled = 1'b1;
                rEnableDone  = 1'b0;
-               if (rCount > 32'd12 )		//se mantiene enable por 240ns
+               if (rTimeCount > 32'd12 )		//se mantiene enable por 240ns
                  begin
                     rNextState = `SET_DOWN_ENAB;
-                    rCount = 32'b0;
+                    rTimeCount = 32'b0;
                  end
                else
                  begin
@@ -91,10 +91,10 @@ reg [7:0] rCurrentState,rNextState;
             begin
                oLCD_Enabled = 1'b0;
                rEnableDone = 1'b0;
-               if (rCount > 1'b1 )		// se mantiene enable por 20ns
+               if (rTimeCount > 1'b1 )		// se mantiene enable por 20ns
                  begin
                     rNextState = `WRITE_DONE;
-                    rCount = 1'b0;
+                    rTimeCount = 1'b0;
                  end
                else
                  begin
@@ -108,7 +108,7 @@ reg [7:0] rCurrentState,rNextState;
                oLCD_Enabled = 1'b0;
  	       rEnableDone = 1'b1;			//se setea EnableDone para terminar
  	    end
-      
+
    //----------------------------------------------
    default:
      rNextState <= `SET_UP_ENAB;
@@ -117,4 +117,3 @@ reg [7:0] rCurrentState,rNextState;
 endcase // case (rCurrentState)
 end
 endmodule
-
