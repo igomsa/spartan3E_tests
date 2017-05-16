@@ -306,9 +306,9 @@ Module_Write_Enable Write_Enable
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1;
                if ( wWriteDone )
-                 rNextState = `STATE_POWERON_INIT_11;
+                 rNextState = `STATE_CONFIGURATION_11;
                else
-                 rNextState = `STATE_POWERON_INIT_9;
+                 rNextState = `STATE_CONFIGURATION_9;
             end
           //------------------------------------------
           /*
@@ -461,9 +461,9 @@ Module_Write_Enable Write_Enable
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1;
                if ( wWriteDone )
-                 rNextState = `STATE_POWERON_INIT_16_A;
+                 rNextState = `STATE_CONFIGURATION_16;
                else
-                 rNextState = `STATE_POWERON_INIT_15;
+                 rNextState = `STATE_CONFIGURATION_17_A;
             end
           //------------------------------------------
           /*
@@ -477,12 +477,12 @@ Module_Write_Enable Write_Enable
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b0;
               if (rTimeCount > 32'd82000 )
-                 rNextState = `STATE_POWERON_INIT_16_B;
+                 rNextState = `STATE_CONFIGURATION_17_B;
                else
-                 rNextState = `STATE_POWERON_INIT_16_A;
+                 rNextState = `STATE_CONFIGURATION_17_A;
             end
           //------------------------------------------
-          `STATE_CONFIGURATION_INIT_17_B:
+          `STATE_CONFIGURATION_17_B:
             begin
                rWrite_Enabled = 1'b0;
                rEnable_Write_Phrase = 1'b0;
