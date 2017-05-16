@@ -30,11 +30,10 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-module senderLCD(
-        input wire        iWriteBegin,
+module Module_LCD_Writer(
+        input wire        Reset,
         input wire [7:0]  iData_BYTE,
         input wire [79:0] iData_Phrase,
-        input wire        wEnable_Write_Phrase,
         input wire        wWrite_Phrase,
         input wire        Clock,
         output reg        oWrite_Phrase_Done,
@@ -42,12 +41,35 @@ module senderLCD(
         output reg        oEnable
    );
 
-   wire wEnable, wWrite_Reset, Index;
-   reg [3:0]  rData_NIBBLE;
+// Wire wEnable: Habilita la secuencia de escritura.
+   wire wEnable;
 
+// Reg [79:0] rData_NIBBLE:
+   reg [79:0]  rData_NIBBLE;
+
+// Reg [7:0] rCurrentState: Estado actual de la secuencia.
+// Reg [7:0] rNextState: Siguiente en de la secuencia.
 reg [7:0] rCurrentState,rNextState;
+
+// Reg rTimeCountReset: En 1 pone cuenta en 0. En 0
+// inicia la cuenta con el ciclo de reloj.
 reg rTimeCountReset;
+
+// Reg [31:0] rTimeCount: LLeva la cuenta de los ciclos de
+// reloj que han pasado.
 reg [31:0] rTimeCount;
+
+
+   Module_Write_Enable Write_Enable
+(
+ .iReset(),
+ .Clock(),
+ .oLCD_ReadWrite(),
+ .oLCD_RegisterSelect(),
+ .oLCD_Enabled(),
+ .rEnableDone()
+);
+
 
 //----------------------------------------------
 //Next State and delay logic
@@ -61,8 +83,9 @@ begin
 	else
 	begin
 		if (rTimeCountReset)
-				rTimeCount <= 32'b0; //restart count else
-				rTimeCount <= rTimeCount + 32'b1; //increments count
+				rTimeCount <= 32'b0; //restart count
+                else
+                  rTimeCount <= rTimeCount + 32'b1; //increments count
 
 		rCurrentState <= rNextState;
 	end

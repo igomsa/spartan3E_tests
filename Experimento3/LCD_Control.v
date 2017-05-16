@@ -22,11 +22,12 @@
 `define STATE_CONFIGURATION_12_B 20
 `define STATE_CONFIGURATION_13   21
 `define STATE_CONFIGURATION_14_A 22
-`define STATE_CONFIGURATION_14_B 23
+`define STATE_CONFIGURATION_14_B 2l3
 `define STATE_CONFIGURATION_15   24
-`define STATE_CONFIGURATION_16_A 25
-`define STATE_CONFIGURATION_16_B 26
-`define STATE_WRITE_PHRASE       27
+`define STATE_WRITE_PHRASE       25
+`define STATE_CONFIGURATION_16   26
+`define STATE_CONFIGURATION_17_A 27
+`define STATE_CONFIGURATION_17_B 28
 
 module Module_LCD_Control
   (
@@ -46,8 +47,26 @@ module Module_LCD_Control
    reg [31:0]       rTimeCount;
    reg              rTimeCountReset;
    wire             wWriteDone;
-  
+
   initial begin rWrite_Phrase = 0;
+
+Module_Write_Enable Write_Enable
+(
+ .iReset(),
+ .Clock(),
+ .oLCD_ReadWrite(),
+ .oLCD_RegisterSelect(),
+ .oLCD_Enabled(),
+ .rEnableDone()
+);
+
+
+     Module_LCD_Writer LCD_Writer
+(
+
+);
+
+
    //----------------------------------------------
    //Next State and delay logic
    always @ ( posedge Clock )
@@ -88,7 +107,7 @@ module Module_LCD_Control
           `STATE_POWERON_INIT_0_A:
             begin
                rWrite_Enabled = 1'b0;
-               rEnable_Write_Phrase = 1'b0;               
+               rEnable_Write_Phrase = 1'b0;
                oLCD_Data = 4'h0;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b0;
@@ -101,7 +120,7 @@ module Module_LCD_Control
           `STATE_POWERON_INIT_0_B:
             begin
                rWrite_Enabled = 1'b0;
-               rEnable_Write_Phrase = 1'b0;               
+               rEnable_Write_Phrase = 1'b0;
                oLCD_Data = 4'h0;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1; //Reset the counter here
@@ -114,7 +133,7 @@ module Module_LCD_Control
           `STATE_POWERON_INIT_1:
             begin
                rWrite_Enabled = 1'b1;
-               rEnable_Write_Phrase = 1'b0;               
+               rEnable_Write_Phrase = 1'b0;
                oLCD_Data = 4'h3;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1;
@@ -130,7 +149,7 @@ module Module_LCD_Control
           `STATE_POWERON_INIT_2_A:
             begin
                rWrite_Enabled = 1'b0;
-               rEnable_Write_Phrase = 1'b0;               
+               rEnable_Write_Phrase = 1'b0;
                oLCD_Data = 4'h3;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b0;
@@ -143,7 +162,7 @@ module Module_LCD_Control
           `STATE_POWERON_INIT_2_B:
             begin
                rWrite_Enabled = 1'b0;
-               rEnable_Write_Phrase = 1'b0;               
+               rEnable_Write_Phrase = 1'b0;
                oLCD_Data = 4'h3;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1;
@@ -156,7 +175,7 @@ module Module_LCD_Control
           `STATE_POWERON_INIT_3:
             begin
                rWrite_Enabled = 1'b1;
-               rEnable_Write_Phrase = 1'b0;               
+               rEnable_Write_Phrase = 1'b0;
                oLCD_Data = 4'h3;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1;
@@ -172,7 +191,7 @@ module Module_LCD_Control
           `STATE_POWERON_INIT_4_A:
             begin
                rWrite_Enabled = 1'b0;
-               rEnable_Write_Phrase = 1'b0;               
+               rEnable_Write_Phrase = 1'b0;
                oLCD_Data = 4'h3;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b0;
@@ -185,7 +204,7 @@ module Module_LCD_Control
           `STATE_POWERON_INIT_4_B:
             begin
                rWrite_Enabled = 1'b0;
-               rEnable_Write_Phrase = 1'b0;               
+               rEnable_Write_Phrase = 1'b0;
                oLCD_Data = 4'h3;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1;
@@ -198,7 +217,7 @@ module Module_LCD_Control
           `STATE_POWERON_INIT_5:
             begin
                rWrite_Enabled = 1'b1;
-               rEnable_Write_Phrase = 1'b0;               
+               rEnable_Write_Phrase = 1'b0;
                oLCD_Data = 4'h3;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1;
@@ -214,7 +233,7 @@ module Module_LCD_Control
           `STATE_POWERON_INIT_6_A:
             begin
                rWrite_Enabled = 1'b0;
-               rEnable_Write_Phrase = 1'b0;               
+               rEnable_Write_Phrase = 1'b0;
                oLCD_Data = 4'h3;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b0;
@@ -227,7 +246,7 @@ module Module_LCD_Control
           `STATE_POWERON_INIT_6_B:
             begin
                rWrite_Enabled = 1'b0;
-               rEnable_Write_Phrase = 1'b0;               
+               rEnable_Write_Phrase = 1'b0;
                oLCD_Data = 4'h3;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1;
@@ -240,7 +259,7 @@ module Module_LCD_Control
           `STATE_POWERON_INIT_7:
             begin
                rWrite_Enabled = 1'b1;
-               rEnable_Write_Phrase = 1'b0;               
+               rEnable_Write_Phrase = 1'b0;
                oLCD_Data = 4'h2;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1;
@@ -256,7 +275,7 @@ module Module_LCD_Control
           `STATE_POWERON_INIT_8_A:
             begin
                rWrite_Enabled = 1'b0;
-               rEnable_Write_Phrase = 1'b0;               
+               rEnable_Write_Phrase = 1'b0;
                oLCD_Data = 4'h2;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b0;
@@ -269,7 +288,7 @@ module Module_LCD_Control
           `STATE_POWERON_INIT_8_B:
             begin
                rWrite_Enabled = 1'b0;
-               rEnable_Write_Phrase = 1'b0;               
+               rEnable_Write_Phrase = 1'b0;
                oLCD_Data = 4'h2;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1;
@@ -282,7 +301,7 @@ module Module_LCD_Control
           `STATE_CONFIGURATION_9:
             begin
                rWrite_Enabled = 1'b1;
-               rEnable_Write_Phrase = 1'b1;               
+               rEnable_Write_Phrase = 1'b1;
                oLCD_Data = 8'h28;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1;
@@ -294,11 +313,11 @@ module Module_LCD_Control
           //------------------------------------------
           /*
            Wait 40 us or longer, which is 2,000 clock cycles at 50 MHz.
-           
+
           `STATE_CONFIGURATION_10_A:
             begin
                rWrite_Enabled = 1'b0;
-               rEnable_Write_Phrase = 1'b0;                
+               rEnable_Write_Phrase = 1'b0;
                oLCD_Data = 8'h28;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b0;
@@ -311,7 +330,7 @@ module Module_LCD_Control
           `STATE_CONFIGURATION_10_B:
             begin
                rWrite_Enabled = 1'b0;
-               rEnable_Write_Phrase = 1'b0;                
+               rEnable_Write_Phrase = 1'b0;
                oLCD_Data = 8'h28;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1;
@@ -323,7 +342,7 @@ module Module_LCD_Control
           `STATE_CONFIGURATION_11:
             begin
                rWrite_Enabled = 1'b1;
-               rEnable_Write_Phrase = 1'b0;               
+               rEnable_Write_Phrase = 1'b0;
                oLCD_Data = 4'h06;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1;
@@ -339,7 +358,7 @@ module Module_LCD_Control
           `STATE_CONFIGURATION_12_A:
             begin
                rWrite_Enabled = 1'b0;
-               rEnable_Write_Phrase = 1'b0;               
+               rEnable_Write_Phrase = 1'b0;
                oLCD_Data = 4'h06;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b0;
@@ -352,7 +371,7 @@ module Module_LCD_Control
           `STATE_CONFIGURATION_12_B:
             begin
                rWrite_Enabled = 1'b0;
-               rEnable_Write_Phrase = 1'b0;               
+               rEnable_Write_Phrase = 1'b0;
                oLCD_Data = 4'h06;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1;
@@ -365,7 +384,7 @@ module Module_LCD_Control
           `STATE_CONFIGURATION_13:
             begin
                rWrite_Enabled = 1'b1;
-               rEnable_Write_Phrase = 1'b0;               
+               rEnable_Write_Phrase = 1'b0;
                oLCD_Data = 4'h0C;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1;
@@ -381,7 +400,7 @@ module Module_LCD_Control
           `STATE_CONFIGURATION_14_A:
             begin
                rWrite_Enabled = 1'b0;
-               rEnable_Write_Phrase = 1'b0;               
+               rEnable_Write_Phrase = 1'b0;
                oLCD_Data = 4'h0C;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b0;
@@ -394,20 +413,50 @@ module Module_LCD_Control
           `STATE_CONFIGURATION_14_B:
             begin
                rWrite_Enabled = 1'b0;
-               rEnable_Write_Phrase = 1'b0;               
+               rEnable_Write_Phrase = 1'b0;
                oLCD_Data = 4'h0C;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1;
-               rNextState = `STATE_RESET;
+               rNextState = `STATE_CONFIGURATION_15;
+            end
+     //------------------------------------------
+          /*
+           Write SF_D<11:8> = 0x00, pulse LCD_E High for 12 clock cycles
+           */
+          `STATE_CONFIGURATION_15:
+            begin
+               rWrite_Enabled = 1'b1;
+               rEnable_Write_Phrase = 1'b0;
+               oLCD_Data = 8'h00;
+               oLCD_RegisterSelect = 1'b0; //these are commands
+               rTimeCountReset = 1'b1;
+               if ( wWriteDone )
+                 rNextState = `STATE_WRITE_PHRASE;
+               else
+                 rNextState = `STATE_POWERON_INIT_15;
+            end
+          //------------------------------------------
+          /*
+           Write phrase "Hola Mundo"
+           */
+          `STATE_WRITE_PHRASE:
+            begin
+               rWrite_Enabled = 1'b1;
+               rEnable_Write_Phrase = 1'b1;
+               rWrite_Phrase = 1'b1;
+               oLCD_Data = {`H , `o , `l , `a , `Space , `M , `u , `n , `d , `o};
+               oLCD_RegisterSelect = 1'b1; //these are commands
+               rTimeCountReset = 1'b1;
+               rNextState = `STATE_WRITE_PHRASE;
             end
           //------------------------------------------
           /*
            Write SF_D<11:8> = 0x01, pulse LCD_E High for 12 clock cycles
            */
-          `STATE_CONFIGURATION_15:
+          `STATE_CONFIGURATION_16:
             begin
                rWrite_Enabled = 1'b1;
-               rEnable_Write_Phrase = 1'b0;              
+               rEnable_Write_Phrase = 1'b0;
                oLCD_Data = 4'h01;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1;
@@ -420,10 +469,10 @@ module Module_LCD_Control
           /*
            Wait 1,64 ms or longer, which is 82,000 clock cycles at 50 MHz.
            */
-          `STATE_CONFIGURATION_16_A:
+          `STATE_CONFIGURATION_17_A:
             begin
                rWrite_Enabled = 1'b0;
-               rEnable_Write_Phrase = 1'b0;              
+               rEnable_Write_Phrase = 1'b0;
                oLCD_Data = 4'h01;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b0;
@@ -433,31 +482,17 @@ module Module_LCD_Control
                  rNextState = `STATE_POWERON_INIT_16_A;
             end
           //------------------------------------------
-          `STATE_CONFIGURATION_INIT_16_B:
+          `STATE_CONFIGURATION_INIT_17_B:
             begin
                rWrite_Enabled = 1'b0;
-               rEnable_Write_Phrase = 1'b0;              
+               rEnable_Write_Phrase = 1'b0;
                oLCD_Data = 4'h01;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1;
                rNextState = `STATE_RESET;
-            end          
-           /*
-           Write phrase "Hola Mundo"
-           */
-          `STATE_WRITE_PHRASE:
-            begin
-               rWrite_Enabled = 1'b1;
-               rEnable_Write_Phrase = 1'b1;
-               rWrite_Phrase = 1'b1;
-               oLCD_Data = {`H , `o , `l , `a , `Space , `M , `u , `n , `d , `o}; 
-               oLCD_RegisterSelect = 1'b1; //these are commands
-               rTimeCountReset = 1'b1;
-               rNextState = `STATE_WRITE_PHRASE;
-            end          
-          //------------------------------------------          
+            end
           //------------------------------------------
-          default:
+                    default:
             begin
                rWrite_Enabled = 1'b0;
                oLCD_Data = 4'h0;
