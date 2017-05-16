@@ -347,9 +347,9 @@ Module_Write_Enable Write_Enable
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1;
                if ( wWriteDone )
-                 rNextState = `STATE_POWERON_INIT_12_A;
+                 rNextState = `STATE_CONFIGURATION_12_A;
                else
-                 rNextState = `STATE_POWERON_INIT_11;
+                 rNextState = `STATE_CONFIGURATION_11;
             end
           //------------------------------------------
           /*
@@ -363,9 +363,9 @@ Module_Write_Enable Write_Enable
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b0;
               if (rTimeCount > 32'd2000 )
-                 rNextState = `STATE_POWERON_INIT_12_B;
+                 rNextState = `STATE_CONFIGURATION_12_B;
                else
-                 rNextState = `STATE_POWERON_INIT_12_A;
+                 rNextState = `STATE_CONFIGURATION_12_A;
             end
           //------------------------------------------
           `STATE_CONFIGURATION_12_B:
@@ -389,9 +389,9 @@ Module_Write_Enable Write_Enable
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1;
                if ( wWriteDone )
-                 rNextState = `STATE_POWERON_INIT_14_A;
+                 rNextState = `STATE_CONFIGURATION_14_A;
                else
-                 rNextState = `STATE_POWERON_INIT_13;
+                 rNextState = `STATE_CONFIGURATION_13;
             end
           //------------------------------------------
           /*
@@ -405,9 +405,9 @@ Module_Write_Enable Write_Enable
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b0;
               if (rTimeCount > 32'd2000 )
-                 rNextState = `STATE_POWERON_INIT_14_B;
+                 rNextState = `STATE_CONFIGURATION_14_B;
                else
-                 rNextState = `STATE_POWERON_INIT_14_A;
+                 rNextState = `STATE_CONFIGURATION_14_A;
             end
           //------------------------------------------
           `STATE_CONFIGURATION_14_B:
@@ -433,7 +433,7 @@ Module_Write_Enable Write_Enable
                if ( wWriteDone )
                  rNextState = `STATE_WRITE_PHRASE;
                else
-                 rNextState = `STATE_POWERON_INIT_15;
+                 rNextState = `STATE_CONFIGURATION_15;
             end
           //------------------------------------------
           /*
