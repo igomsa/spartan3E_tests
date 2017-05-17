@@ -127,12 +127,21 @@ always @ ( * )
                        rNextState <= `WRITE_1ST_NIBBLE;
                   end
                else if(wWrite_Phrase == 2'd1)
-                 oSender <= iData_BYTE[3:0];
+                 begin
+                    oSender <= iData_BYTE[3:0];
+                     if (wEnableDone == 1'd1)
+                       rNextState <= `WAIT_1_uS;
+                     else
+                       rNextState <= `WRITE_1ST_NIBBLE;
+                  end
                else if (wWrite_Phrase == 2'd2)
-                 oSender <= iData_Phrase[3:0];
-
-               if (wEnableDone == 1'd1)
-                 rNextState <= `WAIT_1_uS;
+                 begin
+                    oSender <= iData_Phrase[3:0];
+                    if (wEnableDone == 1'd1)
+                      rNextState <= `WAIT_1_uS;
+                    else
+                      rNextState <= `WRITE_1ST_NIBBLE;
+                 end
                else
                  rNextState <= `WRITE_1ST_NIBBLE;
             end
@@ -143,7 +152,7 @@ always @ ( * )
                oWrite_Phrase_Done <= 0;
                oSender <= oSender;
                rTimeCountReset <= 1'b0;
-               if (rTimeCount <= 32'd51)
+               if (rTimeCount > 32'd51)
                  rNextState <= `RESET_COUNT_0;
                else
                  rNextState <= `WAIT_1_uS;
@@ -153,24 +162,33 @@ always @ ( * )
             begin
                rWrite_Reset <= 1;
                oWrite_Phrase_Done <= 0;
-               oSender <= 4'h0;
+               oSender <= oSender;
                rTimeCountReset <= 1'b1;
                rNextState <= `WRITE_2ND_NIBBLE;
             end
           //------------------------------------------
           `WRITE_2ND_NIBBLE:
-            begin
+begin
                rWrite_Reset <= 0;
                oWrite_Phrase_Done <= 0;
                rTimeCountReset <= 1'b1;
-               if (wWrite_Phrase ==3)
-                 oSender <= iData_Phrase[3:0];
-               else if (wWrite_Phrase == 2)
-                 oSender <= iData_BYTE[3:0];
-               else
 
-               if (wEnableDone == 1'd1)
-                 rNextState <= `WAIT_40_uS;
+               if(wWrite_Phrase == 2'd1)
+                 begin
+                    oSender <= iData_BYTE[7:4];
+                     if (wEnableDone == 1'd1)
+                       rNextState <= `WAIT_40_uS;
+                     else
+                       rNextState <= `WRITE_2ND_NIBBLE;
+                  end
+               else if (wWrite_Phrase == 2'd2)
+                 begin
+                    oSender <= iData_Phrase[7:4];
+                    if (wEnableDone == 1'd1)
+                      rNextState <= `WAIT_40_uS;
+                    else
+                      rNextState <= `WRITE_2ND_NIBBLE;
+                 end
                else
                  rNextState <= `WRITE_2ND_NIBBLE;
             end
@@ -181,7 +199,7 @@ always @ ( * )
                oWrite_Phrase_Done <= 0;
                oSender <= oSender;
                rTimeCountReset <= 1'b0;
-               if (rTimeCount <= 32'd200)
+               if (rTimeCount > 32'd2000)
                  rNextState <= `RESET_COUNT_1;
                else
                  rNextState <= `WAIT_40_uS;
@@ -192,9 +210,9 @@ always @ ( * )
             begin
                rWrite_Reset <= 1;
                oWrite_Phrase_Done <= 0;
-               oSender <= 4'h0;
+               oSender <= oSender;
                rTimeCountReset <= 1'b1;
-               if (wWrite_Phrase)
+               if (wWrite_Phrase==2)
                rNextState <= `CUT_WORD;
                else
                rNextState <= `WRITE_DONE;
@@ -204,16 +222,19 @@ always @ ( * )
             begin
                rWrite_Reset <= 1;
                oWrite_Phrase_Done <= 0;
-               oSender <= 4'h0;
+               oSender <= oSender;
                rData_Phrase <= rData_Phrase >> 8;
-               rNextState <= `WRITE_DONE;
+               if (rData_Phrase == 0)
+                 rNextState <= `WRITE_DONE;
+               else
+                 rNextState <= `STATE_RESET;
             end
           //------------------------------------------
           `WRITE_DONE 	:
             begin
                rWrite_Reset <= 1;
                oWrite_Phrase_Done <= 1;
-               oSender <= 4'h0;
+               oSender <= oSender;
                rNextState <= `STATE_RESET;
             end
           //------------------------------------------

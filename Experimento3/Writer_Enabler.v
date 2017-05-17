@@ -1,12 +1,12 @@
 `timescale 1ns / 1ps
 `define STATE_RESET     0
 `define STATE_ENAB 	1
-`define SET_UP_ENAB	2
-`define RESET_COUNT_0  	3
-`define SET_DOWN_ENAB	4
-`define RESET_COUNT_1  	5
-`define	WRITE_DONE	6
-`define RESET_COUNT_2   7
+`define RESET_COUNT_0  	2
+`define SET_UP_ENAB	3
+`define RESET_COUNT_1  	4
+`define SET_DOWN_ENAB	5
+`define RESET_COUNT_2   6
+`define	WRITE_DONE	7
 
 module Module_Write_Enable
   (
@@ -85,9 +85,10 @@ reg [7:0] rCurrentState,rNextState;
             begin
                oLCD_Enabled<= 1'b1;
                rEnableDone <= 1'b0;
+               rTimeCountReset <= 1'b0;
                if (rTimeCount > 32'd12 )		//se mantiene enable por 240ns
                  begin
-                    rNextState <= `SET_DOWN_ENAB;
+                    rNextState <= `RESET_COUNT_1;
                  end
                else
                  begin
@@ -107,9 +108,10 @@ reg [7:0] rCurrentState,rNextState;
             begin
                oLCD_Enabled<= 1'b0;
                rEnableDone<= 1'b0;
+               rTimeCountReset <= 1'b0;
                if (rTimeCount > 1'b1 )		// se mantiene enable por 20ns
                  begin
-                    rNextState <= `WRITE_DONE;
+                    rNextState <= `RESET_COUNT_2;
                  end
                else
                  begin
@@ -129,6 +131,7 @@ reg [7:0] rCurrentState,rNextState;
             begin
                oLCD_Enabled<= 1'b0;
  	       rEnableDone<= 1'b1;			//se setea EnableDone para terminar
+               rNextState <= `STATE_RESET;
  	    end
 
    //----------------------------------------------

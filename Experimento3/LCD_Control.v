@@ -297,7 +297,7 @@ module Module_LCD_Control
                rData = 80'h2;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1;
-               rNextState = `STATE_RESET;
+               rNextState = `STATE_CONFIGURATION_9;
             end
           //------------------------------------------
           /*
@@ -383,7 +383,7 @@ module Module_LCD_Control
                rData = 80'h06;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1;
-               rNextState = `STATE_RESET;
+               rNextState = `STATE_CONFIGURATION_13;
             end
           //------------------------------------------
           /*
@@ -425,7 +425,7 @@ module Module_LCD_Control
                rData = 80'h0C;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1;
-               rNextState = `STATE_CONFIGURATION_15;
+               rNextState = `STATE_CONFIGURATION_16;
             end
      //------------------------------------------
           /*
@@ -454,7 +454,10 @@ module Module_LCD_Control
                rData = {`H , `o , `l , `a , `Space , `M , `u , `n , `d , `o};
                oLCD_RegisterSelect = 1'b1; //these are commands
                rTimeCountReset = 1'b1;
-               rNextState = `STATE_WRITE_PHRASE;
+               if ( wWriteDone )
+                 rNextState = `STATE_RESET;
+               else
+                 rNextState = `STATE_WRITE_PHRASE;
             end
           //------------------------------------------
           /*
@@ -468,9 +471,9 @@ module Module_LCD_Control
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1;
                if ( wWriteDone )
-                 rNextState = `STATE_CONFIGURATION_16;
-               else
                  rNextState = `STATE_CONFIGURATION_17_A;
+               else
+                 rNextState = `STATE_CONFIGURATION_16;
             end
           //------------------------------------------
           /*
@@ -483,7 +486,7 @@ module Module_LCD_Control
                rData = 80'h01;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b0;
-              if (rTimeCount > 32'd82000 )
+              if (rTimeCount > 32'd85000 )
                  rNextState = `STATE_CONFIGURATION_17_B;
                else
                  rNextState = `STATE_CONFIGURATION_17_A;

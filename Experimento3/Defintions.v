@@ -21,7 +21,7 @@
 `define H	8'b01001000
 `define o	8'b01101111
 `define l	8'b01101100
-`define a	8'b00001010
+`define a	8'b01100001
 `define M	8'b01001101
 `define u	8'b01110101
 `define n	8'b01101110
