@@ -1,14 +1,18 @@
 `timescale 1ns / 1ps
-`define STATE_ENAB 	0
-`define SET_UP_ENAB	1
-`define SET_DOWN_ENAB	2
-`define	WRITE_DONE	3
-`define STATE_RESET 4
+`define STATE_RESET     0
+`define STATE_ENAB 	1
+`define SET_UP_ENAB	2
+`define RESET_COUNT_0  	3
+`define SET_DOWN_ENAB	4
+`define RESET_COUNT_1  	5
+`define	WRITE_DONE	6
+`define RESET_COUNT_2   7
+
 module Module_Write_Enable
   (
    input wire  Reset,
    input wire  Clock,
-   output wire oLCD_Enabled,
+   output reg oLCD_Enabled,
    output reg  rEnableDone
    );
 
@@ -48,65 +52,83 @@ reg [7:0] rCurrentState,rNextState;
           //---------------------------------------
           `STATE_RESET 	:
             begin
-               oLCD_Enabled = 1'b0;
-               rEnableDone  = 1'b0;
+               oLCD_Enabled <= 1'b0;
+               rEnableDone  <= 1'b0;
                rTimeCountReset <= 1'b1;
-                 rNextState <= `STATE_RESET;
+                 rNextState <= `STATE_ENAB;
             end
           //------------------------------------------
           `STATE_ENAB:
             begin
-               oLCD_Enabled = 1'b0;
-               rEnableDone  = 1'b0;
-               rTimeCountReset <= 1'b1;
+               oLCD_Enabled<= 1'b0;
+               rEnableDone <= 1'b0;
+               rTimeCountReset <= 1'b0;
                if (rTimeCount > 32'd2 )		//se mantiene enalble en 0 por 40ns
                  begin
-                    rNextState = `SET_UP_ENAB;
-                    rTimeCount = 32'b0;
+                    rNextState <= `RESET_COUNT_0;
                  end
                else
                  begin
-                    rNextState= `STATE_ENAB;
-
+                    rNextState <= `STATE_ENAB;
                  end
             end
           //-----------------------------------------
+          `RESET_COUNT_0  	:
+            begin
+               oLCD_Enabled<= 1'b0;
+               rEnableDone <= 1'b0;
+               rTimeCountReset <= 1'b1;
+               rNextState <= `SET_UP_ENAB;
+            end
+          //------------------------------------------
           `SET_UP_ENAB:
             begin
-               oLCD_Enabled = 1'b1;
-               rEnableDone  = 1'b0;
+               oLCD_Enabled<= 1'b1;
+               rEnableDone <= 1'b0;
                if (rTimeCount > 32'd12 )		//se mantiene enable por 240ns
                  begin
-                    rNextState = `SET_DOWN_ENAB;
-                    rTimeCount = 32'b0;
+                    rNextState <= `SET_DOWN_ENAB;
                  end
                else
                  begin
-                    rNextState = `SET_UP_ENAB;
-
+                    rNextState <= `SET_UP_ENAB;
                  end
             end
           //--------------------------------------------
+          `RESET_COUNT_1  	:
+            begin
+               oLCD_Enabled<= 1'b1;
+               rEnableDone <= 1'b0;
+               rTimeCountReset <= 1'b1;
+               rNextState <= `SET_DOWN_ENAB;
+            end
+          //------------------------------------------
           `SET_DOWN_ENAB:
             begin
-               oLCD_Enabled = 1'b0;
-               rEnableDone = 1'b0;
+               oLCD_Enabled<= 1'b0;
+               rEnableDone<= 1'b0;
                if (rTimeCount > 1'b1 )		// se mantiene enable por 20ns
                  begin
-                    rNextState = `WRITE_DONE;
-                    rTimeCount = 1'b0;
+                    rNextState <= `WRITE_DONE;
                  end
                else
                  begin
-                    rNextState = `SET_DOWN_ENAB;
-
+                    rNextState <= `SET_DOWN_ENAB;
                  end
             end
           //----------------------------------------------
+          `RESET_COUNT_2  	:
+            begin
+               oLCD_Enabled<= 1'b0;
+               rEnableDone <= 1'b0;
+               rTimeCountReset <= 1'b1;
+               rNextState <= `WRITE_DONE;
+            end
+          //------------------------------------------
           `WRITE_DONE:
             begin
-               oLCD_Enabled = 1'b0;
- 	       rEnableDone = 1'b1;			//se setea EnableDone para terminar
+               oLCD_Enabled<= 1'b0;
+ 	       rEnableDone<= 1'b1;			//se setea EnableDone para terminar
  	    end
 
    //----------------------------------------------

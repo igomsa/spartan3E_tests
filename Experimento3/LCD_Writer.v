@@ -2,13 +2,14 @@
 
 //state definitions
 `define STATE_RESET 	 0
-`define CUT_WORD 	 1
-`define WRITE_1ST_NIBBLE 2
-`define WAIT_1_uS 	 3
-`define RESET_COUNT_0  	 4
-`define WRITE_2ND_NIBBLE 5
-`define WAIT_40_uS 	 6
-`define RESET_COUNT_1  	 7
+`define WRITE_1ST_NIBBLE 1
+`define WAIT_1_uS 	 2
+`define RESET_COUNT_0  	 3
+`define WRITE_2ND_NIBBLE 4
+`define WAIT_40_uS 	 5
+`define RESET_COUNT_1  	 6
+`define CUT_WORD 	 7
+`define WRITE_DONE       8
 
 //////////////////////////////////////////////////////////////////////////////////
 // Company:
@@ -32,18 +33,15 @@
 
 module Module_LCD_Writer(
         input wire        Reset,
-        input wire        iData_NIBBLE,
+        input wire [3:0]  iData_NIBBLE,
         input wire [7:0]  iData_BYTE,
         input wire [79:0] iData_Phrase,
         input wire [1:0]  wWrite_Phrase,
         input wire        Clock,
         output reg        oWrite_Phrase_Done,
-        output wire [3:0] oSender,
-        output reg        oEnable
+        output reg [3:0]  oSender,
+        output wire       oEnable
    );
-
-// Wire wEnable: Habilita la secuencia de escritura.
-   wire wEnable;
 
 // Reg [7:0] rCurrentState: Estado actual de la secuencia.
 // Reg [7:0] rNextState: Siguiente en de la secuencia.
@@ -57,29 +55,33 @@ reg rTimeCountReset;
 // reloj que han pasado.
 reg [31:0] rTimeCount;
 
-   // Wire wLCD_Enabled: Señal de EN dada por Writer_Enabler.
    // Wire wEnableDone: Respuesta de Writer_Enabler.
-   wire    wLCD_Enable, wEnableDone;
+   wire   wEnableDone;
 
 // Register rWrite_Reset: Inicia secuencia de Write_Enable
    reg     rWrite_Reset;
 
+// Register rData_Phrase: Frase de datos a escribir.
+   reg [79:0] rData_Phrase;
+
+
+
 
    Module_Write_Enable Write_Enable
 (
- .iReset(rWrite_Reset),
+ .Reset(rWrite_Reset),
  .Clock(Clock),
- .oLCD_Enabled(wLCD_Enable),
+ .oLCD_Enabled(oEnable),
  .rEnableDone(wEnableDone)
 );
 
-   assign oEnable = wLCD_Enable;
+//   assign  = wLCD_Enable;
 
 //----------------------------------------------
 //Next State and delay logic
 always @ ( posedge Clock )
 begin
-	if (Reset)
+	if (!Reset)
 	begin
 		rCurrentState <= `STATE_RESET;
 		rTimeCount <= 32'b0;
@@ -102,7 +104,8 @@ always @ ( * )
           //------------------------------------------
           `STATE_RESET 	:
             begin
-               rWrite_Reset <= 1'b0;
+               rWrite_Reset <= 1'b1;
+               rData_Phrase <= iData_Phrase;
                oWrite_Phrase_Done <= 1'b0;
                oSender <= 4'h0;
                rTimeCountReset <= 1'b1;
@@ -111,24 +114,24 @@ always @ ( * )
           //------------------------------------------
           `WRITE_1ST_NIBBLE:
             begin
-               rWrite_Reset <= 1;
+               rWrite_Reset <= 0;
                oWrite_Phrase_Done <= 0;
                rTimeCountReset <= 1'b1;
 
                if (wWrite_Phrase == 2'd0)
                   begin
                      oSender <= iData_NIBBLE;
-                     if (wWriteDone == 1'd1)
+                     if (wEnableDone == 1'd1)
                        rNextState <= `WRITE_DONE;
                      else
                        rNextState <= `WRITE_1ST_NIBBLE;
                   end
                else if(wWrite_Phrase == 2'd1)
                  oSender <= iData_BYTE[3:0];
-               else
+               else if (wWrite_Phrase == 2'd2)
                  oSender <= iData_Phrase[3:0];
 
-               if (wWriteDone == 1'd1)
+               if (wEnableDone == 1'd1)
                  rNextState <= `WAIT_1_uS;
                else
                  rNextState <= `WRITE_1ST_NIBBLE;
@@ -136,7 +139,7 @@ always @ ( * )
           //------------------------------------------
           `WAIT_1_uS 	:
             begin
-               rWrite_Reset <= 0;
+               rWrite_Reset <= 1;
                oWrite_Phrase_Done <= 0;
                oSender <= oSender;
                rTimeCountReset <= 1'b0;
@@ -148,7 +151,7 @@ always @ ( * )
           //------------------------------------------
           `RESET_COUNT_0 	:
             begin
-               rWrite_Reset <= 0;
+               rWrite_Reset <= 1;
                oWrite_Phrase_Done <= 0;
                oSender <= 4'h0;
                rTimeCountReset <= 1'b1;
@@ -157,19 +160,24 @@ always @ ( * )
           //------------------------------------------
           `WRITE_2ND_NIBBLE:
             begin
-               rWrite_Reset <= 1;
+               rWrite_Reset <= 0;
                oWrite_Phrase_Done <= 0;
                rTimeCountReset <= 1'b1;
-               if (wWrite_Phrase)
+               if (wWrite_Phrase ==3)
                  oSender <= iData_Phrase[3:0];
-               else
+               else if (wWrite_Phrase == 2)
                  oSender <= iData_BYTE[3:0];
-               rNextState <= `WAIT_40_uS;
+               else
+
+               if (wEnableDone == 1'd1)
+                 rNextState <= `WAIT_40_uS;
+               else
+                 rNextState <= `WRITE_2ND_NIBBLE;
             end
           //------------------------------------------
           `WAIT_40_uS 	:
             begin
-               rWrite_Reset <= 0;
+               rWrite_Reset <= 1;
                oWrite_Phrase_Done <= 0;
                oSender <= oSender;
                rTimeCountReset <= 1'b0;
@@ -182,7 +190,7 @@ always @ ( * )
           //------------------------------------------
           `RESET_COUNT_1  	:
             begin
-               rWrite_Reset <= 0;
+               rWrite_Reset <= 1;
                oWrite_Phrase_Done <= 0;
                oSender <= 4'h0;
                rTimeCountReset <= 1'b1;
@@ -194,16 +202,16 @@ always @ ( * )
           //------------------------------------------
           `CUT_WORD 	:
             begin
-               rWrite_Reset <= 0;
+               rWrite_Reset <= 1;
                oWrite_Phrase_Done <= 0;
                oSender <= 4'h0;
-               iData_Phrase <= iData_Phrase >> 8;
+               rData_Phrase <= rData_Phrase >> 8;
                rNextState <= `WRITE_DONE;
             end
           //------------------------------------------
           `WRITE_DONE 	:
             begin
-               rWrite_Reset <= 0;
+               rWrite_Reset <= 1;
                oWrite_Phrase_Done <= 1;
                oSender <= 4'h0;
                rNextState <= `STATE_RESET;
