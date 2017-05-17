@@ -64,6 +64,14 @@ module testbench_LCD;
 		// Wait 22 ms
 		#22000000
 
+		// Excecutable in GTKWave.
+		$dumpfile("Ejercicio1.vcd");
+		$dumpvars();
+		#650 $finish;
+
+
+// Add stimulus here
+
 		$finish;
 	end
 
