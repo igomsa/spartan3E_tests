@@ -1,5 +1,3 @@
-`timescale 1ns / 1ps
-
 //state definitions
 `define STATE_RESET 	 0
 `define WRITE_1ST_NIBBLE 1
@@ -62,7 +60,7 @@ reg [31:0] rTimeCount;
    reg     rWrite_Reset;
 
 // Register rData_Phrase: Frase de datos a escribir.
-   reg [79:0] rData_Phrase;
+   reg [79:0] rData_Phrase, rAux;
 
 
 
@@ -76,6 +74,11 @@ reg [31:0] rTimeCount;
 );
 
 //   assign  = wLCD_Enable;
+
+   initial begin
+      oSender = 4'b0;
+      rAux = 80'b0;
+   end
 
 //----------------------------------------------
 //Next State and delay logic
@@ -107,7 +110,8 @@ always @ ( * )
                rWrite_Reset <= 1'b1;
                rData_Phrase <= iData_Phrase;
                oWrite_Phrase_Done <= 1'b0;
-               oSender <= 4'h0;
+               oSender <= oSender;
+               //oSender <= 4'b0;
                rTimeCountReset <= 1'b1;
                  rNextState <= `WRITE_1ST_NIBBLE;
             end
@@ -128,7 +132,7 @@ always @ ( * )
                   end
                else if(wWrite_Phrase == 2'd1)
                  begin
-                    oSender <= iData_BYTE[3:0];
+                    oSender <= iData_BYTE[7:4];
                      if (wEnableDone == 1'd1)
                        rNextState <= `WAIT_1_uS;
                      else
@@ -136,7 +140,7 @@ always @ ( * )
                   end
                else if (wWrite_Phrase == 2'd2)
                  begin
-                    oSender <= iData_Phrase[3:0];
+                    oSender <= iData_Phrase[7:4];
                     if (wEnableDone == 1'd1)
                       rNextState <= `WAIT_1_uS;
                     else
@@ -175,7 +179,7 @@ begin
 
                if(wWrite_Phrase == 2'd1)
                  begin
-                    oSender <= iData_BYTE[7:4];
+                    oSender <= iData_BYTE[3:0];
                      if (wEnableDone == 1'd1)
                        rNextState <= `WAIT_40_uS;
                      else
@@ -183,7 +187,7 @@ begin
                   end
                else if (wWrite_Phrase == 2'd2)
                  begin
-                    oSender <= iData_Phrase[7:4];
+                    oSender <= iData_Phrase[3:0];
                     if (wEnableDone == 1'd1)
                       rNextState <= `WAIT_40_uS;
                     else

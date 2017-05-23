@@ -1,4 +1,3 @@
-`timescale 1ns / 1ps
 `define STATE_RESET     0
 `define STATE_ENAB 	1
 `define RESET_COUNT_0  	2
@@ -86,7 +85,7 @@ reg [7:0] rCurrentState,rNextState;
                oLCD_Enabled<= 1'b1;
                rEnableDone <= 1'b0;
                rTimeCountReset <= 1'b0;
-               if (rTimeCount > 32'd12 )		//se mantiene enable por 240ns
+               if (rTimeCount > 32'd15 )		//se mantiene enable por 240ns
                  begin
                     rNextState <= `RESET_COUNT_1;
                  end
