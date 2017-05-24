@@ -4,12 +4,17 @@
 
 module MiniAlu
 (
- input wire Clock,
- input wire Reset,
+
+ // Entradas del módulo.
+ input wire        Clock,
+ input wire        Reset,
+
+ // Salidas del módulo. Salidas de la LCD.
  output wire [3:0] oLCD,
-output reg oReadWrite,
-output reg oRegisterSelect,
-output wire oEnable
+ output reg        oReadWrite,
+ output reg        oRegisterSelect,
+ output wire       oEnable
+
 );
 
 wire [15:0]  wIP,wIP_temp;
@@ -21,7 +26,7 @@ wire signed [7:0] wSourceAddr0,wSourceAddr1;
 wire [7:0] wDestination;
 wire [15:0] wSourceData0,wSourceData1,wIPInitialValue,wImmediateValue;
 
-
+assign oReadWrite = 1'b0; //Sólo se lee de la LCD, nunca se escribe a ella.
 
 
 ROM InstructionRom
@@ -90,18 +95,28 @@ FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FFD4
 	.Q(wDestination)
 );
 
-
-reg rFFLCD_EN;
+// Flip-Flop de la LCD.
+reg rFFLCD_EN, rEnable, rRegisterSelect;
 FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FF_LEDS
 (
 	.Clock(Clock),
 	.Reset(Reset),
 	.Enable( rFFLCD_EN ),
-	.D( wSourceData1 ),
-	.Q( { 3'b0, oEnable, oLCD}    )
+	.D( {3'b0, rEnable, wSourceData1[7:4]} ),
+        .Q( { 3'b0, oEnable, oLCD})
 );
 
-assign wImmediateValue = {wSourceAddr1,wSourceAddr0};
+FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 )
+(
+	.Clock(Clock),
+	.Reset(Reset),
+	.Enable(1'b1),
+	.D(rCall_Addrs),
+	.Q(wCall_Addrs)
+);
+
+   assign rEnable = 1'b1;
+   assign wImmediateValue = {wSourceAddr1,wSourceAddr0};
 
 
 
@@ -170,19 +185,38 @@ begin
 		rBranchTaken <= 1'b1;
 	end
 	//-------------------------------------
+          // Escribe un NIBBLE en la LCD.
 	`LCD:
 	begin
-		rFFLCD_EN     <= 1'b1;
-		rWriteEnable <= 1'b0;
-		rResult      <= 0;
-		rBranchTaken <= 1'b0;
+           rFFLCD_EN     <= 1'b1;
+           rWriteEnable <= 1'b0;
+           rResult      <= 0;
+           rRegisterSelect <= wSourceData0;
+           rBranchTaken <= 1'b0;
 	end
 	//-------------------------------------
+          // Corre los bits del registro en 8 bits.
 	`SHL:
 	begin
 		rFFLCD_EN     <= 1'b0;
-		rWriteEnable <= 1'b0;
+		rWriteEnable <= 1'b1;
 		rResult   <= wSourceData1 >> wSourceData0;
+		rBranchTaken <= 1'b0;
+	end
+	//-------------------------------------
+       `CALL:
+	begin
+		rFFLCD_EN     <= 1'b0;
+		rWriteEnable <= 1'b0;
+		rResult   <= 1'b0;
+		rBranchTaken <= 1'b1;
+	end
+	//-------------------------------------
+        `RET:
+	begin
+		rFFLCD_EN     <= 1'b0;
+		rWriteEnable <= 1'b0;
+		rResult   <= wSourceData1 << wSourceData0;
 		rBranchTaken <= 1'b0;
 	end
 	//-------------------------------------
