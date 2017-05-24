@@ -11,9 +11,9 @@ module MiniAlu
 
  // Salidas del módulo. Salidas de la LCD.
  output wire [3:0] oLCD,
- output reg        oReadWrite,
+ output wire        oReadWrite,
  output reg        oRegisterSelect,
- output wire       oEnable
+ output reg       oEnable
 
 );
 
@@ -96,19 +96,20 @@ FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FFD4
 );
 
 // Flip-Flop de la LCD.
-reg rFFLCD_EN, rEnable, rRegisterSelect;
+reg rFFLCD_EN,rEnable, rRegisterSelect;
+wire wEnable;
 FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FF_LEDS
 (
 	.Clock(Clock),
 	.Reset(Reset),
 	.Enable( rFFLCD_EN ),
-	.D( {3'b0, rEnable, wSourceData1[7:4]} ),
-        .Q( { 3'b0, oEnable, oLCD})
+	.D( wSourceData1[7:4] ),
+        .Q(  oLCD )
 );
 
 wire wCall_Addrs;
 reg rCall_Addrs;
-FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 )
+FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) RET
 (
 	.Clock(Clock),
 	.Reset(Reset),
@@ -117,7 +118,7 @@ FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 )
 	.Q(wCall_Addrs)
 );
 
-   assign rEnable = 1'b1;
+   assign wEnable = 1'b1;
    assign wImmediateValue = {wSourceAddr1,wSourceAddr0};
 
 
@@ -195,6 +196,8 @@ begin
            rResult      <= 0;
            rRegisterSelect <= wSourceData0;
            rBranchTaken <= 1'b0;
+			  rEnable <= wEnable;
+			  oEnable <= 1'b1;
 	end
 	//-------------------------------------
           // Corre los bits del registro en 8 bits.
