@@ -106,6 +106,8 @@ FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FF_LEDS
         .Q( { 3'b0, oEnable, oLCD})
 );
 
+wire wCall_Addrs;
+reg rCall_Addrs;
 FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 )
 (
 	.Clock(Clock),
