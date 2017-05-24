@@ -110,7 +110,7 @@ begin
  	90: oInstruction = {`LCD, 8'b0, `R0, 8'b0};
 	91: oInstruction = {`NOP, 24'd2000};
 	*/
-	92: oInstruction = { `JMP,  8'd0, 16'b0};
+	44: oInstruction = { `JMP,  8'd0, 16'b0};
 	default:
 		oInstruction = { `LCD ,  24'b0 };		//NOP
 	endcase
