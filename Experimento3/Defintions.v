@@ -20,6 +20,15 @@
 `define CALL  4'd10
 `define RET   4'd11
 
+// Registros
+`define R0 8'd0
+`define R1 8'd1
+`define R2 8'd2
+`define R3 8'd3
+`define R4 8'd4
+`define R5 8'd5
+`define R6 8'd6
+`define R7 8'd7
 
 // Se agregan para añadir las letras respectivas a la frase "Hola Mundo". 
 // Se definen las letras con la respectiva representacion ASCII.
