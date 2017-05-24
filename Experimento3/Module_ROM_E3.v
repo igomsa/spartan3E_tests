@@ -2,7 +2,8 @@
 `include "Defintions.v"
 
 `define LOOP1 8'd8
-`define LOOP2 8'd5
+`define SUBROUTINE 8'd24
+
 module ROM
 (
 	input  wire[15:0]  		iAddress,
@@ -12,15 +13,23 @@ always @ ( iAddress )
 begin
 	case (iAddress)
 
+
 //LOOP1:
-	0: oInstruction = { `NOP ,24'd4000    };
-	1: oInstruction = { `STO, `R0,16'd65535 };
-	2: oInstruction = { `STO, `R1,16'd65535 };
-	3: oInstruction = { `NOP ,24'd4000    };
-	4: oInstruction = { `MUL ,`R0,`R0,`R1    };
-	5: oInstruction = { `NOP ,24'd4000    };
-	6: oInstruction = { `LED ,8'b0,`R0,8'b0 };
-	7: oInstruction = { `JMP ,  8'd0,16'b0   };
+	0: oInstruction = { `NOP , 24'd4000    	};
+	1: oInstruction = { `STO ,`R0, `M};
+	2: oInstruction = { `CALL, `SUBROUTINE, `iAddress};
+	3: oInstruction = { `STO ,`R0, `a};
+	4: oInstruction = { `CALL, `SUBROUTINE, `iAddress};
+
+
+SUBROUTINE: oInstruction = {`LDC_INIT, 24'd0};
+	25: oInstruction = {`LCD, 8'b0, `R0, 8'b0};
+	26: oInstruction = {`NOP, 24`b1005};
+	27: oInstruction = {`SHL, `R0, `R0, 8'd4};
+	28: oInstruction = {`LCD, 8'b0, `R0, 8'b0};
+	29: oInstruction = {`NOP, 24`b1005};
+	30: oInstruction = {`RET, 24`b00};
+
 	default:
 		oInstruction = { `LED ,  24'b10101010 };		//NOP
 	endcase
