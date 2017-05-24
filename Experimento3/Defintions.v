@@ -5,12 +5,13 @@
 `default_nettype none
 `define NOP   4'd0
 `define SUB   4'd1
-`define LED   4'd2
+`define LCD   4'd2
 `define BLE   4'd3
 `define STO   4'd4
 `define ADD   4'd5
 `define JMP   4'd6
 `define MUL   4'd7
+`define SHL   4'd8
 
 //Se agregan las siguientes lineas para implementar las funciones LCD y SHL. Ademas se define la instruccion LCD_INIT para automatizar la inicializacion del LCD.
 `define LCD   4'd8

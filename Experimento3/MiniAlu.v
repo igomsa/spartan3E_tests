@@ -6,9 +6,10 @@ module MiniAlu
 (
  input wire Clock,
  input wire Reset,
- output wire [7:0] oLed
-
-
+ output wire [3:0] oLCD,
+output reg oReadWrite,
+output reg oRegisterSelect,
+output wire oEnable
 );
 
 wire [15:0]  wIP,wIP_temp;
@@ -50,6 +51,7 @@ UPCOUNTER_POSEDGE IP
 .Enable(  1'b1                 ),
 .Q(       wIP_temp             )
 );
+
 assign wIP = (rBranchTaken) ? wIPInitialValue : wIP_temp;
 
 FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FFD1
@@ -89,14 +91,14 @@ FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FFD4
 );
 
 
-reg rFFLedEN;
+reg rFFLCD_EN;
 FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FF_LEDS
 (
 	.Clock(Clock),
 	.Reset(Reset),
-	.Enable( rFFLedEN ),
+	.Enable( rFFLCD_EN ),
 	.D( wSourceData1 ),
-	.Q( oLed    )
+	.Q( { 3'b0, oEnable, oLCD}    )
 );
 
 assign wImmediateValue = {wSourceAddr1,wSourceAddr0};
@@ -109,7 +111,7 @@ begin
 	//-------------------------------------
 	`NOP:
 	begin
-		rFFLedEN     <= 1'b0;
+		rFFLCD_EN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b0;
 		rResult      <= 0;
@@ -117,7 +119,7 @@ begin
 	//-------------------------------------
 	`ADD:
 	begin
-		rFFLedEN     <= 1'b0;
+		rFFLCD_EN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b1;
 		rResult   <= wSourceData1 + wSourceData0;
@@ -125,7 +127,7 @@ begin
         //-------------------------------------
 	`SUB:
 	begin
-		rFFLedEN     <= 1'b0;
+		rFFLCD_EN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b1;
 		rResult   <= wSourceData1 - wSourceData0;
@@ -134,7 +136,7 @@ begin
 
 	`MUL:
 	begin
-		rFFLedEN     <= 1'b0;
+		rFFLCD_EN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b1;
 		rResult   <= wSourceData1 * wSourceData0;
@@ -142,7 +144,7 @@ begin
 	//-------------------------------------
 	`STO:
 	begin
-		rFFLedEN     <= 1'b0;
+		rFFLCD_EN     <= 1'b0;
 		rWriteEnable <= 1'b1;
 		rBranchTaken <= 1'b0;
 		rResult      <= wImmediateValue;
@@ -150,7 +152,7 @@ begin
 	//-------------------------------------
 	`BLE:
 	begin
-		rFFLedEN     <= 1'b0;
+		rFFLCD_EN     <= 1'b0;
 		rWriteEnable <= 1'b0;
 		rResult      <= 0;
 		if (wSourceData1 <= wSourceData0 )
@@ -162,23 +164,31 @@ begin
 	//-------------------------------------
 	`JMP:
 	begin
-		rFFLedEN     <= 1'b0;
+		rFFLCD_EN     <= 1'b0;
 		rWriteEnable <= 1'b0;
 		rResult      <= 0;
 		rBranchTaken <= 1'b1;
 	end
 	//-------------------------------------
-	`LED:
+	`LCD:
 	begin
-		rFFLedEN     <= 1'b1;
+		rFFLCD_EN     <= 1'b1;
 		rWriteEnable <= 1'b0;
 		rResult      <= 0;
 		rBranchTaken <= 1'b0;
 	end
 	//-------------------------------------
+	`SHL:
+	begin
+		rFFLCD_EN     <= 1'b0;
+		rWriteEnable <= 1'b0;
+		rResult   <= wSourceData1 >> wSourceData0;
+		rBranchTaken <= 1'b0;
+	end
+	//-------------------------------------
 	default:
 	begin
-		rFFLedEN     <= 1'b1;
+		rFFLCD_EN     <= 1'b1;
 		rWriteEnable <= 1'b0;
 		rResult      <= 0;
 		rBranchTaken <= 1'b0;
