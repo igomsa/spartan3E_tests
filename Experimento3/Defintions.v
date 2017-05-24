@@ -19,14 +19,14 @@
 `define LCD_INIT	4'd10
 
 //Se agregan las siguientes lineas para poder agregar las letras respectivas a la frase "Hola Mundo". Se definen las letras con la respectiva representacion ASCII.
-`define H	8'b01001000
-`define o	8'b01101111
-`define l	8'b01101100
-`define a	8'b01100001
-`define M	8'b01001101
-`define u	8'b01110101
-`define n	8'b01101110
-`define d	8'b01100100
-`define Space 8'b00100000
+`define H	16'b01001000
+`define o	16'b01101111
+`define l	16'b01101100
+`define a	16'b01100001
+`define M	16'b01001101
+`define u	16'b01110101
+`define n	16'b01101110
+`define d	16'b01100100
+`define Space 16'b00100000
 
 `endif
