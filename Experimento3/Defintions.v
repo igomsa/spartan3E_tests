@@ -13,12 +13,16 @@
 `define MUL   4'd7
 `define SHL   4'd8
 
-//Se agregan las siguientes lineas para implementar las funciones LCD y SHL. Ademas se define la instruccion LCD_INIT para automatizar la inicializacion del LCD.
+
+//Se agregan para implementar las funciones LCD y SHL, CALL, RET.
 `define LCD   4'd8
 `define SHL   4'd9
-`define LCD_INIT	4'd10
+`define CALL  4'd10
+`define RET   4'd11
 
-//Se agregan las siguientes lineas para poder agregar las letras respectivas a la frase "Hola Mundo". Se definen las letras con la respectiva representacion ASCII.
+
+// Se agregan para añadir las letras respectivas a la frase "Hola Mundo". 
+// Se definen las letras con la respectiva representacion ASCII.
 `define H	16'b01001000
 `define o	16'b01101111
 `define l	16'b01101100
