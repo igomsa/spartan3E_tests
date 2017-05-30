@@ -5,20 +5,18 @@
 `default_nettype none
 `define NOP   4'd0
 `define SUB   4'd1
-`define LCD   4'd2
-`define BLE   4'd3
-`define STO   4'd4
-`define ADD   4'd5
-`define JMP   4'd6
-`define MUL   4'd7
-`define SHL   4'd8
+`define BLE   4'd2
+`define STO   4'd3
+`define ADD   4'd4
+`define JMP   4'd5
+`define MUL   4'd6
 
 
 //Se agregan para implementar las funciones LCD y SHL, CALL, RET.
-`define LCD   4'd8
-`define SHL   4'd9
-`define CALL  4'd10
-`define RET   4'd11
+`define LCD   4'd7
+`define SHL   4'd8
+`define CALL  4'd9
+`define RET   4'd10
 
 // Registros
 `define R0 8'd0
@@ -30,7 +28,7 @@
 `define R6 8'd6
 `define R7 8'd7
 
-// Se agregan para añadir las letras respectivas a la frase "Hola Mundo". 
+// Se agregan para añadir las letras respectivas a la frase "Hola Mundo".
 // Se definen las letras con la respectiva representacion ASCII.
 `define H	16'b01001000
 `define o	16'b01101111

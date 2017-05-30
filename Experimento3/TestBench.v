@@ -29,7 +29,7 @@ module TestBench;
 
 
 	// Outputs
-   wire [7:0] oLDC;
+   wire [3:0] oLCD;
    wire       oReadWrite, oRegisterSelect, oEnable;
 
 
@@ -37,7 +37,7 @@ module TestBench;
 	MiniAlu uut (
 		.Clock(Clock),
 		.Reset(Reset),
-		.oLed(oLCD),
+		.oLCD(oLCD),
                 .oReadWrite(oReadWrite),
                 .oRegisterSelect(oRegisterSelect),
                 .oEnable(oEnable)

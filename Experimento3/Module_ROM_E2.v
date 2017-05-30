@@ -25,7 +25,7 @@ begin
  	7: oInstruction = {`LCD, 8'b0, `R0, 8'b0};
  	8: oInstruction = {`NOP, 24'd2000};//espera de 40us
  	9: oInstruction = {`STO, `R0, 16'h2};
- 	10: oInstruction = {`SHL, `R0, `R0, 8'b4};
+ 	10: oInstruction = {`SHL, `R0, `R0, 8'd4};
  	11: oInstruction = {`LCD, 8'b0, `R0,8'b0};
  	12: oInstruction = {`NOP, 24'd2000};//espera de 40us
  	//terimna la inicializacion sigue display clear
@@ -53,7 +53,7 @@ begin
  	34: oInstruction = {`SHL, `R0, `R0, 8'd4};
  	35: oInstruction = {`LCD, 8'b0 , `R0, 8'b0};
  	36: oInstruction = {`NOP, 24'd82000};//espero 4.64ms
-//inicia la escritura  
+//inicia la escritura
  	37: oInstruction = {`STO, `R0, `H};
  	38: oInstruction = {`LCD, 8'b0, `R0, 8'b0};
  	39: oInstruction = {`NOP, 24'd50};
