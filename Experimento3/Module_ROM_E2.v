@@ -25,7 +25,7 @@ begin
  	7: oInstruction = {`LCD, 8'b0, `R0, 8'b0};
  	8: oInstruction = {`NOP, 24'd2000};//espera de 40us
  	9: oInstruction = {`STO, `R0, 16'h2};
- 	10: oInstruction = {`SHL, `R0, `R0, 8`b4};
+ 	10: oInstruction = {`SHL, `R0, `R0, 8'b4};
  	11: oInstruction = {`LCD, 8'b0, `R0,8'b0};
  	12: oInstruction = {`NOP, 24'd2000};//espera de 40us
  	//terimna la inicializacion sigue display clear
