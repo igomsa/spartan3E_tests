@@ -36,7 +36,7 @@ module FFD_POSEDGE_SYNCRONOUS_RESET # ( parameter SIZE=8 )
 always @ (posedge Clock)
 begin
 	if ( Reset )
-		Q <= 0;
+		Q <= 8'b0;
 	else
 	begin
 		if (Enable)

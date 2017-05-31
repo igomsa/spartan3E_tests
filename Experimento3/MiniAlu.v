@@ -59,7 +59,7 @@ module MiniAlu
 
    assign wIP = (rBranchTaken) ? wIPInitialValue : wIP_temp;
 
-   FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FFD1
+   FFD_POSEDGE_SYNCRONOUS_RESET # ( 4 ) FFD1
      (
       .Clock(Clock),
       .Reset(Reset),
@@ -96,19 +96,19 @@ module MiniAlu
       );
 
    // Flip-Flop de la LCD.
-   reg               rFFLCD_EN,rEnable, rRegisterSelect;
+   reg               rFFLCD_EN,rEnable;
    wire              wEnable;
    FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FF_LCD
      (
       .Clock(Clock),
       .Reset(Reset),
       .Enable( rFFLCD_EN ),
-      .D( wSourceData1[7:4] ),
-      .Q(  oLCD )
+      .D( {rEnable, wSourceData1[7:4]} ),
+      .Q(  {wEnable, oLCD} )
       );
 
-   wire              wCall_Addrs;
-   reg               rCall_Addrs;
+   wire     [7:0]         wCall_Addrs;
+   reg      [7:0]        rCall_Addrs;
    FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) RET
      (
       .Clock(Clock),
@@ -118,7 +118,11 @@ module MiniAlu
       .Q(wCall_Addrs)
       );
 
-   assign wEnable = 1'b1;
+   initial begin
+     rEnable <= 1'b1;
+   end
+
+
    assign wImmediateValue = {wSourceAddr1,wSourceAddr0};
 
 
@@ -200,10 +204,9 @@ module MiniAlu
                rFFLCD_EN     <= 1'b1;
                rWriteEnable <= 1'b0;
                rResult      <= 0;
-               rRegisterSelect <= wSourceData0;
+               oRegisterSelect <= wSourceAddr0;
                rBranchTaken <= 1'b0;
-               rEnable <= wEnable;
-               oEnable <= 1'b1;
+               oEnable <= wEnable;
             end
 	  //-------------------------------------
           // Corre los bits del registro en 8 bits.
@@ -211,7 +214,7 @@ module MiniAlu
 	    begin
 	       rFFLCD_EN     <= 1'b0;
 	       rWriteEnable <= 1'b1;
-	       rResult   <= wSourceData1 >> wSourceData0;
+	       rResult   <= wSourceData1 << wSourceAddr0;
 	       rBranchTaken <= 1'b0;
                oEnable <= 1'b0;
 	    end
