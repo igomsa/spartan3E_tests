@@ -1,0 +1,29 @@
+[*]
+[*] GTKWave Analyzer v3.3.79 (w)1999-2017 BSI
+[*] Wed Mar 29 15:23:54 2017
+[*]
+[dumpfile] "/home/hgeihsen/Documents/Ing.Electrica/Lab_Digitales/Experimento1/Experimento1.vcd"
+[dumpfile_mtime] "Wed Mar 29 15:19:30 2017"
+[dumpfile_size] 7631
+[savefile] "/home/hgeihsen/Documents/Ing.Electrica/Lab_Digitales/Experimento1/Experimento1.gtkw"
+[timestart] 150000
+[size] 1366 709
+[pos] -1 -1
+*-14.922589 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] TestBench.
+[treeopen] TestBench.uut.
+[sst_width] 207
+[signals_width] 150
+[sst_expanded] 1
+[sst_vpaned_height] 195
+@28
+TestBench.Clock
+@22
+TestBench.uut.DataRam.oDataOut0[15:0]
+@421
+TestBench.uut.DataRam.oDataOut1[15:0]
+@420
+TestBench.uut.DataRam.iDataIn[15:0]
+TestBench.oLed[7:0]
+[pattern_trace] 1
+[pattern_trace] 0
