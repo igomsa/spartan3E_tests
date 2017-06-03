@@ -62,7 +62,7 @@ module TestBench;
 		#22000000
 
 		// Excecutable in GTKWave.
-		$dumpfile("Ejercicio1.vcd");
+		$dumpfile("Ejercicio2.vcd");
 		$dumpvars();
 		#650 $finish;
 

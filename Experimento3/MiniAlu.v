@@ -13,7 +13,7 @@ module MiniAlu
    output wire [3:0] oLCD,
    output wire       oReadWrite,
    output reg        oRegisterSelect,
-   output reg        oEnable
+   output wire        oEnable
 
    );
 
@@ -95,16 +95,26 @@ module MiniAlu
       .Q(wDestination)
       );
 
-   // Flip-Flop de la LCD.
-   reg               rFFLCD_EN,rEnable;
-   wire              wEnable;
-   FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FF_LCD
+/*
+   FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) DELAY
      (
       .Clock(Clock),
       .Reset(Reset),
+      .Enable(wDelay_EN),
+      .D(wDestination),
+      .Q(wNext_State)
+      );
+*/
+
+   // Flip-Flop de la LCD.
+   reg               rFFLCD_EN,rEnable, rFFLCD_Reset;
+   FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FF_LCD
+     (
+      .Clock(Clock),
+      .Reset(rFFLCD_Reset),
       .Enable( rFFLCD_EN ),
       .D( {rEnable, wSourceData1[7:4]} ),
-      .Q(  {wEnable, oLCD} )
+      .Q(  {oEnable, oLCD} )
       );
 
    wire     [7:0]         wCall_Addrs;
@@ -120,6 +130,8 @@ module MiniAlu
 
    initial begin
      rEnable <= 1'b1;
+      rFFLCD_Reset <= 1'b0;
+
    end
 
 
@@ -134,6 +146,7 @@ module MiniAlu
           `NOP:
             begin
                rFFLCD_EN     <= 1'b0;
+               rFFLCD_Reset <= 1'b1;
                rBranchTaken <= 1'b0;
                rWriteEnable <= 1'b0;
                rResult      <= 0;
@@ -142,46 +155,46 @@ module MiniAlu
           `ADD:
             begin
                rFFLCD_EN     <= 1'b0;
+               rFFLCD_Reset <= 1'b1;
                rBranchTaken <= 1'b0;
                rWriteEnable <= 1'b1;
                rResult   <= wSourceData1 + wSourceData0;
-               oEnable <= 1'b0;
             end
           //-------------------------------------
           `SUB:
             begin
                rFFLCD_EN     <= 1'b0;
+               rFFLCD_Reset <= 1'b1;
                rBranchTaken <= 1'b0;
                rWriteEnable <= 1'b1;
                rResult   <= wSourceData1 - wSourceData0;
-               oEnable <= 1'b0;
             end
           //-------------------------------------
 
           `MUL:
             begin
                rFFLCD_EN     <= 1'b0;
+               rFFLCD_Reset <= 1'b1;
                rBranchTaken <= 1'b0;
                rWriteEnable <= 1'b1;
                rResult   <= wSourceData1 * wSourceData0;
-               oEnable <= 1'b0;
             end
           //-------------------------------------
           `STO:
             begin
                rFFLCD_EN     <= 1'b0;
+               rFFLCD_Reset <= 1'b1;
                rWriteEnable <= 1'b1;
                rBranchTaken <= 1'b0;
                rResult      <= wImmediateValue;
-               oEnable <= 1'b0;
             end
           //-------------------------------------
           `BLE:
             begin
                rFFLCD_EN     <= 1'b0;
+               rFFLCD_Reset <= 1'b1;
                rWriteEnable <= 1'b0;
                rResult      <= 0;
-               oEnable <= 1'b0;
                if (wSourceData1 <= wSourceData0 )
                  rBranchTaken <= 1'b1;
                else
@@ -192,49 +205,49 @@ module MiniAlu
           `JMP:
             begin
                rFFLCD_EN     <= 1'b0;
+               rFFLCD_Reset <= 1'b1;
                rWriteEnable <= 1'b0;
                rResult      <= 0;
                rBranchTaken <= 1'b1;
-               oEnable <= 1'b0;
             end
           //-------------------------------------
           // Escribe un NIBBLE en la LCD.
           `LCD:
             begin
                rFFLCD_EN     <= 1'b1;
+               rFFLCD_Reset <= 1'b0;
                rWriteEnable <= 1'b0;
                rResult      <= 0;
                oRegisterSelect <= wSourceAddr0;
                rBranchTaken <= 1'b0;
-               oEnable <= wEnable;
             end
 	  //-------------------------------------
           // Corre los bits del registro en 8 bits.
 	  `SHL:
 	    begin
 	       rFFLCD_EN     <= 1'b0;
+               rFFLCD_Reset <= 1'b1;
 	       rWriteEnable <= 1'b1;
 	       rResult   <= wSourceData1 << wSourceAddr0;
 	       rBranchTaken <= 1'b0;
-               oEnable <= 1'b0;
 	    end
 	  //-------------------------------------
           `CALL:
 	    begin
 	       rFFLCD_EN     <= 1'b0;
+               rFFLCD_Reset <= 1'b1;
 	       rWriteEnable <= 1'b0;
 	       rResult   <= 1'b0;
 	       rBranchTaken <= 1'b1;
-               oEnable <= 1'b0;
 	    end
 	  //-------------------------------------
           `RET:
 	    begin
 	       rFFLCD_EN     <= 1'b0;
+               rFFLCD_Reset <= 1'b1;
 	       rWriteEnable <= 1'b0;
 	       rResult   <= wSourceData1 << wSourceData0;
 	       rBranchTaken <= 1'b0;
-               oEnable <= 1'b0;
 	    end
 	  //-------------------------------------
 	  default:
