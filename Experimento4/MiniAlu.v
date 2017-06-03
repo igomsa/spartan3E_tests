@@ -11,44 +11,43 @@ module MiniAlu
 
 );
 
-wire [15:0]  wIP,wIP_temp;
-reg         rWriteEnable,rBranchTaken;
-wire [27:0] wInstruction;
-wire [3:0]  wOperation;
-reg signed [15:0]   rResult;
-wire signed [7:0] wSourceAddr0,wSourceAddr1;
-wire [7:0] wDestination;
-wire [15:0] wSourceData0,wSourceData1,wIPInitialValue,wImmediateValue;
+wire 	   [15:0]  wIP,wIP_temp;
+reg        	   rWriteEnable,rBranchTaken;
+wire 	   [27:0]  wInstruction;
+wire 	   [3:0]   wOperation;
+reg signed [15:0]  rResult;
+wire signed[7:0]   wSourceAddr0,wSourceAddr1;
+wire       [7:0]   wDestination;
+wire 	   [15:0]  wSourceData0,wSourceData1,wIPInitialValue,wImmediateValue;
 
 
 
 
 ROM InstructionRom
 (
-	.iAddress(     wIP          ),
+	.iAddress    (     wIP      ),
 	.oInstruction( wInstruction )
 );
 
-RAM_DUAL_READ_PORT DataRam
+	// Instanciar la memoria 
+RAM_SINGLE_READ_PORT # (3,24,640*480) VideoMemory
 (
-	.Clock(         Clock        ),
-	.iWriteEnable(  rWriteEnable ),
-	.iReadAddress0( wInstruction[7:0] ),
-	.iReadAddress1( wInstruction[15:8] ),
-	.iWriteAddress( wDestination ),
-	.iDataIn(       rResult      ),
-	.oDataOut0(     wSourceData0 ),
-	.oDataOut1(     wSourceData1 )
-);
+	.Clock	      ( Clock 				 ),
+	.iWriteEnable ( rVGAWritEnable 			 ),
+	.iReadAddress ( 24'b0 				 ),
+	.iWriteAddress( {wSourceData1[7:0],wSourceData0} ),
+	.iDataIn      ( wInstruction[23:21] 		 ),
+	.oDataOut     ( {oVGA_R,oVGA_G,oVGA_B} 		 )
+);	
 
 assign wIPInitialValue = (Reset) ? 8'b0 : wDestination;
 UPCOUNTER_POSEDGE IP
 (
-.Clock(   Clock                ),
-.Reset(   Reset | rBranchTaken ),
-.Initial( wIPInitialValue + 1  ),
-.Enable(  1'b1                 ),
-.Q(       wIP_temp             )
+.Clock  (  Clock                ),
+.Reset  (  Reset | rBranchTaken ),
+.Initial( wIPInitialValue + 1   ),
+.Enable (  1'b1                 ),
+.Q      (  wIP_temp             )
 );
 assign wIP = (rBranchTaken) ? wIPInitialValue : wIP_temp;
 
