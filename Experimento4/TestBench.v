@@ -24,45 +24,53 @@
 
 module TestBench;
 
-	// Inputs
-	reg Clock;
-	reg Reset;
+   // Inputs
+   reg Clock;
+   reg Reset;
+   wire wVGA_B;
+   wire wVGA_G;
+   wire wVGA_R;
+   wire [15:0] wHorizontal_Sync;
+   wire [15:0] wVertical_Sync;
 
-	// Outputs
-	wire [7:0] oLed;
+   // Outputs
 
-	// Instantiate the Unit Under Test (UUT)
-	MiniAlu uut (
-		.Clock(Clock),
-		.Reset(Reset),
-		.oLed(oLed)
-	);
+   // Instantiate the Unit Under Test (UUT)
+   MiniAlu uut (
+                .Clock(Clock),
+                .Reset(Reset),
+                .oVGA_B(wVGA_B),
+                .oVGA_G(wVGA_G),
+                .oVGA_R(wVGA_R),
+                .oHorizontal_Sync(wHorizontal_Sync),
+                .oVertical_Sync(wVertical_Sync)
+                );
 
-	always
-	begin
-		#5  Clock =  ! Clock;
+   always
+     begin
+        #5  Clock =  ! Clock;
 
-	end
+     end
 
-	initial begin
-		// Initialize Inputs
-		Clock = 0;
-		Reset = 0;
+   initial begin
+      // Initialize Inputs
+      Clock = 0;
+      Reset = 0;
 
-		// Wait 100 ns for global reset to finish
-		#100;
-		Reset = 1;
-		#50
-		Reset = 0;
+      // Wait 100 ns for global reset to finish
+      #100;
+      Reset = 1;
+      #50
+        Reset = 0;
 
-           // Excecutable in GTKWave.
-           $dumpfile("Ejercicio1.vcd");
-           $dumpvars();
-           #650 $finish;
+      // Excecutable in GTKWave.
+      $dumpfile("Ejercicio1.vcd");
+      $dumpvars();
+      #650 $finish;
 
 
-		// Add stimulus here
+      // Add stimulus here
 
-	end
+   end
 
 endmodule

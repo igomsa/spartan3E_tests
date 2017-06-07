@@ -10,8 +10,8 @@ module MiniAlu
    output wire oVGA_B,
    output wire oVGA_G,
    output wire oVGA_R,
-   output wire oHorizontal_Sync,
-   output wire oVertical_Sync
+   output reg [15:0] oHorizontal_Sync,
+   output reg [15:0] oVertical_Sync
 
    );
 
@@ -34,6 +34,8 @@ module MiniAlu
       );
 
    // Instanciar la memoria
+   reg               rVGAWritEnable;
+
    RAM_SINGLE_READ_PORT # (3,24,640*480) VideoMemory
      (
       .Clock	      ( Clock 				 ),
@@ -42,6 +44,18 @@ module MiniAlu
       .iWriteAddress( {wSourceData1[7:0],wSourceData0} ),
       .iDataIn      ( wInstruction[23:21] 		 ),
       .oDataOut     ( {oVGA_R,oVGA_G,oVGA_B} 		 )
+      );
+
+   RAM_DUAL_READ_PORT DataRam
+     (
+      .Clock(         Clock        ),
+      .iWriteEnable(  rWriteEnable ),
+      .iReadAddress0( wInstruction[7:0] ),
+      .iReadAddress1( wInstruction[15:8] ),
+      .iWriteAddress( wDestination ),
+      .iDataIn(       rResult      ),
+      .oDataOut0(     wSourceData0 ),
+      .oDataOut1(     wSourceData1 )
       );
 
    assign wIPInitialValue = (Reset) ? 8'b0 : wDestination;
@@ -108,6 +122,7 @@ module MiniAlu
    initial begin
       oHorizontal_Sync <= 0;
       oVertical_Sync <= 0;
+
    end
 
 
@@ -155,10 +170,10 @@ module MiniAlu
             begin
                rVGAWritEnable     <= 1'b1;
                rBranchTaken <= 1'b0;
-               rWriteEnable <= 1'b';
+               rWriteEnable <= 1'b1;
                rResult   <= 1'b0;
-               oHorizontal_Sync <= SourceData0;
-               oVertical_Sync <= SourceData1;
+               oHorizontal_Sync <= wSourceData0;
+               oVertical_Sync <= wSourceData1;
             end
 
           //-------------------------------------
