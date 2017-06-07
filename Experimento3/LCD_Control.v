@@ -297,8 +297,7 @@ module Module_LCD_Control
                rData = 80'h2;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1;
-               //rNextState = `STATE_CONFIGURATION_9;
-               rNextState = `STATE_RESET;
+               rNextState = `STATE_CONFIGURATION_9;
             end
           //------------------------------------------
           /*
@@ -349,19 +348,19 @@ module Module_LCD_Control
           `STATE_CONFIGURATION_11:
             begin
                rWrite_Enabled = 1'b1;
-               rWrite_Phrase = 2'd0;
+               rWrite_Phrase = 2'd1;
                rData = 80'h06;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1;
                if ( wWriteDone )
-                 rNextState = `STATE_CONFIGURATION_12_A;
+                 //rNextState = `STATE_CONFIGURATION_12_A;
+                 rNextState = `STATE_CONFIGURATION_13;
                else
                  rNextState = `STATE_CONFIGURATION_11;
             end
           //------------------------------------------
           /*
            Wait 40 us or longer, which is 2,000 clock cycles at 50 MHz.
-           */
           `STATE_CONFIGURATION_12_A:
             begin
                rWrite_Enabled = 1'b0;
@@ -386,6 +385,7 @@ module Module_LCD_Control
                rTimeCountReset = 1'b1;
                rNextState = `STATE_CONFIGURATION_13;
             end
+           */
           //------------------------------------------
           /*
            Write SF_D<11:8> = 0x0C, pulse LCD_E High for 12 clock cycles
@@ -393,19 +393,19 @@ module Module_LCD_Control
           `STATE_CONFIGURATION_13:
             begin
                rWrite_Enabled = 1'b1;
-               rWrite_Phrase = 2'd0;
+               rWrite_Phrase = 2'd1;
                rData = 80'h0C;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1;
                if ( wWriteDone )
-                 rNextState = `STATE_CONFIGURATION_14_A;
+               //  rNextState = `STATE_CONFIGURATION_14_A;
+               rNextState = `STATE_CONFIGURATION_16;
                else
                  rNextState = `STATE_CONFIGURATION_13;
             end
           //------------------------------------------
           /*
            Wait 40 us or longer, which is 2,000 clock cycles at 50 MHz.
-           */
           `STATE_CONFIGURATION_14_A:
             begin
                rWrite_Enabled = 1'b0;
@@ -426,9 +426,10 @@ module Module_LCD_Control
                rData = 80'h0C;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1;
-               //rNextState = `STATE_CONFIGURATION_16;
-                 rNextState = `STATE_RESET;
+               rNextState = `STATE_CONFIGURATION_16;
+                // rNextState = `STATE_RESET;
             end
+           */
      //------------------------------------------
           /*
            Write SF_D<11:8> = 0x00, pulse LCD_E High for 12 clock cycles
@@ -469,7 +470,7 @@ module Module_LCD_Control
           `STATE_CONFIGURATION_16:
             begin
                rWrite_Enabled = 1'b1;
-               rWrite_Phrase = 2'd0;
+               rWrite_Phrase = 2'd1;
                rData = 80'h01;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1;
@@ -489,7 +490,7 @@ module Module_LCD_Control
                rData = 80'h01;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b0;
-              if (rTimeCount > 32'd85000 )
+              if (rTimeCount > 32'd80004 )
                  rNextState = `STATE_CONFIGURATION_17_B;
                else
                  rNextState = `STATE_CONFIGURATION_17_A;
@@ -502,8 +503,8 @@ module Module_LCD_Control
                rData = 80'h01;
                oLCD_RegisterSelect = 1'b0; //these are commands
                rTimeCountReset = 1'b1;
-               rNextState = `STATE_CONFIGURATION_15;
-                // rNextState = `STATE_RESET;
+               //rNextState = `STATE_CONFIGURATION_15;
+                 rNextState = `STATE_RESET;
             end
           //------------------------------------------
           default:

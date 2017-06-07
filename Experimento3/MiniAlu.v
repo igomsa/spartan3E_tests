@@ -155,7 +155,7 @@ module MiniAlu
           `ADD:
             begin
                rFFLCD_EN     <= 1'b0;
-               rFFLCD_Reset <= 1'b1;
+               rFFLCD_Reset <= 1'b0;
                rBranchTaken <= 1'b0;
                rWriteEnable <= 1'b1;
                rResult   <= wSourceData1 + wSourceData0;
@@ -183,7 +183,7 @@ module MiniAlu
           `STO:
             begin
                rFFLCD_EN     <= 1'b0;
-               rFFLCD_Reset <= 1'b1;
+               rFFLCD_Reset <= 1'b0;
                rWriteEnable <= 1'b1;
                rBranchTaken <= 1'b0;
                rResult      <= wImmediateValue;
@@ -192,7 +192,7 @@ module MiniAlu
           `BLE:
             begin
                rFFLCD_EN     <= 1'b0;
-               rFFLCD_Reset <= 1'b1;
+               rFFLCD_Reset <= 1'b0;
                rWriteEnable <= 1'b0;
                rResult      <= 0;
                if (wSourceData1 <= wSourceData0 )

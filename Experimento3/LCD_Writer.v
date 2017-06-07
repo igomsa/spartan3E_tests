@@ -108,9 +108,9 @@ always @ ( * )
           `STATE_RESET 	:
             begin
                rWrite_Reset <= 1'b1;
-               rData_Phrase <= iData_Phrase;
+               rData_Phrase <= 1'd0;
                oWrite_Phrase_Done <= 1'b0;
-               oSender <= oSender;
+               oSender <= 1'd0;
                //oSender <= 4'b0;
                rTimeCountReset <= 1'b1;
                  rNextState <= `WRITE_1ST_NIBBLE;
@@ -154,9 +154,9 @@ always @ ( * )
             begin
                rWrite_Reset <= 1;
                oWrite_Phrase_Done <= 0;
-               oSender <= oSender;
+               oSender <= 1'd0;
                rTimeCountReset <= 1'b0;
-               if (rTimeCount > 32'd51)
+               if (rTimeCount > 32'd53)
                  rNextState <= `RESET_COUNT_0;
                else
                  rNextState <= `WAIT_1_uS;
@@ -201,9 +201,9 @@ begin
             begin
                rWrite_Reset <= 1;
                oWrite_Phrase_Done <= 0;
-               oSender <= oSender;
+               oSender <= 1'd0;
                rTimeCountReset <= 1'b0;
-               if (rTimeCount > 32'd2000)
+               if (rTimeCount > 32'd2006)
                  rNextState <= `RESET_COUNT_1;
                else
                  rNextState <= `WAIT_40_uS;

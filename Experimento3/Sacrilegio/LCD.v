@@ -74,12 +74,12 @@ wire wLCD_EN;
 
 //sends one command/data when wWriteBegin=1
 senderLCD senderCmds(
-.iWriteBegin(wWriteBegin),
+.iWriteEnabler(wWriteBegin),
 .iData(w8Bitsdata),
 .Reset(Reset),
 .Clock(Clock),
 .oWriteDone(wWriteDone),
-.oSender(oSender),
+.oNIBBLE(oSender),
 .oLCD_EN(wLCD_EN)
 );
 

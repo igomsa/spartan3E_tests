@@ -12,32 +12,32 @@
 `define STATE_FINISH_W 		8
 
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date:    11:56:50 09/21/2016 
-// Design Name: 
-// Module Name:    senderLCD 
-// Project Name: 
-// Target Devices: 
-// Tool versions: 
-// Description: 
+// Company:
+// Engineer:
 //
-// Dependencies: 
+// Create Date:    11:56:50 09/21/2016
+// Design Name:
+// Module Name:    senderLCD
+// Project Name:
+// Target Devices:
+// Tool versions:
+// Description:
 //
-// Revision: 
+// Dependencies:
+//
+// Revision:
 // Revision 0.01 - File Created
-// Additional Comments: 
+// Additional Comments:
 //
 //////////////////////////////////////////////////////////////////////////////////
 
 module senderLCD(
-	input wire iWriteBegin,
+	input wire iWriteEnabler,
 	input wire [7:0] iData,
 	input wire Reset,
 	input wire Clock,
 	output reg oWriteDone,
-	output reg [3:0] oSender,
+	output reg [3:0] oNIBBLE,
 	output reg oLCD_EN
    );
 
@@ -57,101 +57,101 @@ begin
 	else
 	begin
 		if (rTimeCountReset)
-				rTimeCount <= 32'b0; //restart count
+				rTimeCount <= 32'b0; //reinicia la cuenta
 		else
-				rTimeCount <= rTimeCount + 32'b1; //increments count
-			
+				rTimeCount <= rTimeCount + 32'b1; //incrementa la cuenta
+
 		rCurrentState <= rNextState;
 	end
 end
 
 //----------------------------------------------
-//Current state and output logic
+//Lógica de estado actal y salida
 always @ ( * )
 begin
 	case (rCurrentState)
 	//-----------------------------------------
-	//reset state
+	//Se permanece en este estado hasta que se habilita la escritura.
 	`STATE_RESET:
 	begin
-		oSender = 			4'b0;
+		oNIBBLE = 			4'b0;
 		oWriteDone = 		1'b0;
 		oLCD_EN = 			1'b0;
 		rTimeCountReset = 1'b1;
-		
-		if(iWriteBegin)
+
+		if(iWriteEnabler)
 			rNextState = `STATE_BEFORE_EN_H;
 		else
 			rNextState = `STATE_RESET;
 	end
 	//------------------------------------------
-	//set 4 upper bits data to send, E=0
+	//Envía el Nibble más significativo, EN=0
 	`STATE_BEFORE_EN_H:
 	begin
-		oSender = 			iData[7:4]; //upper bits
+	        oNIBBLE = 		iData[7:4]; //Nibble más significativo
 		oWriteDone = 		'b0;
 		oLCD_EN = 			1'b0;			//E=0
 		rTimeCountReset = 1'b0;
-		
+
 		//delay 40ns
 		if (rTimeCount > 32'd2 )
 		begin
-			rTimeCountReset = 1'b1; //resets count
+			rTimeCountReset = 1'b1; //reinicia la cuenta
 			rNextState = `STATE_HOLD_EN_H;
 		end
 		else
 			rNextState = `STATE_BEFORE_EN_H;
 	end
 	//------------------------------------------
-	//hold the upper 4 bits data and E=1
+	//Mantiene los 4 bits más significativos en alto, EN=1
 	`STATE_HOLD_EN_H:
 	begin
-		oSender = 			iData[7:4]; //upper bits
+		oNIBBLE = 		iData[7:4]; //Nibble más significativo
 		oWriteDone = 		1'b0;
 		oLCD_EN = 			1'b1;			//E=1
 		rTimeCountReset = 1'b0;
-		
+
 		//delay 240 ns
 		if (rTimeCount > 32'd12 )
 		begin
-			rTimeCountReset = 1'b1; //resets count
+			rTimeCountReset = 1'b1; //reinicia la cuenta
 			rNextState = `STATE_AFTER_EN_H;
 		end
 		else
 			rNextState = `STATE_HOLD_EN_H;
 	end
 	//------------------------------------------
-	//clear E, hold upper bits for 40ns
+	//E=0, sostiene el nibble más alto por 40ns
 	`STATE_AFTER_EN_H:
 	begin
-		oSender = 			iData[7:4]; //upper bits
+		oNIBBLE = 		iData[7:4]; //Nibble más significativo
 		oWriteDone = 		1'b0;
 		oLCD_EN = 			1'b0;			//E=0
 		rTimeCountReset = 1'b0;
-		
+
 		//delay 40ns
 		if (rTimeCount > 32'd2 )
 		begin
-			rTimeCountReset = 1'b1; //resets count
+			rTimeCountReset = 1'b1; //reinicia la cuenta
 			rNextState = `STATE_INTER;
 		end
 		else
 			rNextState = `STATE_AFTER_EN_H;
 	end
-	
+
 	//------------------------------------------
-	//delay between 4 bit sending events
+	//delay entre el envío de 6 bits
 	`STATE_INTER:
 	begin
-		oSender = 			4'b0;
+		oNIBBLE = 			4'b0;
 		oWriteDone = 		1'b0;
 		oLCD_EN = 			1'b0;
 		rTimeCountReset = 1'b0;
-		
+
 		//delay 1us
 		if (rTimeCount > 32'd50 )
 		begin
-			rTimeCountReset = 1'b1; //resets count
+			rTimeCountReset = 1'b1; //reinicia la cuenta
 			rNextState = `STATE_BEFORE_EN_L;
 		end
 		else
@@ -159,69 +159,69 @@ begin
 	end
 
 	//------------------------------------------
-	//set 4 lower bits data to send, E=0
+	//Habilita el Nibble menos significativo , E=0
 	`STATE_BEFORE_EN_L:
 	begin
-		oSender = 			iData[3:0]; //lower bits
+		oNIBBLE = 		iData[3:0]; //Nibble menos significativo
 		oWriteDone = 		1'b0;
 		oLCD_EN = 			1'b0;			//E=0
 		rTimeCountReset = 1'b0;
-		
+
 		//delay 40ns
 		if (rTimeCount > 32'd2 )
 		begin
-			rTimeCountReset = 1'b1; //resets count
+			rTimeCountReset = 1'b1; //reinicia la cuenta
 			rNextState = `STATE_HOLD_EN_L;
 		end
 		else
 			rNextState = `STATE_BEFORE_EN_L;
 	end
 	//------------------------------------------
-	//hold the lower 4 bits data and E=1
+	//Mantiene el Nibble menos significativo en alto, E=1
 	`STATE_HOLD_EN_L:
 	begin
-		oSender = 			iData[3:0]; //lower bits
+		oNIBBLE = 			iData[3:0]; //Nibble menos significativo
 		oWriteDone = 		1'b0;
 		oLCD_EN = 			1'b1;			//E=1
 		rTimeCountReset = 1'b0;
-		
+
 		//delay 240ns
 		if (rTimeCount > 32'd12 )
 		begin
-			rTimeCountReset=1'b1; //resets count
+			rTimeCountReset=1'b1; //reinicia la cuenta
 			rNextState = `STATE_AFTER_EN_L;
 		end
 		else
 			rNextState = `STATE_HOLD_EN_L;
 	end
 	//------------------------------------------
-	//clear E, hold lower bits for 40ns
+	// Mantiene el Nibble menos significativo por 40ns, E=0
 	`STATE_AFTER_EN_L:
 	begin
-		oSender = 			iData[3:0]; //lower bits
+		oNIBBLE = 		iData[3:0]; //Nibble menos significativo
 		oWriteDone = 		1'b0;
 		oLCD_EN = 			1'b0;			//E=0
 		rTimeCountReset = 1'b0;
-		
+
 		//delay 40ns
 		if (rTimeCount > 32'd2 )
 		begin
-			rTimeCountReset = 1'b1; //resets count
+			rTimeCountReset = 1'b1; //reinicia la cuenta
 			rNextState = `STATE_FINISH_W;
 		end
 		else
 			rNextState = `STATE_AFTER_EN_L;
 	end
-	
+
 	//------------------------------------------
-	//delay of 40us between commands/data
+	//delay de 40us entre datos
 	`STATE_FINISH_W:
 	begin
-		oSender = 			4'b0;
+		oNIBBLE = 			4'b0;
 		oWriteDone = 		1'b0;
 		oLCD_EN = 			1'b0;
 		rTimeCountReset = 1'b0;
-		
+
 		//delay 40us
 		if (rTimeCount > 32'd2000 )
 		begin
@@ -232,17 +232,17 @@ begin
 		else
 			rNextState = 		`STATE_FINISH_W;
 	end
-	
+
 	//------------------------------------------
 	default:
 	begin
-		oSender = 			4'b0;
+		oNIBBLE = 			4'b0;
 		oWriteDone = 		1'b0;
 		oLCD_EN = 			1'b0;
 		rTimeCountReset = 1'b0;
 		rNextState = 		`STATE_RESET;
 	end
-	
+
 	endcase
 end
 endmodule

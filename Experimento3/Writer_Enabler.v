@@ -62,7 +62,7 @@ reg [7:0] rCurrentState,rNextState;
                oLCD_Enabled<= 1'b0;
                rEnableDone <= 1'b0;
                rTimeCountReset <= 1'b0;
-               if (rTimeCount > 32'd2 )		//se mantiene enalble en 0 por 40ns
+               if (rTimeCount > 32'd4 )		//se mantiene enalble en 0 por 40ns
                  begin
                     rNextState <= `RESET_COUNT_0;
                  end
@@ -85,7 +85,7 @@ reg [7:0] rCurrentState,rNextState;
                oLCD_Enabled<= 1'b1;
                rEnableDone <= 1'b0;
                rTimeCountReset <= 1'b0;
-               if (rTimeCount > 32'd15 )		//se mantiene enable por 240ns
+               if (rTimeCount > 32'd17 )		//se mantiene enable por 240ns
                  begin
                     rNextState <= `RESET_COUNT_1;
                  end
@@ -108,7 +108,7 @@ reg [7:0] rCurrentState,rNextState;
                oLCD_Enabled<= 1'b0;
                rEnableDone<= 1'b0;
                rTimeCountReset <= 1'b0;
-               if (rTimeCount > 1'b1 )		// se mantiene enable por 20ns
+               if (rTimeCount > 1'd4 )		// se mantiene enable por 20ns
                  begin
                     rNextState <= `RESET_COUNT_2;
                  end
