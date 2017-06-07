@@ -10,17 +10,22 @@ module RAM_SINGLE_READ_PORT # ( parameter DATA_WIDTH= 16, parameter ADDR_WIDTH=8
 	output reg [DATA_WIDTH-1:0] oDataOut
 );
 
+initial begin
+   oDataOut <= 3'b0;
+end
+
 reg [DATA_WIDTH-1:0] Ram [MEM_SIZE:0];
-	
+
 always @(posedge Clock)
-	
+
 begin
 	if (iWriteEnable)
 		Ram[iWriteAddress] <= iDataIn;
 		oDataOut 	   <= Ram[iReadAddress];
 end
-	
+
 endmodule
+
 
 /*
 module RAM_DUAL_READ_PORT # ( parameter DATA_WIDTH= 16, parameter ADDR_WIDTH=8, parameter MEM_SIZE=8 )
@@ -35,18 +40,18 @@ module RAM_DUAL_READ_PORT # ( parameter DATA_WIDTH= 16, parameter ADDR_WIDTH=8, 
 	output reg [DATA_WIDTH-1:0] oDataOut1
 );
 
-reg [DATA_WIDTH-1:0] Ram [MEM_SIZE:0];		
+reg [DATA_WIDTH-1:0] Ram [MEM_SIZE:0];
 
-always @(posedge Clock) 
-begin 
-	
-		if (iWriteEnable) 
-			Ram[iWriteAddress] <= iDataIn; 
-			
-	
-			oDataOut0 <= Ram[iReadAddress0]; 
-			oDataOut1 <= Ram[iReadAddress1]; 
-		
-end 
+always @(posedge Clock)
+begin
+
+		if (iWriteEnable)
+			Ram[iWriteAddress] <= iDataIn;
+
+
+			oDataOut0 <= Ram[iReadAddress0];
+			oDataOut1 <= Ram[iReadAddress1];
+
+end
 endmodule
 */
