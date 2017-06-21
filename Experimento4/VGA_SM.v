@@ -19,23 +19,35 @@ module Module_VGA_Control
    output wire oVGA_B,
    output wire oVGA_G,
    output wire oVGA_R,
-   output reg  oHorizontal_Sync,
-   output reg  oVertical_Sync
+   output wire  oHorizontal_Sync,
+   output wire  oVertical_Sync
 
    );
 
    reg [3:0]   rColor;
    reg [7:0]   rCurrentState,rNextState;
-   reg [31:0]  rTimeCount, rCurrentRow, rCurrentCol, i, j;
-   reg         rTimeCountReset;
+   reg [31:0]  rTimeCount,  i, j;
+   wire [7:0] wCurrentRow, wCurrentCol;
+	reg wRam_R, wRam_G, wRam_B;
+   reg         rTimeCountReset, rResetCol, rResetRow;
 
 
    initial begin
       rColor <= {0,0,0};
-      {rCurrentRow, rCurrentCol} <= {0,0};
-      {oVertical_Sync, oHorizontal_Sync} <= {0,0};
+//      {rCurrentRow, rCurrentCol} <= {0,0};
+      //{oVertical_Sync, oHorizontal_Sync} <= {0,0};
    end
 
+crvga crvga1(
+	.clock(Clock),
+	.reset(Reset),
+	.iCrvgaR(wRam_R),.iCrvgaG(wRam_G),.iCrvgaB(wRam_B),
+	.oCrvgaR(oVGA_R),.oCrvgaG(oVGA_G),.oCrvgaB(oVGA_B),
+	.hoz_sync(oHorizontal_Sync),
+	.ver_sync(oVertical_Sync),
+	.oCurrentCol(wCurrentCol),
+	.oCurrentRow(wCurrentRow)
+);
 
    //assign {oVGA_R, oVGA_B, oVGA_G} = ( rCurrentCol < 100 ||  rCurrentCol > 540 || rCurrentRow < 100 || rCurrentRow > 380 ) ? {0,0,0} : rColor;
 
@@ -59,42 +71,53 @@ module Module_VGA_Control
           end
      end
    //----------------------------------------------
-
+/*
    //Col and Row counter
    always @ ( posedge Clock )
      begin
+        // Cuando se da el Reset general, Col y Row se resetean.
         if (Reset)
           begin
              {rCurrentRow, rCurrentCol} <= {0,0};
           end
+
         else
           begin
-             if (rCurrentRow < 480)
+             if (rResetCol = 1)
+                  rCurrentCol <= 0;
+             else
                begin
-                  //for (i= 0; i < 480; i = i +1)
-                  // begin
-                  if (rCurrentCol<640)
+                  if (rResetRow <= 1)
                     begin
-                       //for (j = 0; j < 640 ; j = i+1)
-                       //  begin
-                       oHorizontal_Sync <= 1;
-                       rCurrentCol <= rCurrentCol + 1;
+                       if (rCurrentRow < 480)
+                         begin
+                            //for (i= 0; i < 480; i = i +1)
+                            // begin
+                            if (rCurrentCol<640)
+                              begin
+                                 //for (j = 0; j < 640 ; j = i+1)
+                                 //  begin
+                                 oHorizontal_Sync <= 1;
+                                 rCurrentCol <= rCurrentCol + 1;
+                              end
+                            else
+                              begin
+                                 rCurrentCol <= 0;
+                                 oHorizontal_Sync <= 0;
+                                 rCurrentRow <= rCurrentRow + 1;
+                              end
+                            oVertical_Sync <= 1;
+                         end
                     end
                   else
                     begin
-                       rCurrentCol <= 0;
-                       oHorizontal_Sync <= 0;
-                       rCurrentRow <= rCurrentRow + 1;
+                       rCurrentRow <= 0;
+                       oVertical_Sync <= 0;
                     end
-                  oVertical_Sync <= 1;
-               end
-             else
-               begin
-                  rCurrentRow <= 0;
-                  oVertical_Sync <= 0;
                end
           end
      end
+ */
    //----------------------------------------------
 
         //Current state and output logic
@@ -106,14 +129,16 @@ module Module_VGA_Control
                `STATE_RESET:
                  begin
                     //rColor <= {0,0,0};
-                    {oVGA_R, oVGA_B, oVGA_G} <= `COLOR_BLACK;
-                    oVertical_Sync <= 0;
-                    oHorizontal_Sync <= 0;
-                    //if (rCurrentCol >= 100 ||  rCurrentCol <= 540 || rCurrentRow >= 100 || rCurrentRow <= 380)
+                    {wRam_R, wRam_G, wRam_B} <= `COLOR_BLACK;
+                    //oVertical_Sync <= 0;
+                    //oHorizontal_Sync <= 0;
+                    if (wCurrentCol >= 100 ||  wCurrentCol <= 540 || wCurrentRow >= 100 || wCurrentRow <= 380)
                       rNextState <= `SET_GREEN;
+                    else
+                      rNextState <= `STATE_RESET;
                  end
                //------------------------------------------
-
+/*
                `PULSE_WIDTH_TIME:
                  begin
                     rColor <= `COLOR_BLACK;
@@ -142,12 +167,13 @@ module Module_VGA_Control
                          rTimeCountReset <= 1;
                       end
                  end
+ */
                //------------------------------------------
 
                `SET_GREEN:
                  begin
-                    rColor <= `COLOR_GREEN;
-                    if (rCurrentRow > 170)
+                   {wRam_R, wRam_G, wRam_B} <= `COLOR_GREEN;
+                    if (wCurrentRow > 170)
                       rNextState <= `SET_RED;
                     else
                       rNextState <= `SET_GREEN;
@@ -156,8 +182,8 @@ module Module_VGA_Control
 
                `SET_RED:
                  begin
-                    rColor <= `COLOR_RED;
-                    if (rCurrentRow > 240)
+                    {wRam_R, wRam_G, wRam_B} <= `COLOR_RED;
+                    if (wCurrentRow > 240)
                       rNextState <= `SET_MAGENTA;
                     else
                       rNextState <= `SET_RED;
@@ -166,8 +192,8 @@ module Module_VGA_Control
 
                `SET_MAGENTA:
                  begin
-                    rColor <= `COLOR_MAGENTA;
-                    if (rCurrentRow > 310)
+                    {wRam_R, wRam_G, wRam_B} <= `COLOR_MAGENTA;
+                    if (wCurrentRow > 310)
                       rNextState <= `SET_BLUE;
                     else
                       rNextState <= `SET_MAGENTA;
@@ -176,8 +202,8 @@ module Module_VGA_Control
 
                `SET_BLUE:
                  begin
-                    rColor <= `COLOR_BLUE;
-                    if (rCurrentRow > 380)
+                    {wRam_R, wRam_G, wRam_B} <= `COLOR_BLUE;
+                    if (wCurrentRow > 380)
                       rNextState <= `STATE_RESET;
                     else
                       rNextState <= `SET_BLUE;
@@ -186,7 +212,7 @@ module Module_VGA_Control
 
                default:
                  begin
-                    rColor <= {0,0,0};
+                    {wRam_R, wRam_G, wRam_B} <= {0,0,0};
                     rNextState <= `STATE_RESET;
                  end
                //------------------------------------------
