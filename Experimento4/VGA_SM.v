@@ -132,10 +132,7 @@ crvga crvga1(
                     {wRam_R, wRam_G, wRam_B} <= `COLOR_BLACK;
                     //oVertical_Sync <= 0;
                     //oHorizontal_Sync <= 0;
-                    if (wCurrentCol >= 100 ||  wCurrentCol <= 540 || wCurrentRow >= 100 || wCurrentRow <= 380)
                       rNextState <= `SET_GREEN;
-                    else
-                      rNextState <= `STATE_RESET;
                  end
                //------------------------------------------
 /*
@@ -173,7 +170,7 @@ crvga crvga1(
                `SET_GREEN:
                  begin
                    {wRam_R, wRam_G, wRam_B} <= `COLOR_GREEN;
-                    if (wCurrentRow > 170)
+                    if (wCurrentRow > 64)
                       rNextState <= `SET_RED;
                     else
                       rNextState <= `SET_GREEN;
@@ -183,7 +180,7 @@ crvga crvga1(
                `SET_RED:
                  begin
                     {wRam_R, wRam_G, wRam_B} <= `COLOR_RED;
-                    if (wCurrentRow > 240)
+                    if (wCurrentRow > 128)
                       rNextState <= `SET_MAGENTA;
                     else
                       rNextState <= `SET_RED;
@@ -193,7 +190,7 @@ crvga crvga1(
                `SET_MAGENTA:
                  begin
                     {wRam_R, wRam_G, wRam_B} <= `COLOR_MAGENTA;
-                    if (wCurrentRow > 310)
+                    if (wCurrentRow > 192)
                       rNextState <= `SET_BLUE;
                     else
                       rNextState <= `SET_MAGENTA;
@@ -203,7 +200,7 @@ crvga crvga1(
                `SET_BLUE:
                  begin
                     {wRam_R, wRam_G, wRam_B} <= `COLOR_BLUE;
-                    if (wCurrentRow > 380)
+                    if (wCurrentRow == 0)
                       rNextState <= `STATE_RESET;
                     else
                       rNextState <= `SET_BLUE;
