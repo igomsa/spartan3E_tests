@@ -1,0 +1,12 @@
+INST "Clock_BUFGP" LOC = BUFGMUX_X1Y11;
+NET "clock" LOC = C9;
+NET "reset" LOC = L13;
+NET "reset" IOSTANDARD = LVTTL;
+NET "reset" PULLDOWN;
+
+NET "oVGA_R"			LOC = "H14" | IOSTANDARD = LVTTL | DRIVE = 8 | SLEW = FAST ;
+NET "oVGA_G"			LOC = "H15" | IOSTANDARD = LVTTL | DRIVE = 8 | SLEW = FAST ;
+NET "oVGA_B" 			LOC = "G15" | IOSTANDARD = LVTTL | DRIVE = 8 | SLEW = FAST ;
+NET "oHorizontal_Sync" 	LOC = "F15" | IOSTANDARD = LVTTL | DRIVE = 8 | SLEW = FAST ;
+NET "oVertical_Sync" 	LOC = "F14" | IOSTANDARD = LVTTL | DRIVE = 8 | SLEW = FAST ;
+
