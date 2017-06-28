@@ -2,14 +2,20 @@
 
 `include "Defintions.v"
 
-`define STATE_RESET       0
-`define PULSE_WIDTH_TIME  1
-`define BACK_PORCH_TIME   2
-`define SET_GREEN         3
-`define SET_RED           4
-`define SET_MAGENTA       5
-`define SET_BLUE          6
-`define FRONT_PORCH_TIME  7
+`define STATE_RESET			0
+`define C_KEY					1
+`define CS_KEY 				2
+`define D_KEY         		3
+`define DS_KEY           	4
+`define E_KEY       			5
+`define LINE					6
+`define F_KEY          		7
+`define FS_KEY  				8
+`define G_KEY					9
+`define GS_KEY					10
+`define A_KEY					11
+`define AS_KEY					12
+`define B_KEY					13
 
 module Module_VGA_Control
   (
@@ -33,7 +39,7 @@ module Module_VGA_Control
 
 
    initial begin
-      rColor <= {0,0,0};
+      rColor <= {0,1,1};
 //      {rCurrentRow, rCurrentCol} <= {0,0};
       //{oVertical_Sync, oHorizontal_Sync} <= {0,0};
    end
@@ -81,88 +87,146 @@ crvga crvga1(
 
                `STATE_RESET:
                  begin
-                    //rColor <= {0,0,0};
-                    {wRam_R, wRam_G, wRam_B} <= `COLOR_BLACK;
-                    //oVertical_Sync <= 0;
-                    //oHorizontal_Sync <= 0;
-                    //if (wCurrentCol >= 100 ||  wCurrentCol <= 540 || wCurrentRow >= 100 || wCurrentRow <= 380)
-                      rNextState <= `SET_GREEN;
-                    //else
-                     // rNextState <= `STATE_RESET;
-                 end
-               //------------------------------------------
-/*
-               `PULSE_WIDTH_TIME:
-                 begin
-                    rColor <= `COLOR_BLACK;
-                    oVertical_Sync <= 0;
-                    oHorizontal_Sync <= 0;
-                    if (rTimeCount < 1600)
-                      rNextState <= `PULSE_WIDTH_TIME;
+                    //rColor <= {0,1,1};
+                    {wRam_R, wRam_G, wRam_B} <= `COLOR_CYAN;
+                    if (wCurrentRow > 99)
+                      rNextState <= `C_KEY;
                     else
-                      begin
-                         rNextState <= `BACK_PORCH_TIME;
-                         rTimeCountReset <= 1;
-                      end
-                 end
-               //------------------------------------------
-
-               `BACK_PORCH_TIME:
-                 begin
-                    rColor <= `COLOR_BLACK;
-                    oVertical_Sync <= 0;
-                    oHorizontal_Sync <= 0;
-                    if (rTimeCount < 23200)
-                      rNextState <= `BACK_PORCH_TIME;
-                    else
-                      begin
-                         rNextState <= `SET_GREEN;
-                         rTimeCountReset <= 1;
-                      end
-                 end
- */
-               //------------------------------------------
-
-               `SET_GREEN:
-                 begin
-                   {wRam_R, wRam_G, wRam_B} <= `COLOR_GREEN;
-                    if (wCurrentRow > 120)
-                      rNextState <= `SET_RED;
-                    else
-                      rNextState <= `SET_GREEN;
-                 end
-               //------------------------------------------
-
-               `SET_RED:
-                 begin
-                    {wRam_R, wRam_G, wRam_B} <= `COLOR_RED;
-                    if (wCurrentRow > 240)
-                      rNextState <= `SET_MAGENTA;
-                    else
-                      rNextState <= `SET_RED;
-                 end
-               //------------------------------------------
-
-               `SET_MAGENTA:
-                 begin
-                    {wRam_R, wRam_G, wRam_B} <= `COLOR_MAGENTA;
-                    if (wCurrentRow > 360)
-                      rNextState <= `SET_BLUE;
-                    else
-                      rNextState <= `SET_MAGENTA;
-                 end
-               //------------------------------------------
-
-               `SET_BLUE:
-                 begin
-                    {wRam_R, wRam_G, wRam_B} <= `COLOR_BLUE;
-                    if (wCurrentRow == 0)
                       rNextState <= `STATE_RESET;
-                    else
-                      rNextState <= `SET_BLUE;
                  end
                //------------------------------------------
 
+					//DO
+               `C_KEY:
+                 begin
+                   {wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
+                    if (wCurrentCol > 52)
+                      rNextState <= `CS_KEY;
+                    else
+                      rNextState <= `C_KEY;
+                 end
+               //------------------------------------------
+					//DO#
+               `CS_KEY:
+                 begin
+                    {wRam_R, wRam_G, wRam_B} <= `COLOR_BLACK;
+                    if (wCurrentCol > 105)
+                      rNextState <= `D_KEY;
+                    else
+                      rNextState <= `CS_KEY;
+                 end
+               //------------------------------------------
+					//RE
+               `D_KEY:
+                 begin
+                    {wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
+                    if (wCurrentCol > 158)
+                      rNextState <= `DS_KEY;
+                    else
+                      rNextState <= `D_KEY;
+                 end
+               //------------------------------------------
+					//RE#
+               `DS_KEY:
+                 begin
+                    {wRam_R, wRam_G, wRam_B} <= `COLOR_BLACK;
+                    if (wCurrentCol >211)
+                      rNextState <= `E_KEY;
+                    else
+                      rNextState <= `DS_KEY;
+                 end
+               //------------------------------------------
+              
+					//MI
+               `E_KEY:
+                 begin
+                    {wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
+                    if (wCurrentCol >264)
+                      rNextState <= `LINE;
+                    else
+                      rNextState <= `E_KEY;
+                 end
+               //------------------------------------------               
+
+               `LINE:
+                 begin
+                    {wRam_R, wRam_G, wRam_B} <= `COLOR_BLACK;
+                    if (wCurrentCol >268)
+                      rNextState <= `F_KEY;
+                    else
+                      rNextState <= `LINE;
+                 end
+               //------------------------------------------               
+					//FA
+               `F_KEY:
+                 begin
+                    {wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
+                    if (wCurrentCol >321)
+                      rNextState <= `FS_KEY;
+                    else
+                      rNextState <= `FS_KEY;
+                 end
+               //------------------------------------------               
+					//FA#
+               `FS_KEY:
+                 begin
+                    {wRam_R, wRam_G, wRam_B} <= `COLOR_BLACK;
+                    if (wCurrentCol >374)
+                      rNextState <= `G_KEY;
+                    else
+                      rNextState <= `FS_KEY;
+                 end
+               //------------------------------------------               
+					//SOL
+               `G_KEY:
+                 begin
+                    {wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
+                    if (wCurrentCol >427)
+                      rNextState <= `GS_KEY;
+                    else
+                      rNextState <= `A_KEY;
+                 end
+               //------------------------------------------               
+					//SOL#
+               `GS_KEY:
+                 begin
+                    {wRam_R, wRam_G, wRam_B} <= `COLOR_BLACK;
+                    if (wCurrentCol >480)
+                      rNextState <= `A_KEY;
+                    else
+                      rNextState <= `GS_KEY;
+                 end
+               //------------------------------------------              
+					//LA
+               `A_KEY:
+                 begin
+                    {wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
+                    if (wCurrentCol >533)
+                      rNextState <= `AS_KEY;
+                    else
+                      rNextState <= `AS_KEY;
+                 end
+               //------------------------------------------
+					//LAS
+               `AS_KEY:
+                 begin
+                    {wRam_R, wRam_G, wRam_B} <= `COLOR_BLACK;
+                    if (wCurrentCol >586)
+                      rNextState <= `B_KEY;
+                    else
+                      rNextState <= `AS_KEY;
+                 end
+               //------------------------------------------
+					//SI
+               `B_KEY:
+                 begin
+                    {wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
+                    if (wCurrentCol >639)
+                      rNextState <= `C_KEY;
+                    else
+                      rNextState <= `B_KEY;
+                 end
+               //------------------------------------------					
                default:
                  begin
                     {wRam_R, wRam_G, wRam_B} <= {0,0,0};
