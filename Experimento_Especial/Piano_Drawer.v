@@ -89,7 +89,7 @@ crvga crvga1(
                  begin
                     //rColor <= {0,1,1};
                     {wRam_R, wRam_G, wRam_B} <= `COLOR_CYAN;
-                    if (wCurrentRow > 99)
+                    if (wCurrentRow > 99 && wCurrentRow < 380)
                       rNextState <= `C_KEY;
                     else
                       rNextState <= `STATE_RESET;
@@ -164,7 +164,7 @@ crvga crvga1(
                     if (wCurrentCol >321)
                       rNextState <= `FS_KEY;
                     else
-                      rNextState <= `FS_KEY;
+                      rNextState <= `F_KEY;
                  end
                //------------------------------------------               
 					//FA#
@@ -184,7 +184,7 @@ crvga crvga1(
                     if (wCurrentCol >427)
                       rNextState <= `GS_KEY;
                     else
-                      rNextState <= `A_KEY;
+                      rNextState <= `G_KEY;
                  end
                //------------------------------------------               
 					//SOL#
@@ -204,7 +204,7 @@ crvga crvga1(
                     if (wCurrentCol >533)
                       rNextState <= `AS_KEY;
                     else
-                      rNextState <= `AS_KEY;
+                      rNextState <= `A_KEY;
                  end
                //------------------------------------------
 					//LAS
@@ -221,15 +221,17 @@ crvga crvga1(
                `B_KEY:
                  begin
                     {wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
-                    if (wCurrentCol >639)
-                      rNextState <= `C_KEY;
+                    if (wCurrentRow >379)
+                      rNextState <= `STATE_RESET;
+						  else if(wCurrentCol==0)
+							 rNextState <= `C_KEY;
                     else
                       rNextState <= `B_KEY;
-                 end
+					  end
                //------------------------------------------					
                default:
                  begin
-                    {wRam_R, wRam_G, wRam_B} <= {0,0,0};
+                    {wRam_R, wRam_G, wRam_B} <= {0,1,1};
                     rNextState <= `STATE_RESET;
                  end
                //------------------------------------------
