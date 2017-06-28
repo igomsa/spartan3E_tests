@@ -70,54 +70,7 @@ crvga crvga1(
              rCurrentState <= rNextState;
           end
      end
-   //----------------------------------------------
-/*
-   //Col and Row counter
-   always @ ( posedge Clock )
-     begin
-        // Cuando se da el Reset general, Col y Row se resetean.
-        if (Reset)
-          begin
-             {rCurrentRow, rCurrentCol} <= {0,0};
-          end
 
-        else
-          begin
-             if (rResetCol = 1)
-                  rCurrentCol <= 0;
-             else
-               begin
-                  if (rResetRow <= 1)
-                    begin
-                       if (rCurrentRow < 480)
-                         begin
-                            //for (i= 0; i < 480; i = i +1)
-                            // begin
-                            if (rCurrentCol<640)
-                              begin
-                                 //for (j = 0; j < 640 ; j = i+1)
-                                 //  begin
-                                 oHorizontal_Sync <= 1;
-                                 rCurrentCol <= rCurrentCol + 1;
-                              end
-                            else
-                              begin
-                                 rCurrentCol <= 0;
-                                 oHorizontal_Sync <= 0;
-                                 rCurrentRow <= rCurrentRow + 1;
-                              end
-                            oVertical_Sync <= 1;
-                         end
-                    end
-                  else
-                    begin
-                       rCurrentRow <= 0;
-                       oVertical_Sync <= 0;
-                    end
-               end
-          end
-     end
- */
    //----------------------------------------------
 
         //Current state and output logic
