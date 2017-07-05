@@ -2,14 +2,14 @@
 
 `include "Defintions.v"
 
-`define STATE_RESET			0
+`define STATE_RESET		    	        0
 `define C_KEY					1
-`define CS_KEY 				2
-`define D_KEY         		3
-`define DS_KEY           	4
-`define E_KEY       			5
+`define CS_KEY 				        2
+`define D_KEY         		                3
+`define DS_KEY           	                4
+`define E_KEY       			        5
 `define LINE					6
-`define F_KEY          		7
+`define F_KEY          		                7
 `define FS_KEY  				8
 `define G_KEY					9
 `define GS_KEY					10
