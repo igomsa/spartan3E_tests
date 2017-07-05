@@ -32,4 +32,17 @@
 `define COLOR_YELLOW  8'b110
 `define COLOR_WHITE   8'b111
 
+`define DO 8'h1A 
+`define RE 8'h22
+`define MI 8'h21
+`define FA 8'h2A
+`define SOL 8'h32
+`define LA 8'h31
+`define SI 8'h3A
+`define DOs 8'h1B
+`define REs 8'h23
+`define FAs 8'h34
+`define SOLs 8'h33
+`define LAs 8'h3B
+
 `endif
