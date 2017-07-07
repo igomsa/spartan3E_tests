@@ -2,20 +2,21 @@
 
 `include "Defintions.v"
 
-`define STATE_RESET			0
-`define C_KEY					1
-`define CS_KEY 				2
+`define STATE_RESET		0
+`define C_KEY			1
+`define CS_KEY 			2
 `define D_KEY         		3
 `define DS_KEY           	4
-`define E_KEY       			5
-`define LINE					6
+`define E_KEY       		5
+`define LINE			6
 `define F_KEY          		7
-`define FS_KEY  				8
-`define G_KEY					9
-`define GS_KEY					10
-`define A_KEY					11
-`define AS_KEY					12
-`define B_KEY					13
+`define FS_KEY  		8
+`define G_KEY			9 
+`define GS_KEY			10
+`define A_KEY			11
+`define AS_KEY			12
+`define B_KEY			13
+//---------------------------------------------------------
 
 module Module_VGA_Control
   (
@@ -25,15 +26,15 @@ module Module_VGA_Control
    output wire oVGA_B,
    output wire oVGA_G,
    output wire oVGA_R,
-   output wire  oHorizontal_Sync,
-   output wire  oVertical_Sync,
-	input wire clk_kb,
-	input wire data_kb
+   output wire oHorizontal_Sync,
+   output wire oVertical_Sync,
+   input wire  clk_kb,
+   input wire  data_kb
 
    );
 
    reg [2:0] rColor [0:11]  ;
-   reg [7:0]   rCurrentState,rNextState;
+   reg [7:0]   rCurrentState,rNextState, rCurrentColorState, rNextColorState;
    reg [31:0]  rTimeCount,  i, j;
 	wire [7:0] ikeyboard;
    wire [31:0] wCurrentRow, wCurrentCol;
@@ -42,13 +43,25 @@ module Module_VGA_Control
 	wire [2:0]  wColor;
 
    initial begin
+      rColor[0] = `COLOR_WHITE;
+      rColor[1] = `COLOR_BLACK;
+      rColor[2] = `COLOR_WHITE;
+      rColor[3] = `COLOR_BLACK;
+      rColor[4] = `COLOR_WHITE;
+      rColor[5] = `COLOR_WHITE;
+      rColor[6] = `COLOR_BLACK;
+      rColor[7] = `COLOR_WHITE;
+      rColor[8] = `COLOR_BLACK;
+      rColor[9] = `COLOR_WHITE;
+      rColor[10] = `COLOR_BLACK;
+      rColor[11] = `COLOR_WHITE;
       //rColor <= {0,1,1};
 //      {rCurrentRow, rCurrentCol} <= {0,0};
       //{oVertical_Sync, oHorizontal_Sync} <= {0,0};
    end
 
 crvga crvga1(
-	.clock(Clock),
+        .clock(Clock),
 	.reset(Reset),
 	.iCrvgaR(wRam_R),.iCrvgaG(wRam_G),.iCrvgaB(wRam_B),
 	.oCrvgaR(oVGA_R),.oCrvgaG(oVGA_G),.oCrvgaB(oVGA_B),
@@ -76,6 +89,7 @@ keyboard keyboard1(
         if (Reset)
           begin
              rCurrentState <= `STATE_RESET;
+             rCurrentColorState <= `C_KEY;
              rTimeCount <= 32'b0;
           end
         else
@@ -85,11 +99,144 @@ keyboard keyboard1(
              else
                rTimeCount <= rTimeCount + 32'b1;
              rCurrentState <= rNextState;
+             rCurrentColorState <= rNextColorState;
           end
      end
 
    //----------------------------------------------
+   always @ (
+             rColor[0],
+             rColor[1],
+             rColor[2],
+             rColor[3],
+             rColor[4],
+             rColor[5],
+             rColor[6],
+             rColor[7],
+             rColor[8],
+             rColor[9],
+             rColor[10],
+             rColor[11]
+             )
 
+     begin
+        case(rCurrentColorState)
+          `C_KEY:
+            begin
+               rColor[0] <= `COLOR_GREEN;
+               if (ikeyboard == `DO)
+                 rNextState <= `CS_KEY;
+               else
+                 rNextState <= `C_KEY;
+            end
+          `CS_KEY:
+            begin
+               rColor[0] <= `COLOR_WHITE;
+               rColor[1] <= `COLOR_GREEN;
+               if (ikeyboard == `DOs)
+                 rNextState <= `D_KEY;
+               else
+                 rNextState <= `CS_KEY;
+            end
+          `D_KEY:
+            begin
+               rColor[1] <= `COLOR_WHITE;
+               rColor[2] <= `COLOR_GREEN;
+               if (ikeyboard == `RE)
+                 rNextState <= `DS_KEY;
+               else
+                 rNextState <= `D_KEY;
+            end
+          `DS_KEY:
+            begin
+               rColor[2] <= `COLOR_BLACK;
+               rColor[3] <= `COLOR_GREEN;
+               if (ikeyboard == `REs)
+                 rNextState <= `E_KEY;
+               else
+                 rNextState <= `DS_KEY;
+            end
+          `E_KEY:
+            begin
+               rColor[3] <= `COLOR_WHITE;
+               rColor[4] <= `COLOR_GREEN;
+               if (ikeyboard == `MI)
+                 rNextState <= `F_KEY;
+               else
+                 rNextState <= `E_KEY;
+            end
+          `F_KEY:
+            begin
+               rColor[4] <= `COLOR_WHITE;
+               rColor[5] <= `COLOR_GREEN;
+               if (ikeyboard == `FA)
+                 rNextState <= `FS_KEY;
+               else
+                 rNextState <= `F_KEY;
+            end
+          `FS_KEY:
+            begin
+               rColor[5] <= `COLOR_BLACK;
+               rColor[6] <= `COLOR_GREEN;
+               if (ikeyboard == `FAs)
+                 rNextState <= `G_KEY;
+               else
+                 rNextState <= `FS_KEY;
+            end
+          `G_KEY:
+            begin
+               rColor[6] <= `COLOR_WHITE;
+               rColor[7] <= `COLOR_GREEN;
+               if (ikeyboard == `SOL)
+                 rNextState <= `GS_KEY;
+               else
+                 rNextState <= `G_KEY;
+            end
+          `GS_KEY:
+            begin
+               rColor[7] <= `COLOR_BLACK;
+               rColor[8] <= `COLOR_GREEN;
+               if (ikeyboard == `SOLs)
+                 rNextState <= `A_KEY;
+               else
+                 rNextState <= `GS_KEY;
+            end
+          `A_KEY:
+            begin
+               rColor[8] <= `COLOR_WHITE;
+               rColor[9] <= `COLOR_GREEN;
+               if (ikeyboard == `LA)
+                 rNextState <= `AS_KEY;
+               else
+                 rNextState <= `A_KEY;
+            end
+          `AS_KEY:
+            begin
+               rColor[9] <= `COLOR_BLACK;
+               rColor[10] <= `COLOR_GREEN;
+               if (ikeyboard == `LAs)
+                 rNextState <= `B_KEY;
+               else
+                 rNextState <= `AS_KEY;
+            end
+          `B_KEY:
+            begin
+               rColor[10] <= `COLOR_WHITE;
+               rColor[11] <= `COLOR_GREEN;
+               if (ikeyboard == `SI)
+                 rNextState <= `C_KEY;
+               else
+                 rNextState <= `B_KEY;
+            end
+          default:
+            begin
+               {wRam_R, wRam_G, wRam_B} <= {0,0,1};
+               rNextState <= `C_KEY;
+            end
+        endcase
+     end
+
+   //----------------------------------------------
         //Current state and output logic
    always @ ( //*
 
@@ -115,18 +262,6 @@ keyboard keyboard1(
                  begin
                     //rColor <= {0,1,1};
                     {wRam_R, wRam_G, wRam_B} <= `COLOR_BLUE;
-                    rColor[0] = `COLOR_WHITE;
-                    rColor[1] = `COLOR_BLACK;
-                    rColor[2] = `COLOR_WHITE;
-                    rColor[3] = `COLOR_BLACK;
-                    rColor[4] = `COLOR_WHITE;
-                    rColor[5] = `COLOR_WHITE;
-                    rColor[6] = `COLOR_BLACK;
-                    rColor[7] = `COLOR_WHITE;
-                    rColor[8] = `COLOR_BLACK;
-                    rColor[9] = `COLOR_WHITE;
-                    rColor[10] = `COLOR_BLACK;
-                    rColor[11] = `COLOR_WHITE;
 
                     if (wCurrentRow > 99 && wCurrentRow < 380)
                       rNextState <= `C_KEY;

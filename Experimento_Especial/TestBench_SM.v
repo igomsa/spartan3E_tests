@@ -77,6 +77,7 @@ module testbench_VGA;
       #1 rClock =  !rClock;
       #1 rClock =  !rClock;
       #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
    end
    // reset module
 
