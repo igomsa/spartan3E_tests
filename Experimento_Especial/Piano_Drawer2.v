@@ -1,6 +1,7 @@
 `timescale 1ns / 1ps
 
 `include "Defintions.v"
+ 
 
 `define STATE_RESET		0
 `define C_KEY			1
@@ -11,12 +12,26 @@
 `define LINE			6
 `define F_KEY          		7
 `define FS_KEY  		8
-`define G_KEY			9 
+`define G_KEY			9
 `define GS_KEY			10
 `define A_KEY			11
 `define AS_KEY			12
 `define B_KEY			13
+
 //---------------------------------------------------------
+
+`define aC_KEY		 0
+`define aCS_KEY 		 1
+`define aD_KEY         	 2
+`define aDS_KEY           3
+`define aE_KEY       	 4
+`define aF_KEY          	 5
+`define aFS_KEY  	 6
+`define aG_KEY		 7
+`define aGS_KEY		 8
+`define aA_KEY		 9
+`define aAS_KEY		 10
+`define aB_KEY		 11
 
 module Module_VGA_Control
   (
@@ -121,117 +136,117 @@ keyboard keyboard1(
 
      begin
         case(rCurrentColorState)
-          `C_KEY:
+          `aC_KEY:
             begin
                rColor[0] <= `COLOR_GREEN;
                if (ikeyboard == `DO)
-                 rNextState <= `CS_KEY;
+                 rNextColorState <= `aCS_KEY;
                else
-                 rNextState <= `C_KEY;
+                 rNextColorState <= `aC_KEY;
             end
-          `CS_KEY:
+          `aCS_KEY:
             begin
                rColor[0] <= `COLOR_WHITE;
                rColor[1] <= `COLOR_GREEN;
                if (ikeyboard == `DOs)
-                 rNextState <= `D_KEY;
+                 rNextColorState <= `aD_KEY;
                else
-                 rNextState <= `CS_KEY;
+                 rNextColorState <= `aCS_KEY;
             end
-          `D_KEY:
+          `aD_KEY:
             begin
                rColor[1] <= `COLOR_WHITE;
                rColor[2] <= `COLOR_GREEN;
                if (ikeyboard == `RE)
-                 rNextState <= `DS_KEY;
+                 rNextColorState <= `aDS_KEY;
                else
-                 rNextState <= `D_KEY;
+                 rNextColorState <= `aD_KEY;
             end
-          `DS_KEY:
+          `aDS_KEY:
             begin
                rColor[2] <= `COLOR_BLACK;
                rColor[3] <= `COLOR_GREEN;
                if (ikeyboard == `REs)
-                 rNextState <= `E_KEY;
+                 rNextColorState <= `aE_KEY;
                else
-                 rNextState <= `DS_KEY;
+                 rNextColorState <= `aDS_KEY;
             end
-          `E_KEY:
+          `aE_KEY:
             begin
                rColor[3] <= `COLOR_WHITE;
                rColor[4] <= `COLOR_GREEN;
                if (ikeyboard == `MI)
-                 rNextState <= `F_KEY;
+                 rNextColorState <= `aF_KEY;
                else
-                 rNextState <= `E_KEY;
+                 rNextColorState <= `aE_KEY;
             end
-          `F_KEY:
+          `aF_KEY:
             begin
                rColor[4] <= `COLOR_WHITE;
                rColor[5] <= `COLOR_GREEN;
                if (ikeyboard == `FA)
-                 rNextState <= `FS_KEY;
+                 rNextColorState <= `aFS_KEY;
                else
-                 rNextState <= `F_KEY;
+                 rNextColorState <= `aF_KEY;
             end
-          `FS_KEY:
+          `aFS_KEY:
             begin
                rColor[5] <= `COLOR_BLACK;
                rColor[6] <= `COLOR_GREEN;
                if (ikeyboard == `FAs)
-                 rNextState <= `G_KEY;
+                 rNextColorState <= `aG_KEY;
                else
-                 rNextState <= `FS_KEY;
+                 rNextColorState <= `aFS_KEY;
             end
-          `G_KEY:
+          `aG_KEY:
             begin
                rColor[6] <= `COLOR_WHITE;
                rColor[7] <= `COLOR_GREEN;
                if (ikeyboard == `SOL)
-                 rNextState <= `GS_KEY;
+                 rNextColorState <= `aGS_KEY;
                else
-                 rNextState <= `G_KEY;
+                 rNextColorState <= `aG_KEY;
             end
-          `GS_KEY:
+          `aGS_KEY:
             begin
                rColor[7] <= `COLOR_BLACK;
                rColor[8] <= `COLOR_GREEN;
                if (ikeyboard == `SOLs)
-                 rNextState <= `A_KEY;
+                 rNextColorState <= `aA_KEY;
                else
-                 rNextState <= `GS_KEY;
+                 rNextColorState <= `aGS_KEY;
             end
-          `A_KEY:
+          `aA_KEY:
             begin
                rColor[8] <= `COLOR_WHITE;
                rColor[9] <= `COLOR_GREEN;
                if (ikeyboard == `LA)
-                 rNextState <= `AS_KEY;
+                 rNextColorState <= `aAS_KEY;
                else
-                 rNextState <= `A_KEY;
+                 rNextColorState <= `aA_KEY;
             end
-          `AS_KEY:
+          `aAS_KEY:
             begin
                rColor[9] <= `COLOR_BLACK;
                rColor[10] <= `COLOR_GREEN;
                if (ikeyboard == `LAs)
-                 rNextState <= `B_KEY;
+                 rNextColorState <= `aB_KEY;
                else
-                 rNextState <= `AS_KEY;
+                 rNextColorState <= `aAS_KEY;
             end
-          `B_KEY:
+          `aB_KEY:
             begin
                rColor[10] <= `COLOR_WHITE;
                rColor[11] <= `COLOR_GREEN;
                if (ikeyboard == `SI)
-                 rNextState <= `C_KEY;
+                 rNextColorState <= `aC_KEY;
                else
-                 rNextState <= `B_KEY;
+                 rNextColorState <= `aB_KEY;
             end
           default:
             begin
-               {wRam_R, wRam_G, wRam_B} <= {0,0,1};
-               rNextState <= `C_KEY;
+               rColor[0] <= 0;
+               rNextColorState <= `C_KEY;
             end
         endcase
      end
