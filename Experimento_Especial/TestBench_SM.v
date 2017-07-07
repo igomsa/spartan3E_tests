@@ -7,7 +7,7 @@ module testbench_VGA;
    reg Reset;
 	reg rClock;
 	reg rData;
-	
+
 
    // Outputs
    wire oVGA_B;
@@ -27,97 +27,141 @@ module testbench_VGA;
       .oVGA_R(oVGA_R),
       .oHorizontal_Sync(oHorizontal_Sync),
       .oVertical_Sync(oVertical_Sync),
-		.clk_kb(Clock),
+		.clk_kb(rClock),
 		.data_kb(rData)
       );
-		
+
 	 // generates clock signal
    always #1 Clock = !Clock;
-  // reset module
-   
-	initial begin //11010101010
+
+   always begin
+      #22 rClock = !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+      #1 rClock =  !rClock;
+   end
+   // reset module
+
+        initial begin //11010101010
 		Clock = 1;
 		Reset = 1;
 		rClock = 1;
 		rData = 1;
-		
-		
+
+
 	#20
 		Reset = 0;
-		
+
 	#2
 		rData = 0; //inicia bit 11
-	
+
 	#2
 		rData = 0; //primer bit del byte
-	
+
 	#2
 		rData = 1;
-	
+
 	#2
 		rData = 0;
-	
+
 	#2
 		rData = 0;
-	
+
 	#2
 		rData = 0;
-	
+
 	#2
 		rData = 1;
-	
+
 	#2
-		rData = 0; 
-	
+		rData = 0;
+
 	#2
 		rData = 0; // ac'a termina la tecla
-	
+
 	#2
-		rData = 1; // paridad 
-	
+		rData = 1; // paridad
+
 	#2
 		rData = 1; // termina el env'io
-	
-	#10
+
 	#2
 		rData = 0; //inicia bit 11
-	
+
 	#2
-		rData = 0; //primer bit del byte
-	
+		rData =0; //primer bit del byte
+
 	#2
-		rData = 0;
-	
+		rData =0;
+
 	#2
-		rData = 0;
-	
+		rData =0;
+
 	#2
-		rData = 0;
-	
+		rData =0;
+
 	#2
-		rData = 1;
-	
+		rData =1 ;
+
 	#2
-		rData = 1;
-	
+		rData =1 ;
+
 	#2
-		rData = 1; 
-	
+		rData =1 ;
+
 	#2
-		rData = 1; // ac'a termina la tecla
-	
+		rData =1 ; // ac'a termina la tecla
+
 	#2
-		rData = 1; // paridad 
-	
+		rData = 1; // paridad
+
 	#2
 		rData = 1; // termina el env'io
-	
+
 	#10
-		
+
 		$finish;
-	
+
 	end
-		
-  
+
+
 
 endmodule
