@@ -32,7 +32,7 @@ module Module_VGA_Control
 
    );
 
-   reg [3:0]   rColor;
+   reg [2:0] rColor [0:11]  ;
    reg [7:0]   rCurrentState,rNextState;
    reg [31:0]  rTimeCount,  i, j;
 	wire [7:0] ikeyboard;
@@ -42,7 +42,7 @@ module Module_VGA_Control
 	wire [2:0]  wColor;
 
    initial begin
-      rColor <= {0,1,1};
+      //rColor <= {0,1,1};
 //      {rCurrentRow, rCurrentCol} <= {0,0};
       //{oVertical_Sync, oHorizontal_Sync} <= {0,0};
    end
@@ -62,8 +62,10 @@ keyboard keyboard1(
 		.data_kb(data_kb),
 		.out_reg(ikeyboard)
 		);
+
    //assign {oVGA_R, oVGA_B, oVGA_G} = ( rCurrentCol < 100 ||  rCurrentCol > 540 || rCurrentRow < 100 || rCurrentRow > 380 ) ? {0,0,0} : rColor;
-	assign wColor = (ikeyboard == `RE) ? `COLOR_YELLOW : `COLOR_WHITE;  
+
+	assign wColor = (ikeyboard == `RE) ? `COLOR_YELLOW : `COLOR_WHITE;
 
    //----------------------------------------------
    //Next State and delay logic
@@ -87,7 +89,22 @@ keyboard keyboard1(
    //----------------------------------------------
 
         //Current state and output logic
-        always @ ( * )
+   always @ ( 
+				/*
+             rColor[0],
+             rColor[1],
+             rColor[2],
+             rColor[3],
+             rColor[4],
+             rColor[5],
+             rColor[6],
+             rColor[7],
+             rColor[8],
+             rColor[9],
+             rColor[10],
+             rColor[11]
+				 */
+             )
           begin
              case (rCurrentState)
                //------------------------------------------
@@ -96,6 +113,19 @@ keyboard keyboard1(
                  begin
                     //rColor <= {0,1,1};
                     {wRam_R, wRam_G, wRam_B} <= `COLOR_BLUE;
+                    /*rColor[0] = `COLOR_WHITE;
+                    rColor[1] = `COLOR_BLACK;
+                    rColor[2] = `COLOR_WHITE;
+                    rColor[3] = `COLOR_BLACK;
+                    rColor[4] = `COLOR_WHITE;
+                    rColor[5] = `COLOR_WHITE;
+                    rColor[6] = `COLOR_BLACK;
+                    rColor[7] = `COLOR_WHITE;
+                    rColor[8] = `COLOR_BLACK;
+                    rColor[9] = `COLOR_WHITE;
+                    rColor[10] = `COLOR_BLACK;
+                    rColor[11] = `COLOR_WHITE;*/
+
                     if (wCurrentRow > 99 && wCurrentRow < 380)
                       rNextState <= `C_KEY;
                     else
@@ -105,7 +135,8 @@ keyboard keyboard1(
           //DO
                `C_KEY:
                  begin
-                   {wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
+                   //{wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
+                   {wRam_R, wRam_G, wRam_B} <= rColor[0];
                     if (wCurrentCol > 52)
                       if(wCurrentRow < 240)       // es necesario revisar la fila, para ir a LINE
                           rNextState <= `CS_KEY;
@@ -120,17 +151,22 @@ keyboard keyboard1(
           //DO#
                `CS_KEY:
                  begin
-                    {wRam_R, wRam_G, wRam_B} <= `COLOR_BLACK;
+                   // {wRam_R, wRam_G, wRam_B} <= `COLOR_BLACK;
+                   {wRam_R, wRam_G, wRam_B} <= rColor[1];
                     if (wCurrentCol > 105)
                       rNextState <= `D_KEY;
                     else
                       rNextState <= `CS_KEY;
                  end
 //------------------------------------------
-					//RE
+	//RE
                `D_KEY:
                  begin
-                    {wRam_R, wRam_G, wRam_B} <= wColor;
+                    if (ikeyboard == `RE)
+                      {wRam_R, wRam_G, wRam_B} <= `COLOR_YELLOW;
+                    else
+                      //{wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
+                   {wRam_R, wRam_G, wRam_B} <= rColor[2];
                     if (wCurrentCol > 158)
                         if(wCurrentRow < 240)
                             rNextState <= `DS_KEY;
@@ -145,7 +181,8 @@ keyboard keyboard1(
 					//RE#
                `DS_KEY:
                  begin
-                    {wRam_R, wRam_G, wRam_B} <= `COLOR_BLACK;
+                    //{wRam_R, wRam_G, wRam_B} <= `COLOR_BLACK;
+                   {wRam_R, wRam_G, wRam_B} <= rColor[3];
                     if (wCurrentCol >211)
                       rNextState <= `E_KEY;
                     else
@@ -156,7 +193,8 @@ keyboard keyboard1(
 					//MI
                `E_KEY:
                  begin
-                    {wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
+                    //{wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
+                   {wRam_R, wRam_G, wRam_B} <= rColor[4];
                     if (wCurrentCol >264)
                       rNextState <= `LINE;
                     else
@@ -166,7 +204,8 @@ keyboard keyboard1(
 					//FA
                `F_KEY:
                  begin
-                    {wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
+                    //{wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
+                   {wRam_R, wRam_G, wRam_B} <= rColor[5];
                     if (wCurrentCol >321)
                         if(wCurrentRow < 240)
                            rNextState <= `FS_KEY;
@@ -181,7 +220,8 @@ keyboard keyboard1(
 					//FA#
                `FS_KEY:
                  begin
-                    {wRam_R, wRam_G, wRam_B} <= `COLOR_BLACK;
+                   // {wRam_R, wRam_G, wRam_B} <= `COLOR_BLACK;
+                   {wRam_R, wRam_G, wRam_B} <= rColor[6];
                     if (wCurrentCol >374)
                       rNextState <= `G_KEY;
                     else
@@ -191,7 +231,8 @@ keyboard keyboard1(
 					//SOL
                `G_KEY:
                  begin
-                    {wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
+                   // {wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
+                   {wRam_R, wRam_G, wRam_B} <= rColor[7];
                     if (wCurrentCol >427)
                         if(wCurrentRow < 240)
                             rNextState <= `GS_KEY;
@@ -206,7 +247,8 @@ keyboard keyboard1(
 					//SOL#
                `GS_KEY:
                  begin
-                    {wRam_R, wRam_G, wRam_B} <= `COLOR_BLACK;
+                  //  {wRam_R, wRam_G, wRam_B} <= `COLOR_BLACK;
+                   {wRam_R, wRam_G, wRam_B} <= rColor[8];
                     if (wCurrentCol >480)
                       rNextState <= `A_KEY;
                     else
@@ -216,7 +258,8 @@ keyboard keyboard1(
 					//LA
                `A_KEY:
                  begin
-                    {wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
+                  //  {wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
+                   {wRam_R, wRam_G, wRam_B} <= rColor[9];
                     if (wCurrentCol >533)
                        if(wCurrentRow < 240)
                            rNextState <= `AS_KEY;
@@ -231,7 +274,8 @@ keyboard keyboard1(
 					//LAS
                `AS_KEY:
                  begin
-                    {wRam_R, wRam_G, wRam_B} <= `COLOR_BLACK;
+                   // {wRam_R, wRam_G, wRam_B} <= `COLOR_BLACK;
+                   {wRam_R, wRam_G, wRam_B} <= rColor[10];
                     if (wCurrentCol >586)
                       rNextState <= `B_KEY;
                     else
@@ -259,7 +303,8 @@ keyboard keyboard1(
 //------------------------------------------
                `B_KEY:
                  begin
-                    {wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
+                    //{wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
+                   {wRam_R, wRam_G, wRam_B} <= rColor[11];
                     if (wCurrentRow >379)
                       rNextState <= `STATE_RESET;
               else if(wCurrentCol==0)

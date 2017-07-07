@@ -26,13 +26,11 @@ module testbench_VGA;
       .oVGA_G(oVGA_G),
       .oVGA_R(oVGA_R),
       .oHorizontal_Sync(oHorizontal_Sync),
-      .oVertical_Sync(oVertical_Sync)
-      );
-		
-	keyboard keyboard2(
+      .oVertical_Sync(oVertical_Sync),
 		.clk_kb(Clock),
 		.data_kb(rData)
-	);
+      );
+		
 	 // generates clock signal
    always #1 Clock = !Clock;
   // reset module

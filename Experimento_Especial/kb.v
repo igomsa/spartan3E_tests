@@ -27,11 +27,11 @@ begin
 	case (counter)
 		1:;
 		2: 	data_curr[0] <= data_kb;
-		3: 	data_curr[1] <= data_kb;	
+		3: 	data_curr[1] <= data_kb;
 		4: 	data_curr[2] <= data_kb;
-		5: 	data_curr[3] <= data_kb;	
+		5: 	data_curr[3] <= data_kb;
 		6: 	data_curr[4] <= data_kb;
-		7: 	data_curr[5] <= data_kb;	
+		7: 	data_curr[5] <= data_kb;
 		8: 	data_curr[6] <= data_kb;
 		9: 	data_curr[7] <= data_kb;
 		10:	flag <= 1'b1;
@@ -40,7 +40,7 @@ begin
 
 	if (counter <= 10)
 		counter <= counter + 4'h1;
-	else 
+	else
 		counter <= 4'h1;
 end
 
@@ -52,4 +52,4 @@ begin
 		data_pre <= data_curr;
 end
 
-endmodule 
+endmodule
