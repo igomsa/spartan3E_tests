@@ -16,7 +16,7 @@
 `define A_KEY					11
 `define AS_KEY					12
 `define B_KEY					13
- 
+
 module Module_VGA_Control
   (
 
@@ -66,7 +66,7 @@ keyboard keyboard1(
    //assign {oVGA_R, oVGA_B, oVGA_G} = ( rCurrentCol < 100 ||  rCurrentCol > 540 || rCurrentRow < 100 || rCurrentRow > 380 ) ? {0,0,0} : rColor;
 
 	/*assign wColor = (ikeyboard == `RE) ? `COLOR_YELLOW : `COLOR_WHITE;
-	
+
 	*/
 
    //----------------------------------------------
@@ -91,8 +91,8 @@ keyboard keyboard1(
    //----------------------------------------------
 
         //Current state and output logic
-   always @ ( *
-				/*
+   always @ ( //*
+
              rColor[0],
              rColor[1],
              rColor[2],
@@ -105,7 +105,7 @@ keyboard keyboard1(
              rColor[9],
              rColor[10],
              rColor[11]
-				 */
+
              )
           begin
              case (rCurrentState)
@@ -115,7 +115,7 @@ keyboard keyboard1(
                  begin
                     //rColor <= {0,1,1};
                     {wRam_R, wRam_G, wRam_B} <= `COLOR_BLUE;
-                    /*rColor[0] = `COLOR_WHITE;
+                    rColor[0] = `COLOR_WHITE;
                     rColor[1] = `COLOR_BLACK;
                     rColor[2] = `COLOR_WHITE;
                     rColor[3] = `COLOR_BLACK;
@@ -126,7 +126,7 @@ keyboard keyboard1(
                     rColor[8] = `COLOR_BLACK;
                     rColor[9] = `COLOR_WHITE;
                     rColor[10] = `COLOR_BLACK;
-                    rColor[11] = `COLOR_WHITE;*/
+                    rColor[11] = `COLOR_WHITE;
 
                     if (wCurrentRow > 99 && wCurrentRow < 380)
                       rNextState <= `C_KEY;
@@ -140,8 +140,8 @@ keyboard keyboard1(
 					  if (ikeyboard == `DO)
                       {wRam_R, wRam_G, wRam_B} <= `COLOR_YELLOW;
                     else
-                   {wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
-                   //{wRam_R, wRam_G, wRam_B} <= rColor[0];
+                   //{wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
+                   {wRam_R, wRam_G, wRam_B} <= rColor[0];
                     if (wCurrentCol > 52)
                       if(wCurrentRow < 240)       // es necesario revisar la fila, para ir a LINE
                           rNextState <= `CS_KEY;
@@ -159,8 +159,8 @@ keyboard keyboard1(
 					  if (ikeyboard == `DOs)
                       {wRam_R, wRam_G, wRam_B} <= `COLOR_YELLOW;
                     else
-                    {wRam_R, wRam_G, wRam_B} <= `COLOR_BLACK;
-                   //{wRam_R, wRam_G, wRam_B} <= rColor[1];
+                    //{wRam_R, wRam_G, wRam_B} <= `COLOR_BLACK;
+                   {wRam_R, wRam_G, wRam_B} <= rColor[1];
                     if (wCurrentCol > 105)
                       rNextState <= `D_KEY;
                     else
@@ -173,8 +173,8 @@ keyboard keyboard1(
                     if (ikeyboard == `RE)
                       {wRam_R, wRam_G, wRam_B} <= `COLOR_YELLOW;
                     else
-                    {wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
-                   //{wRam_R, wRam_G, wRam_B} <= rColor[2];
+                    //{wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
+                   {wRam_R, wRam_G, wRam_B} <= rColor[2];
                     if (wCurrentCol > 158)
                         if(wCurrentRow < 240)
                             rNextState <= `DS_KEY;
@@ -192,8 +192,8 @@ keyboard keyboard1(
 					  if (ikeyboard == `REs)
                       {wRam_R, wRam_G, wRam_B} <= `COLOR_YELLOW;
                     else
-                    {wRam_R, wRam_G, wRam_B} <= `COLOR_BLACK;
-                   //{wRam_R, wRam_G, wRam_B} <= rColor[3];
+                    //{wRam_R, wRam_G, wRam_B} <= `COLOR_BLACK;
+                   {wRam_R, wRam_G, wRam_B} <= rColor[3];
                     if (wCurrentCol >211)
                       rNextState <= `E_KEY;
                     else
@@ -207,8 +207,8 @@ keyboard keyboard1(
 					  if (ikeyboard == `MI)
                       {wRam_R, wRam_G, wRam_B} <= `COLOR_YELLOW;
                     else
-                    {wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
-                   //{wRam_R, wRam_G, wRam_B} <= rColor[4];
+                    //{wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
+                   {wRam_R, wRam_G, wRam_B} <= rColor[4];
                     if (wCurrentCol >264)
                       rNextState <= `LINE;
                     else
@@ -221,8 +221,8 @@ keyboard keyboard1(
 					  if (ikeyboard == `FA)
                       {wRam_R, wRam_G, wRam_B} <= `COLOR_YELLOW;
                     else
-                    {wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
-                   //{wRam_R, wRam_G, wRam_B} <= rColor[5];
+                    //{wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
+                   {wRam_R, wRam_G, wRam_B} <= rColor[5];
                     if (wCurrentCol >321)
                         if(wCurrentRow < 240)
                            rNextState <= `FS_KEY;
@@ -240,8 +240,8 @@ keyboard keyboard1(
 					  if (ikeyboard == `FAs)
                       {wRam_R, wRam_G, wRam_B} <= `COLOR_YELLOW;
                     else
-                   {wRam_R, wRam_G, wRam_B} <= `COLOR_BLACK;
-                   //{wRam_R, wRam_G, wRam_B} <= rColor[6];
+                   //{wRam_R, wRam_G, wRam_B} <= `COLOR_BLACK;
+                   {wRam_R, wRam_G, wRam_B} <= rColor[6];
                     if (wCurrentCol >374)
                       rNextState <= `G_KEY;
                     else
@@ -254,8 +254,8 @@ keyboard keyboard1(
 					  if (ikeyboard == `SOL)
                       {wRam_R, wRam_G, wRam_B} <= `COLOR_YELLOW;
                     else
-                   {wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
-                   //{wRam_R, wRam_G, wRam_B} <= rColor[7];
+                   //{wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
+                   {wRam_R, wRam_G, wRam_B} <= rColor[7];
                     if (wCurrentCol >427)
                         if(wCurrentRow < 240)
                             rNextState <= `GS_KEY;
@@ -273,8 +273,8 @@ keyboard keyboard1(
 					  if (ikeyboard == `SOLs)
                       {wRam_R, wRam_G, wRam_B} <= `COLOR_YELLOW;
                     else
-                  {wRam_R, wRam_G, wRam_B} <= `COLOR_BLACK;
-                   //{wRam_R, wRam_G, wRam_B} <= rColor[8];
+                  //{wRam_R, wRam_G, wRam_B} <= `COLOR_BLACK;
+                   {wRam_R, wRam_G, wRam_B} <= rColor[8];
                     if (wCurrentCol >480)
                       rNextState <= `A_KEY;
                     else
@@ -287,8 +287,8 @@ keyboard keyboard1(
 					  if (ikeyboard == `LA)
                       {wRam_R, wRam_G, wRam_B} <= `COLOR_YELLOW;
                     else
-                  {wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
-                   //{wRam_R, wRam_G, wRam_B} <= rColor[9];
+                  //{wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
+                   {wRam_R, wRam_G, wRam_B} <= rColor[9];
                     if (wCurrentCol >533)
                        if(wCurrentRow < 240)
                            rNextState <= `AS_KEY;
@@ -306,8 +306,8 @@ keyboard keyboard1(
 					  if (ikeyboard == `LAs)
                       {wRam_R, wRam_G, wRam_B} <= `COLOR_YELLOW;
                     else
-                   {wRam_R, wRam_G, wRam_B} <= `COLOR_BLACK;
-                   //{wRam_R, wRam_G, wRam_B} <= rColor[10];
+                   //{wRam_R, wRam_G, wRam_B} <= `COLOR_BLACK;
+                   {wRam_R, wRam_G, wRam_B} <= rColor[10];
                     if (wCurrentCol >586)
                       rNextState <= `B_KEY;
                     else
@@ -339,8 +339,8 @@ keyboard keyboard1(
 					  if (ikeyboard == `SI)
                       {wRam_R, wRam_G, wRam_B} <= `COLOR_YELLOW;
                     else
-                    {wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
-                   //{wRam_R, wRam_G, wRam_B} <= rColor[11];
+                    //{wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
+                   {wRam_R, wRam_G, wRam_B} <= rColor[11];
                     if (wCurrentRow >379)
                       rNextState <= `STATE_RESET;
               else if(wCurrentCol==0)
