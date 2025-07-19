@@ -49,7 +49,7 @@ endmodule
 
 
 //----------------------------------------------------------------------
-//Se define el módulo de multiplicación para implementar el "array multiplier"
+//The multiplication module is defined to implement the "array multiplier"
 module EMUL(
  input wire [31:0] wA,
  input wire [31:0] wB,
@@ -63,7 +63,7 @@ endmodule // EMUL
 
 
 
-// Modulo para multiplicacion con Mux
+// Module to multiply with Mux.
 module MUX(
 	input wire [18:0] wCase0,
 	input wire [18:0] wCase1,

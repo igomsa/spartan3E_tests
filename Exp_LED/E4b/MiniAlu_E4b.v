@@ -19,9 +19,9 @@ reg [15:0]   rResult;
 wire [7:0]  wSourceAddr0,wSourceAddr1,wDestination;
 wire [15:0] wSourceData0,wSourceData1,wIPInitialValue,wImmediateValue;
 
-   //Register ENMUL: Habilitador de contador para mostrar resultado de MUL.
-   //Register rResetMUL: Reinicia la cuenta del contador.
-   //Wire [1:0] i: Lleva la cuenta.
+   // Register ENMUL: Enables the counter to display the result of MUL.
+   // Register rResetMUL: Resets the counter count.
+   // Wire [1:0] i: Keeps the count.
    wire   [1:0]  i;
    reg      rResetMUL;
    reg      ENMUL;
@@ -55,7 +55,7 @@ UPCOUNTER_POSEDGE IP
 .Q(       wIP_temp             )
 );
 
-   //Contador para mostrar resultado en de 32 bits
+   // Counter to display 32-bit result
 UPCOUNTER_POSEDGE counter0
 (
 .Clock(   Clock                ),
@@ -116,19 +116,19 @@ FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FF_LEDS
 
 assign wImmediateValue = {wSourceAddr1,wSourceAddr0};
 
-   //Resultados parciales de multiplicación por MUX.
+   //Partial results of multiplication by MUX.
 wire [17:0]   wParcialRes0, wParcialRes1, wParcialRes2, wParcialRes3;
 wire [17:0]   wParcialRes4,   wParcialRes5, wParcialRes6, wParcialRes7;
 
-   //Resultados parciales de las sumas.
+   //Partial results of the additions.
 wire [20:0]   wParcialRes8, wParcialRes9, wParcialRes10, wParcialRes11;
 wire [22:0]   wParcialRes12, wParcialRes13;
 
-   //Resultado final de la multiplicación de AxB.
+   //Final result of multiplication of AxB.
 wire [31:0] wResult;
 
-   //Se introducen en las funciones MUX los resultados correspondientes a cada caso posible del selector.
-   // Dado que son numeros de 16 bits, son necesarios 8 muxes.
+   // The corresponding results for each possible case of the selector are entered into the MUX functions.
+   // Since they are 16-bit numbers, 8 MUXes are necessary.
 		mux mux0(.wcase0(19'b0), .wcase1({3'b0, wsourcedata1}), .wcase2({2'b0, wSourceData1, 1'b0}), .wCase3({2'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[1:0]), .oR(wParcialRes0[17:0]) );
 		mux mux1(.wcase0(19'b0), .wcase1({3'b0, wsourcedata1}), .wcase2({2'b0, wSourceData1, 1'b0}), .wCase3({2'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[3:2]), .oR(wParcialRes1[17:0]) );
 		mux mux2(.wcase0(19'b0), .wcase1({3'b0, wsourcedata1}), .wcase2({2'b0, wSourceData1, 1'b0}), .wCase3({2'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[5:4]), .oR(wParcialRes2[17:0]) );
@@ -138,20 +138,20 @@ wire [31:0] wResult;
 		mux mux6(.wcase0(19'b0), .wcase1({3'b0, wsourcedata1}), .wcase2({2'b0, wSourceData1, 1'b0}), .wCase3({2'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[13:12]), .oR(wParcialRes6[17:0]));
 		mux mux7(.wcase0(19'b0), .wcase1({3'b0, wsourcedata1}), .wcase2({2'b0, wSourceData1, 1'b0}), .wCase3({2'b0, wSourceData1, 1'b0} + wSourceData1), .wSelection(wSourceData0[15:14]), .oR(wParcialRes7[17:0]) );
 
-// Se llevan a cabo las sumas parciales de los resultados obtenidos en los muxes.
-	// Sumas con corrimiento de 2 bits
+   // Partial additions of the results obtained from the muxes.
+   // Additions with a 2-bit shift
 		EMUL mul0(.wA({14'b0, wParcialRes0[17:0]}), .wB({12'b0, wParcialRes1[17:0], 2'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes8[20:0]));
 		EMUL mul1(.wA({14'b0, wParcialRes2[17:0]}), .wB({12'b0, wParcialRes3[17:0], 2'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes9[20:0]));
 		EMUL mul2(.wA({14'b0, wParcialRes4[17:0]}), .wB({12'b0, wParcialRes5[17:0], 2'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes10[20:0]));
 		EMUL mul3(.wA({14'b0, wParcialRes6[17:0]}), .wB({12'b0, wParcialRes7[17:0], 2'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes11[20:0]));
-	//Sumas con crimiento de 4 bits. (sumas de los resultados de las sumas)
+	//Additions with a 4-bit shift. (additions of the addition results).
 		EMUL mul4(.wA({13'b0, wParcialRes8[18:0]}), .wB({10'b0, wParcialRes9[18:0], 4'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes12[22:0]));
 		EMUL mul5(.wA({13'b0, wParcialRes10[18:0]}), .wB({10'b0, wParcialRes11[18:0], 4'b0}), .iCarry(1'b0), .oCarry(), .oR(wParcialRes13[22:0]));
-	// Sumas con rrimientos de 8 bits, suma final.
+	// Additions with an 8-bit shift, final addition.
 		EMUL mul6(.wA({9'b0, wParcialRes12[22:0]}), .wB({6'b0, wParcialRes13[22:0], 8'b0}), .iCarry(1'b0), .oCarry(), .oR(wResult[31:0]));
 
 
-//Condiciones iniciales para evitar condiciones X.
+//Initial conditions to avoid X states.
    initial
      begin
         rResetMUL <= 0;
@@ -199,7 +199,7 @@ begin
                 rResetMUL <= 0;
                 ENMUL <= 1;
 
-           //Con respecto al contador se asigna el resultado.
+           // Considering the counter, the result is assigned.
           if (i==0)
                begin
 	          rResult <= {8'b0, wResult[7:0]};

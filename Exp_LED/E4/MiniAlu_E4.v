@@ -100,16 +100,16 @@ FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FF_LEDS
 
 assign wImmediateValue = {wSourceAddr1,wSourceAddr0};
 
-//Wire wFinalResult: Se conecta al resultado del bloque de suma.
-//Wire wResult: Se conecta al resultado del MUX.
+//Wire wFinalResult: Connects to the result of the addition block.
+//Wire wResult: Connects to the output of the MUX.
 wire [7:0]   wFinalResult;
 wire [11:0] wResult;
 
-                //Multiplicación de AxB (6 bit x 2 bit)
+                //Multiplication of AxB (6 bit x 2 bit)
 		MUX 		mux0(.wCase0(6'b0), .wCase1(wSourceData1[3:0]), .wCase2({1'b0, wSourceData1[3:0], 1'b0}), .wCase3({wSourceData1[3:0], 1'b0} + wSourceData1[3:0]), .wSelection(wSourceData0[1:0]), .oR(wResult[5:0]) );
 		MUX 		mux1(.wCase0(6'b0), .wCase1(wSourceData1[3:0]), .wCase2({1'b0, wSourceData1[3:0], 1'b0}), .wCase3({1'b0, wSourceData1[3:0], 1'b0} + wSourceData1[3:0]), .wSelection(wSourceData0[3:2]), .oR(wResult[11:6]) );
 
-                //Suma de las salidas de los MUX
+                //Sum of the MUX outputs
 		EMUL 		mul0(.wA(wResult[5:0]), .wB({wResult[11:6], 2'b0}), .iCarry(1'b0), .oCarry(), .oR(wFinalResult[7:0]));
 
 always @ ( * )
@@ -124,13 +124,13 @@ begin
 		rResult      <= 0;
 	end
 	//-------------------------------------
-          //Implementación de la multiplicación.
+          //Implementation of multiplication.
 	`MUL:
 	begin
 		rFFLedEN     <= 1'b0;
 		rBranchTaken <= 1'b0;
 		rWriteEnable <= 1'b1;
-           //Conexión de salida de sumador a resultado. Luego pasa a oLed.
+           //Connect the adder output to the result. Then it goes to oLed.
 	rResult 		<= {8'b0, wFinalResult};
 	end
 	//-------------------------------------

@@ -99,28 +99,28 @@ timescale 1ns / 1ps
    assign wImmediateValue = {wSourceAddr1,wSourceAddr0};
 
    //----------------------------------------------------------------------
-   //Se introduce cÃ³digo para realizar instancias de manera automÃ¡tica
-   //a manera de arreglo de 15x14
+   // Code is introduced to perform automatic instantiations
+   // in the form of a 15x14 array
 
    wire [16:0]         wCarry[16:0];
    wire [16:0]         wResult[16:0];
 
-   generate //Permite instanciar varias veces
+   generate // Allows multiple instantiations
    genvar              CurrentRow, CurrentCol;
-      //For de las filas.
+      // For the rows.
       for (CurrentRow = 0; CurrentRow < 15; CurrentRow = CurrentRow +1)
-        begin: MUL_ROW //Etiqueta de inicio del for de filas
-           //For de las columnas
+        begin: MUL_ROW // Start label for the row for-loop
+           // For the columns
            for ( CurrentCol = 0; CurrentCol < 16; CurrentCol = CurrentCol + 1)
-             begin: MUL_COL //Etiqueta de inicio del for de columnas
-                //La primera columna es un caso especial.
-                //Se debe asignar 0 a su valor de iCarry.
+             begin: MUL_COL // Start label for the column for-loop
+                // The first column is a special case.
+                // 0 must be assigned to its iCarry value.
                 if (CurrentCol == 0)
                   begin
                      assign wCarry[ CurrentRow ][ 0 ] = 0;
                   end//if
-                //La primera fila es un caso especial de conexión,
-                //específicamente en entradas.
+                // The first row is a special case for connection,
+                // specifically for inputs.
                 if (CurrentRow == 0)
                   begin
                      if (CurrentCol == 15)
@@ -146,7 +146,7 @@ timescale 1ns / 1ps
                              );
                        end
                   end //if
-                //ultima columna de las demas filas
+                // Last column of the other rows
                 else if (CurrentCol == 15 )
                   begin
                      EMUL  MyAdder2(
@@ -157,9 +157,9 @@ timescale 1ns / 1ps
                                     .oR(wResult[ CurrentRow ][ CurrentCol ])
                                     );
                   end//else if
-                // La última columna es un caso especial de conexión.
+                // The last column is a special connection case.
 
-                //Filas y columnas típicas
+                // Typical rows and columns
                 else
                   begin
                      EMUL  MyAdder
