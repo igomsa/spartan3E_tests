@@ -41,25 +41,24 @@ module Module_LCD_Writer(
         output wire       oEnable
    );
 
-// Reg [7:0] rCurrentState: Estado actual de la secuencia.
-// Reg [7:0] rNextState: Siguiente en de la secuencia.
+// Reg [7:0] rCurrentState: Current state of sequence.
+// Reg [7:0] rNextState: Next in sequence.
 reg [7:0] rCurrentState,rNextState;
 
-// Reg rTimeCountReset: En 1 pone cuenta en 0. En 0
-// inicia la cuenta con el ciclo de reloj.
+// Reg rTimeCountReset: When EN, set count to 0.
+// When !EN starts the count with clock cycle.
 reg rTimeCountReset;
 
-// Reg [31:0] rTimeCount: LLeva la cuenta de los ciclos de
-// reloj que han pasado.
+// Reg [31:0] rTimeCount: Has the count of clock cycles.
 reg [31:0] rTimeCount;
 
-   // Wire wEnableDone: Respuesta de Writer_Enabler.
+   // Wire wEnableDone: Answer from Writer_Enabler.
    wire   wEnableDone;
 
-// Register rWrite_Reset: Inicia secuencia de Write_Enable
+// Register rWrite_Reset: Starts sequence of Write_Enable
    reg     rWrite_Reset;
 
-// Register rData_Phrase: Frase de datos a escribir.
+// Register rData_Phrase: Data phrase to write.
    reg [79:0] rData_Phrase, rAux;
 
 
