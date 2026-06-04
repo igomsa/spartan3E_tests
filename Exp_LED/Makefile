@@ -1,32 +1,48 @@
-Ejercicio_1:
-	iverilog -Wall -o Ejercicio1.out MiniAlu_E1.v Module_ROM_E1.v Collaterals.v RAM.v Defintions.v TestBench_E1.v && vvp Ejercicio1.out && gtkwave Ejercicio1.vcd Ejercicio1.gtkw &
+# Icarus Verilog simulation of the MiniAlu LED experiments.
+#
+#   make sim_E1     build and run exercise 1 (writes Ejercicio1.vcd)
+#   make wave_E1    open the exercise 1 waveform in GTKWave
+#   make all        run every exercise
+#   make clean      remove build artifacts
+#
+# Each MiniAlu_E*.v includes Defintions.v from common/, so -I points there.
 
-Ejercicio_2:
-	iverilog -Wall -o Ejercicio2.out MiniAlu_E2.v Module_ROM_E2.v Collaterals.v RAM.v Defintions.v TestBench_E2.v && vvp Ejercicio2.out && gtkwave Ejercicio2.vcd Ejercicio2.gtkw &
+IVERILOG := iverilog -g2005 -I common
+VVP      := vvp
+GTKWAVE  := gtkwave
+COMMON   := common/Collaterals.v common/RAM.v
 
-Ejercicio_3:
-	iverilog -Wall -o Ejercicio3.out MiniAlu_E3.v Module_ROM_E3.v Collaterals.v RAM.v Defintions.v TestBench_E3.v && vvp Ejercicio3.out && gtkwave Ejercicio3.vcd Ejercicio3.gtkw &
+.PHONY: all clean \
+        sim_E1 sim_E2 sim_E3 sim_E4 \
+        wave_E1 wave_E2 wave_E3 wave_E4
 
-Ejercicio_4:
-	iverilog -Wall -o Ejercicio4.out MiniAlu_E4.v Module_ROM_E4.v Collaterals_4.v RAM.v Defintions.v TestBench_E4.v && vvp Ejercicio4.out && gtkwave Ejercicio4.vcd Ejercicio4.gtkw &
+all: sim_E1 sim_E2 sim_E3 sim_E4
 
-Ejercicio_4b:
-	iverilog -Wall -o Ejercicio4b.out MiniAlu_E4b.v Module_ROM_E4b.v Collaterals_4b.v RAM.v Defintions.v TestBench_E4b.v && vvp Ejercicio4b.out && gtkwave Ejercicio4b.vcd Ejercicio4b.gtkw &
+sim_E1:
+	$(IVERILOG) -I E1 -o Ejercicio1.out E1/MiniAlu_E1.v E1/Module_ROM_E1.v $(COMMON) E1/TestBench_E1.v
+	$(VVP) Ejercicio1.out
+
+sim_E2:
+	$(IVERILOG) -I E2 -o Ejercicio2.out E2/MiniAlu_E2.v E2/Module_ROM_E2.v $(COMMON) E2/TestBench_E2.v
+	$(VVP) Ejercicio2.out
+
+sim_E3:
+	$(IVERILOG) -I E3 -o Ejercicio3.out E3/MiniAlu_E3.v E3/Module_ROM_E3.v $(COMMON) E3/TestBench_E3.v
+	$(VVP) Ejercicio3.out
+
+# E4 has its own Collaterals_4.v (not the shared common/Collaterals.v).
+sim_E4:
+	$(IVERILOG) -I E4 -o Ejercicio4.out E4/MiniAlu_E4.v E4/Module_ROM_E4.v E4/Collaterals_4.v common/RAM.v E4/TestBench_E4.v
+	$(VVP) Ejercicio4.out
+
+wave_E1:
+	$(GTKWAVE) Ejercicio1.vcd E1/Ejercicio1.gtkw &
+wave_E2:
+	$(GTKWAVE) Ejercicio2.vcd E2/Ejercicio2.gtkw &
+wave_E3:
+	$(GTKWAVE) Ejercicio3.vcd E3/Ejercicio3.gtkw &
+wave_E4:
+	$(GTKWAVE) Ejercicio4.vcd E4/Ejercicio4.gtkw &
 
 clean:
-	rm Ejercicio1.out Ejercicio1.vcd Ejercicio2.out Ejercicio2.vcd Ejercicio3.out Ejercicio3.vcd Ejercicio4.out Ejercicio4.vcd
-
-clean_E1:
-	rm Ejercicio1.out Ejercicio1.vcd
-
-clean_E2:
-	rm Ejercicio2.out Ejercicio2.vcd
-
-clean_E3:
-	rm Ejercicio3.out Ejercicio3.vcd
-
-clean_E4:
-	rm Ejercicio4.out Ejercicio4.vcd
-
-clean_E4b:
-	rm Ejercicio4b.out Ejercicio4b.vcd
+	rm -f *.out *.vcd
