@@ -5,11 +5,11 @@
 module MiniAlu
   (
 
-   // Entradas del módulo.
+   // Module inputs.
    input wire        Clock,
    input wire        Reset,
 
-   // Salidas del módulo. Salidas de la LCD.
+   // Module outputs. LCD outputs.
    output wire [3:0] oLCD,
    output wire       oReadWrite,
    output reg        oRegisterSelect,
@@ -26,7 +26,7 @@ module MiniAlu
    wire [7:0]        wDestination;
    wire [15:0]       wSourceData0,wSourceData1,wIPInitialValue,wImmediateValue;
 
-   assign oReadWrite = 1'b0; //Sólo se lee de la LCD, nunca se escribe a ella.
+   assign oReadWrite = 1'b0; //The LCD is only read, never written to.
 
 
    ROM InstructionRom
@@ -106,7 +106,7 @@ module MiniAlu
       );
 */
 
-   // Flip-Flop de la LCD.
+   // LCD flip-flop.
    reg               rFFLCD_EN,rEnable, rFFLCD_Reset;
    FFD_POSEDGE_SYNCRONOUS_RESET # ( 8 ) FF_LCD
      (
@@ -211,7 +211,7 @@ module MiniAlu
                rBranchTaken <= 1'b1;
             end
           //-------------------------------------
-          // Escribe un NIBBLE en la LCD.
+          // Write a NIBBLE to the LCD.
           `LCD:
             begin
                rFFLCD_EN     <= 1'b1;
@@ -222,7 +222,7 @@ module MiniAlu
                rBranchTaken <= 1'b0;
             end
 	  //-------------------------------------
-          // Corre los bits del registro en 8 bits.
+          // Shift the register bits by 8 bits.
 	  `SHL:
 	    begin
 	       rFFLCD_EN     <= 1'b0;

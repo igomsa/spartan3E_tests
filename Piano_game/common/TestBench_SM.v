@@ -92,22 +92,10 @@ module testbench_VGA;
 		Reset = 0;
 
 	#2
-		rData = 0; //inicia bit 11
+		rData = 0; //start bit 11
 
 	#2
-		rData = 0; //primer bit del byte
-
-	#2
-		rData = 1;
-
-	#2
-		rData = 0;
-
-	#2
-		rData = 0;
-
-	#2
-		rData = 0;
+		rData = 0; //first bit of the byte
 
 	#2
 		rData = 1;
@@ -116,19 +104,31 @@ module testbench_VGA;
 		rData = 0;
 
 	#2
-		rData = 0; // ac'a termina la tecla
+		rData = 0;
 
 	#2
-		rData = 1; // paridad
+		rData = 0;
 
 	#2
-		rData = 1; // termina el env'io
+		rData = 1;
 
 	#2
-		rData = 0; //inicia bit 11
+		rData = 0;
 
 	#2
-		rData =0; //primer bit del byte
+		rData = 0; // end of the key here
+
+	#2
+		rData = 1; // parity
+
+	#2
+		rData = 1; // end of the transmission
+
+	#2
+		rData = 0; //start bit 11
+
+	#2
+		rData =0; //first bit of the byte
 
 	#2
 		rData =0;
@@ -149,13 +149,13 @@ module testbench_VGA;
 		rData =1 ;
 
 	#2
-		rData =1 ; // ac'a termina la tecla
+		rData =1 ; // end of the key here
 
 	#2
-		rData = 1; // paridad
+		rData = 1; // parity
 
 	#2
-		rData = 1; // termina el env'io
+		rData = 1; // end of the transmission
 
 	#10
 

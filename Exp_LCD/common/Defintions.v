@@ -12,13 +12,13 @@
 `define MUL   4'd6
 
 
-//Se agregan para implementar las funciones LCD y SHL, CALL, RET.
+//Added to implement the LCD and SHL, CALL, RET functions.
 `define LCD   4'd7
 `define SHL   4'd8
 `define CALL  4'd9
 `define RET   4'd10
 
-// Registros
+// Registers
 `define R0 8'd0
 `define R1 8'd1
 `define R2 8'd2
@@ -28,8 +28,8 @@
 `define R6 8'd6
 `define R7 8'd7
 
-// Se agregan para añadir las letras respectivas a la frase "Hola Mundo".
-// Se definen las letras con la respectiva representacion ASCII.
+// Added to provide the letters for the phrase "Hola Mundo".
+// The letters are defined with their respective ASCII representation.
 `define H	16'b01001000
 `define o	16'b01101111
 `define l	16'b01101100

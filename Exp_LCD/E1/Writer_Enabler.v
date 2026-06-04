@@ -16,16 +16,16 @@ module Module_Write_Enable
    );
 
 
-// Reg [7:0] rCurrentState: Estado actual de la secuencia.
-// Reg [7:0] rNextState: Siguiente en de la secuencia.
+// Reg [7:0] rCurrentState: Current state of the sequence.
+// Reg [7:0] rNextState: Next state of the sequence.
 reg [7:0] rCurrentState,rNextState;
 
-   // Reg rTimeCountReset: En 1 pone cuenta en 0. En 0
-   // inicia la cuenta con el ciclo de reloj.
+   // Reg rTimeCountReset: When 1, sets count to 0. When 0,
+   // starts the count with the clock cycle.
    reg         rTimeCountReset;
 
-   // Reg [31:0] rTimeCount: LLeva la cuenta de los ciclos de
-   // reloj que han pasado.
+   // Reg [31:0] rTimeCount: Keeps the count of the clock
+   // cycles that have elapsed.
    reg [31:0]  rTimeCount;
 
    always @ ( posedge Clock )
@@ -62,7 +62,7 @@ reg [7:0] rCurrentState,rNextState;
                oLCD_Enabled<= 1'b0;
                rEnableDone <= 1'b0;
                rTimeCountReset <= 1'b0;
-               if (rTimeCount > 32'd4 )		//se mantiene enalble en 0 por 40ns
+               if (rTimeCount > 32'd4 )		//keep enable at 0 for 40ns
                  begin
                     rNextState <= `RESET_COUNT_0;
                  end
@@ -85,7 +85,7 @@ reg [7:0] rCurrentState,rNextState;
                oLCD_Enabled<= 1'b1;
                rEnableDone <= 1'b0;
                rTimeCountReset <= 1'b0;
-               if (rTimeCount > 32'd17 )		//se mantiene enable por 240ns
+               if (rTimeCount > 32'd17 )		//keep enable for 240ns
                  begin
                     rNextState <= `RESET_COUNT_1;
                  end
@@ -108,7 +108,7 @@ reg [7:0] rCurrentState,rNextState;
                oLCD_Enabled<= 1'b0;
                rEnableDone<= 1'b0;
                rTimeCountReset <= 1'b0;
-               if (rTimeCount > 1'd4 )		// se mantiene enable por 20ns
+               if (rTimeCount > 1'd4 )		// keep enable for 20ns
                  begin
                     rNextState <= `RESET_COUNT_2;
                  end
@@ -129,7 +129,7 @@ reg [7:0] rCurrentState,rNextState;
           `WRITE_DONE:
             begin
                oLCD_Enabled<= 1'b0;
- 	       rEnableDone<= 1'b1;			//se setea EnableDone para terminar
+ 	       rEnableDone<= 1'b1;			//set EnableDone to finish
                rNextState <= `STATE_RESET;
  	    end
 

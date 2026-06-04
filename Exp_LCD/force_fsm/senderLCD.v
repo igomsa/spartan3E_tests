@@ -57,21 +57,21 @@ begin
 	else
 	begin
 		if (rTimeCountReset)
-				rTimeCount <= 32'b0; //reinicia la cuenta
+				rTimeCount <= 32'b0; //reset the counter
 		else
-				rTimeCount <= rTimeCount + 32'b1; //incrementa la cuenta
+				rTimeCount <= rTimeCount + 32'b1; //increment the counter
 
 		rCurrentState <= rNextState;
 	end
 end
 
 //----------------------------------------------
-//Lógica de estado actal y salida
+//Current state and output logic
 always @ ( * )
 begin
 	case (rCurrentState)
 	//-----------------------------------------
-	//Se permanece en este estado hasta que se habilita la escritura.
+	//Stay in this state until writing is enabled.
 	`STATE_RESET:
 	begin
 		oNIBBLE = 			4'b0;
@@ -85,10 +85,10 @@ begin
 			rNextState = `STATE_RESET;
 	end
 	//------------------------------------------
-	//Envía el Nibble más significativo, EN=0
+	//Send the most significant nibble, EN=0
 	`STATE_BEFORE_EN_H:
 	begin
-	        oNIBBLE = 		iData[7:4]; //Nibble más significativo
+	        oNIBBLE = 		iData[7:4]; //most significant nibble
 		oWriteDone = 		'b0;
 		oLCD_EN = 			1'b0;			//E=0
 		rTimeCountReset = 1'b0;
@@ -96,17 +96,17 @@ begin
 		//delay 40ns
 		if (rTimeCount > 32'd2 )
 		begin
-			rTimeCountReset = 1'b1; //reinicia la cuenta
+			rTimeCountReset = 1'b1; //reset the counter
 			rNextState = `STATE_HOLD_EN_H;
 		end
 		else
 			rNextState = `STATE_BEFORE_EN_H;
 	end
 	//------------------------------------------
-	//Mantiene los 4 bits más significativos en alto, EN=1
+	//Hold the 4 most significant bits high, EN=1
 	`STATE_HOLD_EN_H:
 	begin
-		oNIBBLE = 		iData[7:4]; //Nibble más significativo
+		oNIBBLE = 		iData[7:4]; //most significant nibble
 		oWriteDone = 		1'b0;
 		oLCD_EN = 			1'b1;			//E=1
 		rTimeCountReset = 1'b0;
@@ -114,17 +114,17 @@ begin
 		//delay 240 ns
 		if (rTimeCount > 32'd12 )
 		begin
-			rTimeCountReset = 1'b1; //reinicia la cuenta
+			rTimeCountReset = 1'b1; //reset the counter
 			rNextState = `STATE_AFTER_EN_H;
 		end
 		else
 			rNextState = `STATE_HOLD_EN_H;
 	end
 	//------------------------------------------
-	//E=0, sostiene el nibble más alto por 40ns
+	//E=0, hold the upper nibble for 40ns
 	`STATE_AFTER_EN_H:
 	begin
-		oNIBBLE = 		iData[7:4]; //Nibble más significativo
+		oNIBBLE = 		iData[7:4]; //most significant nibble
 		oWriteDone = 		1'b0;
 		oLCD_EN = 			1'b0;			//E=0
 		rTimeCountReset = 1'b0;
@@ -132,7 +132,7 @@ begin
 		//delay 40ns
 		if (rTimeCount > 32'd2 )
 		begin
-			rTimeCountReset = 1'b1; //reinicia la cuenta
+			rTimeCountReset = 1'b1; //reset the counter
 			rNextState = `STATE_INTER;
 		end
 		else
@@ -140,7 +140,7 @@ begin
 	end
 
 	//------------------------------------------
-	//delay entre el envío de 6 bits
+	//delay between the 6-bit transfers
 	`STATE_INTER:
 	begin
 		oNIBBLE = 			4'b0;
@@ -151,7 +151,7 @@ begin
 		//delay 1us
 		if (rTimeCount > 32'd50 )
 		begin
-			rTimeCountReset = 1'b1; //reinicia la cuenta
+			rTimeCountReset = 1'b1; //reset the counter
 			rNextState = `STATE_BEFORE_EN_L;
 		end
 		else
@@ -159,10 +159,10 @@ begin
 	end
 
 	//------------------------------------------
-	//Habilita el Nibble menos significativo , E=0
+	//Enable the least significant nibble, E=0
 	`STATE_BEFORE_EN_L:
 	begin
-		oNIBBLE = 		iData[3:0]; //Nibble menos significativo
+		oNIBBLE = 		iData[3:0]; //least significant nibble
 		oWriteDone = 		1'b0;
 		oLCD_EN = 			1'b0;			//E=0
 		rTimeCountReset = 1'b0;
@@ -170,17 +170,17 @@ begin
 		//delay 40ns
 		if (rTimeCount > 32'd2 )
 		begin
-			rTimeCountReset = 1'b1; //reinicia la cuenta
+			rTimeCountReset = 1'b1; //reset the counter
 			rNextState = `STATE_HOLD_EN_L;
 		end
 		else
 			rNextState = `STATE_BEFORE_EN_L;
 	end
 	//------------------------------------------
-	//Mantiene el Nibble menos significativo en alto, E=1
+	//Hold the least significant nibble high, E=1
 	`STATE_HOLD_EN_L:
 	begin
-		oNIBBLE = 			iData[3:0]; //Nibble menos significativo
+		oNIBBLE = 			iData[3:0]; //least significant nibble
 		oWriteDone = 		1'b0;
 		oLCD_EN = 			1'b1;			//E=1
 		rTimeCountReset = 1'b0;
@@ -188,17 +188,17 @@ begin
 		//delay 240ns
 		if (rTimeCount > 32'd12 )
 		begin
-			rTimeCountReset=1'b1; //reinicia la cuenta
+			rTimeCountReset=1'b1; //reset the counter
 			rNextState = `STATE_AFTER_EN_L;
 		end
 		else
 			rNextState = `STATE_HOLD_EN_L;
 	end
 	//------------------------------------------
-	// Mantiene el Nibble menos significativo por 40ns, E=0
+	// Hold the least significant nibble for 40ns, E=0
 	`STATE_AFTER_EN_L:
 	begin
-		oNIBBLE = 		iData[3:0]; //Nibble menos significativo
+		oNIBBLE = 		iData[3:0]; //least significant nibble
 		oWriteDone = 		1'b0;
 		oLCD_EN = 			1'b0;			//E=0
 		rTimeCountReset = 1'b0;
@@ -206,7 +206,7 @@ begin
 		//delay 40ns
 		if (rTimeCount > 32'd2 )
 		begin
-			rTimeCountReset = 1'b1; //reinicia la cuenta
+			rTimeCountReset = 1'b1; //reset the counter
 			rNextState = `STATE_FINISH_W;
 		end
 		else
@@ -214,7 +214,7 @@ begin
 	end
 
 	//------------------------------------------
-	//delay de 40us entre datos
+	//40us delay between data
 	`STATE_FINISH_W:
 	begin
 		oNIBBLE = 			4'b0;

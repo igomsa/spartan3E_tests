@@ -101,9 +101,9 @@ crvga crvga1(
                  begin
                    {wRam_R, wRam_G, wRam_B} <= `COLOR_WHITE;
                     if (wCurrentCol > 52)
-                      if(wCurrentRow < 240)       // es necesario revisar la fila, para ir a LINE
+                      if(wCurrentRow < 240)       // need to check the row to decide whether to go to LINE
                           rNextState <= `CS_KEY;
-                 else if(wCurrentCol > 74)        // si la fila es mayor a 240, se debe imprimir un poco mas blanco y luego ir a LINE
+                 else if(wCurrentCol > 74)        // if the row is greater than 240, draw a bit more white and then go to LINE
                           rNextState <= `LINE;
                       else
                           rNextState <= `C_KEY;
@@ -158,7 +158,7 @@ crvga crvga1(
                  end
                //------------------------------------------
 
-               `LINE: // depende de las columnas debe regresar a un estado diferente
+               `LINE: // depending on the columns, return to a different state
                  begin
                     {wRam_R, wRam_G, wRam_B} <= `COLOR_BLACK;
                     if (wCurrentCol > 78 && wCurrentCol < 179)
