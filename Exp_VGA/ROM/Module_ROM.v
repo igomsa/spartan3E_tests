@@ -17,20 +17,20 @@ begin
 	0: oInstruction  = { `NOP, 24'd4000     };
 
 	1: oInstruction  = { `STO, `R0, 16'd250 };
-	2: oInstruction  = { `STO, `R1, 16'd250 }; // Define las posiciones maximas
+	2: oInstruction  = { `STO, `R1, 16'd250 }; // define the maximum positions
 	3: oInstruction  = { `STO, `R2, 16'd1 };
 
 	4: oInstruction  = { `STO, `R3, 16'd240 };
-	5: oInstruction  = { `STO, `R4, 16'd240 }; //Posiciones iniciales
+	5: oInstruction  = { `STO, `R4, 16'd240 }; // initial positions
 
 	6: oInstruction = { `NOP, 24'd4000  	};
-	7: oInstruction  = { `VGA, `COLOR_GREEN, `R3,`R4}; //Color Verde en posicion actual
+	7: oInstruction  = { `VGA, `COLOR_GREEN, `R3,`R4}; // green at the current position
 	8: oInstruction = { `NOP, 24'd4000  	};
 
 	9: oInstruction  = { `ADD, `R4, 16'd1 };
-	10: oInstruction  = { `BLE, 16'd6, `R4, `R0}; // Salta si Columna menor a valor maximo
+	10: oInstruction  = { `BLE, 16'd6, `R4, `R0}; // jump while the column is below the maximum
 	11: oInstruction  = { `ADD, `R3, 16'd1 };
-	12: oInstruction  = { `BLE, 16'd5, `R4, `R0}; // Salta si fila menor a valor maximo
+	12: oInstruction  = { `BLE, 16'd5, `R4, `R0}; // jump while the row is below the maximum
 
 
 	13: oInstruction = { `JMP, 8'd0,16'b0	};

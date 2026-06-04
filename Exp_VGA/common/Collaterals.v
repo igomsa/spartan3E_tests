@@ -49,7 +49,7 @@ endmodule
 
 
 //----------------------------------------------------------------------
-//Se define el módulo de suma para implementar el "array multiplier"
+// adder module used to implement the array multiplier
 module EMUL(
  input wire wA,
  input wire wB,
@@ -62,8 +62,8 @@ module EMUL(
 endmodule // EMUL
 
 //----------------------------------------------------------------------
-//Se define el módulo de FFD de 8 bits para usarlo como registro auxiliar
-//y evitar un error por sensibilidad en el always@(*) de MiniAlu_E2.v.
+// 8-bit D flip-flop module used as an auxiliary register
+// to avoid a sensitivity issue in the always@(*) of MiniAlu_E2.v.
 module Buffer8b(
  input wire [15:0] iI,
  output reg [15:0] oO

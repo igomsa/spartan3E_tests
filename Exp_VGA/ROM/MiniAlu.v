@@ -33,7 +33,7 @@ module MiniAlu
       .oInstruction( wInstruction )
       );
 
-   // Instanciar la memoria
+   // instantiate the memory
    reg               rVGAWritEnable;
 
    RAM_SINGLE_READ_PORT # (3,24,640*480) VideoMemory
