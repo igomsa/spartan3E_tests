@@ -639,7 +639,7 @@ module Module_VGA_Control
           //------------------------------------------
           default:
             begin
-               {wRam_R, wRam_G, wRam_B} <= {0,0,1};
+               {wRam_R, wRam_G, wRam_B} <= {1'b0, 1'b0, 1'b1};
                rNextState <= `STATE_RESET;
             end
           //------------------------------------------
