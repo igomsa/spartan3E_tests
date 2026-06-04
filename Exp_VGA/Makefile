@@ -1,32 +1,34 @@
-Ejercicio_1:
-	iverilog -Wall -o Ejercicio1.out MiniAlu_E1.v Module_ROM_E1.v Collaterals.v RAM.v Defintions.v TestBench_E1.v && vvp Ejercicio1.out && gtkwave Ejercicio1.vcd Ejercicio1.gtkw &
+# Icarus Verilog simulation of the VGA experiments.
+#
+#   make sim_rom    ROM-driven color generator (MiniAlu writes the VGA RAM)
+#   make sim_fsm    FSM-driven VGA pattern generator
+#   make wave       open the last run's waveform in GTKWave
+#   make all        run both
+#   make clean      remove build artifacts
+#
+# Each dir ships two resolution variants of a module (crvga / crvga_480x640,
+# VGA_SM / VGA_SM_480x640) that declare the same name, so a build must pick ONE.
+# Files are therefore listed explicitly rather than globbed.
 
-Ejercicio_2:
-	iverilog -Wall -o Ejercicio2.out MiniAlu_E2.v Module_ROM_E2.v Collaterals.v RAM.v Defintions.v TestBench_E2.v && vvp Ejercicio2.out && gtkwave Ejercicio2.vcd Ejercicio2.gtkw &
+IVERILOG := iverilog -g2005 -I common
+VVP      := vvp
+GTKWAVE  := gtkwave
+VGA      := common/crvga.v common/upcounter.v common/Collaterals.v
 
-Ejercicio_3:
-	iverilog -Wall -o Ejercicio3.out MiniAlu_E3.v Module_ROM_E3.v Collaterals.v RAM.v Defintions.v TestBench_E3.v && vvp Ejercicio3.out && gtkwave Ejercicio3.vcd Ejercicio3.gtkw &
+.PHONY: all clean sim_rom sim_fsm wave
 
-Ejercicio_4:
-	iverilog -Wall -o Ejercicio4.out MiniAlu_E4.v Module_ROM_E4.v Collaterals_4.v RAM.v Defintions.v TestBench_E4.v && vvp Ejercicio4.out && gtkwave Ejercicio4.vcd Ejercicio4.gtkw &
+all: sim_rom sim_fsm
 
-Ejercicio_4b:
-	iverilog -Wall -o Ejercicio4b.out MiniAlu_E4b.v Module_ROM_E4b.v Collaterals_4b.v RAM.v Defintions.v TestBench_E4b.v && vvp Ejercicio4b.out && gtkwave Ejercicio4b.vcd Ejercicio4b.gtkw &
+sim_rom:
+	$(IVERILOG) -I ROM -o rom.out ROM/MiniAlu.v ROM/Module_ROM.v ROM/RAM.v ROM/RAM1.v $(VGA) ROM/TestBench.v
+	$(VVP) rom.out
+
+sim_fsm:
+	$(IVERILOG) -I FSM -o fsm.out FSM/VGA_SM.v $(VGA) FSM/TestBench_SM.v
+	$(VVP) fsm.out
+
+wave:
+	$(GTKWAVE) Ejercicio1.vcd &
 
 clean:
-	rm Ejercicio1.out Ejercicio1.vcd Ejercicio2.out Ejercicio2.vcd Ejercicio3.out Ejercicio3.vcd Ejercicio4.out Ejercicio4.vcd
-
-clean_E1:
-	rm Ejercicio1.out Ejercicio1.vcd
-
-clean_E2:
-	rm Ejercicio2.out Ejercicio2.vcd
-
-clean_E3:
-	rm Ejercicio3.out Ejercicio3.vcd
-
-clean_E4:
-	rm Ejercicio4.out Ejercicio4.vcd
-
-clean_E4b:
-	rm Ejercicio4b.out Ejercicio4b.vcd
+	rm -f *.out *.vcd
