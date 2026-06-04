@@ -18,7 +18,7 @@ begin
 
 	1: oInstruction  = { `STO, `R0, 16'd250 };
 	2: oInstruction  = { `STO, `R1, 16'd250 }; // Define las posiciones maximas
-	3: oInstruction  = { `STO, `R2, 1 };
+	3: oInstruction  = { `STO, `R2, 16'd1 };
 
 	4: oInstruction  = { `STO, `R3, 16'd240 };
 	5: oInstruction  = { `STO, `R4, 16'd240 }; //Posiciones iniciales
@@ -27,9 +27,9 @@ begin
 	7: oInstruction  = { `VGA, `COLOR_GREEN, `R3,`R4}; //Color Verde en posicion actual
 	8: oInstruction = { `NOP, 24'd4000  	};
 
-	9: oInstruction  = { `ADD, `R4, 1 };
+	9: oInstruction  = { `ADD, `R4, 16'd1 };
 	10: oInstruction  = { `BLE, 16'd6, `R4, `R0}; // Salta si Columna menor a valor maximo
-	11: oInstruction  = { `ADD, `R3, 1 };
+	11: oInstruction  = { `ADD, `R3, 16'd1 };
 	12: oInstruction  = { `BLE, 16'd5, `R4, `R0}; // Salta si fila menor a valor maximo
 
 

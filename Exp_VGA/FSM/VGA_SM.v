@@ -33,7 +33,7 @@ module Module_VGA_Control
 
 
    initial begin
-      rColor <= {0,0,0};
+      rColor <= {1'b0, 1'b0, 1'b0};
 //      {rCurrentRow, rCurrentCol} <= {0,0};
       //{oVertical_Sync, oHorizontal_Sync} <= {0,0};
    end
@@ -209,7 +209,7 @@ crvga crvga1(
 
                default:
                  begin
-                    {wRam_R, wRam_G, wRam_B} <= {0,0,0};
+                    {wRam_R, wRam_G, wRam_B} <= {1'b0, 1'b0, 1'b0};
                     rNextState <= `STATE_RESET;
                  end
                //------------------------------------------
